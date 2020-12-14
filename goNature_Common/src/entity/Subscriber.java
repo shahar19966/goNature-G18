@@ -1,5 +1,6 @@
 package entity;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -8,13 +9,14 @@ public class Subscriber extends Person {
 	private SimpleIntegerProperty subscriberFamilyMembers;
 	private SimpleStringProperty subscriberCardDetails;
 	private SimpleStringProperty phone;
-
+	private SimpleBooleanProperty isGuide;
 	public Subscriber(String subscriberNumber, String id, String firstName, String lastName, String phone, String mail,
-			int subscriberFamilyMembers, String subscriberCardDetails) {
+			int subscriberFamilyMembers, String subscriberCardDetails,boolean isGuide) {
 		super(id, firstName, lastName, mail);
 		this.subscriberCardDetails = new SimpleStringProperty(subscriberCardDetails);
 		this.subscriberFamilyMembers = new SimpleIntegerProperty(subscriberFamilyMembers);
 		this.subscriberNumber = new SimpleStringProperty(subscriberNumber);
+		this.isGuide=new SimpleBooleanProperty(isGuide);
 	}
 
 	public String toString() {
@@ -43,6 +45,13 @@ public class Subscriber extends Person {
 
 	public SimpleStringProperty getSubscriberCardDetailsProperty() {
 		return subscriberCardDetails;
+	}
+	public boolean getIsGuide() {
+		return isGuide.getValue();
+	}
+
+	public SimpleBooleanProperty getIsGuideProperty() {
+		return isGuide;
 	}
 
 }
