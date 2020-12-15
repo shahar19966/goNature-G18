@@ -4,18 +4,18 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Employee extends Person {
 	private SimpleStringProperty employeeNumber;
-	private SimpleStringProperty role;
+	private EntityConstants.EmployeeRole role;
 
-	public Employee(String employeeNumber, String id, String firstName, String lastName, String email, String role) {
+	public Employee(String employeeNumber, String id, String firstName, String lastName, String email, EntityConstants.EmployeeRole role) {
 		super(id, firstName, lastName,email);
-		this.role = new SimpleStringProperty(role);
+		this.role = role;
 		this.employeeNumber = new SimpleStringProperty(employeeNumber);
 	}
 
 	@Override
 	public String toString() {
 		return ("Employee " + employeeNumber.getValue() + " " + super.toString() + " " + getEmail() + " "
-				+ role.getValue());
+				+ role);
 	}
 
 	public String getEmployeeNumber() {
@@ -24,7 +24,7 @@ public class Employee extends Person {
 
 
 	public String getRole() {
-		return role.getValue();
+		return role.toString();
 	}
 
 	public SimpleStringProperty getEmployeeNumberProperty() {
@@ -36,7 +36,7 @@ public class Employee extends Person {
 		getEmailProperty().set(newEmail);
 	}
 
-	public SimpleStringProperty getRoleProperty() {
+	public EntityConstants.EmployeeRole getRoleEnum() {
 		return role;
 	}
 

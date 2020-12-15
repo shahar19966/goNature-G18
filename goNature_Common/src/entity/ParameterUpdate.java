@@ -4,21 +4,21 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ParameterUpdate {
-	private SimpleStringProperty parameter;
+	private EntityConstants.ParkParameter parameter;
 	private SimpleIntegerProperty newValue;
 	private SimpleStringProperty parkName;
-	public ParameterUpdate(String parameter, int newValue,String parkName) {
-		this.parameter = new SimpleStringProperty(parameter);
+	public ParameterUpdate(EntityConstants.ParkParameter parameter, int newValue,String parkName) {
+		this.parameter = parameter;
 		this.newValue = new SimpleIntegerProperty(newValue);
 		this.parkName=new SimpleStringProperty(parkName);
 	}
 	public String getParameter() {
-		return parameter.getValue();
+		return parameter.toString();
 	}
-	public void setParameter(String parameter) {
-		this.parameter.set(parameter);
+	public void setParameter(EntityConstants.ParkParameter parameter) {
+		this.parameter=parameter;
 	}
-	public SimpleStringProperty getParameterProperty() {
+	public EntityConstants.ParkParameter getParameterEnum() {
 		return parameter;
 	}
 	public int getNewValue() {
