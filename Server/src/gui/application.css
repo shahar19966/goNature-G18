@@ -229,6 +229,12 @@
 	-fx-effect:dropshadow(gaussian,black,0,0,0,0) ;
 	-fx-underline: true;
 }
+.seconderyTitleServer
+{
+	-fx-font-weight:bold;
+	-fx-text-fill: #78b785;
+	-fx-font-size:40px;
+}
 .homeTitle{
 -fx-background-color: seagreen;
 -fx-font-size:50px;
