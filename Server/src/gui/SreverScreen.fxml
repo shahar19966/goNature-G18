@@ -23,17 +23,17 @@
                <children>
                   <AnchorPane fx:id="fillPane" prefHeight="647.0" prefWidth="910.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TextField fx:id="serverIPLabel" editable="false" focusTraversable="false" layoutX="251.0" layoutY="316.0" prefHeight="39.0" prefWidth="227.0" style="-fx-background-color: WITHE; -fx-text-inner-color: #a0a2aa;" text="00.00.00.00">
+                        <TextField fx:id="serverIPLabel" editable="false" focusTraversable="false" layoutX="238.0" layoutY="294.0" prefHeight="39.0" prefWidth="227.0" style="-fx-background-color: WITHE; -fx-text-inner-color: #a0a2aa;" text="00.00.00.00">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </TextField>
-                        <Label layoutX="137.0" layoutY="332.0" text="Server ip:" textFill="#a0a2aa">
+                        <Label layoutX="138.0" layoutY="303.0" text="Server ip:" textFill="#a0a2aa">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <TitledPane fx:id="_logTitledPane" animated="false" layoutX="110.0" layoutY="394.0" prefHeight="220.0" prefWidth="685.0" text="Log">
+                        <TitledPane fx:id="_logTitledPane" animated="false" layoutX="116.0" layoutY="380.0" prefHeight="220.0" prefWidth="685.0" text="Log">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="311.0" prefWidth="425.0" style="-fx-background-color: #a0a2aa;">
                                  <children>
@@ -52,26 +52,16 @@
                               <Font name="System Bold" size="19.0" />
                            </font>
                         </TitledPane>
-                        <Label layoutX="700.0" layoutY="306.0" text="Database" textFill="#a0a2aa" />
-                        <Button fx:id="_startBtn" layoutX="378.0" layoutY="216.0" mnemonicParsing="false" onAction="#startServerClicked" prefHeight="39.0" prefWidth="98.0" styleClass="logInBtn" text="Start">
+                        <Label layoutX="693.0" layoutY="276.0" text="Database" textFill="#a0a2aa" />
+                        <Button fx:id="_startBtn" layoutX="378.0" layoutY="168.0" mnemonicParsing="false" onAction="#startServerClicked" prefHeight="39.0" prefWidth="98.0" styleClass="logInBtn" text="Start">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Button>
-                        <TextField fx:id="_serverPortTextField" layoutX="439.0" layoutY="157.0" onAction="#startServerClicked" prefHeight="26.0" prefWidth="98.0" text="5555">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </TextField>
-                        <Label layoutX="356.0" layoutY="166.0" prefHeight="27.0" prefWidth="44.0" text="Port" textFill="#a0a2ab">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <ProgressIndicator fx:id="loadingSpinner" layoutX="551.0" layoutY="326.0" prefHeight="39.0" prefWidth="44.0" />
-                        <Circle fx:id="_serverLedIndicator" fill="RED" layoutX="654.0" layoutY="345.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Label layoutX="633.0" layoutY="306.0" text="Server" textFill="#a0a2aa" />
-                        <Circle fx:id="_dbLedIndicator" fill="#ff1f1f" layoutX="731.0" layoutY="346.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
+                        <ProgressIndicator fx:id="loadingSpinner" layoutX="551.0" layoutY="297.0" prefHeight="39.0" prefWidth="44.0" />
+                        <Circle fx:id="_serverLedIndicator" fill="RED" layoutX="646.0" layoutY="317.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Label layoutX="633.0" layoutY="276.0" text="Server" textFill="#a0a2aa" />
+                        <Circle fx:id="_dbLedIndicator" fill="#ff1f1f" layoutX="724.0" layoutY="317.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
                         <Label alignment="TOP_CENTER" layoutX="305.0" layoutY="40.0" prefHeight="73.0" prefWidth="268.0" styleClass="seconderyTitleServer" stylesheets="@application.css" text="goNature" textFill="#a0a2aa">
                            <font>
                               <Font size="58.0" />
