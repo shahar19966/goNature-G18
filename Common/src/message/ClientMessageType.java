@@ -1,6 +1,7 @@
 package message;
 
 public enum ClientMessageType {
+	DISCONNECTED,
 	CONNECTION,
 	VALIDATE_USER,
 	VALIDATE_DATE,
