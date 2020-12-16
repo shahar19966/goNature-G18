@@ -1,0 +1,235 @@
+.radio-button .radio {
+    -fx-border-width: 1px;
+    -fx-border-color: #5D7564;
+    -fx-background-color: #96BCA0;
+    -fx-background-image: null;
+    -fx-border-radius: 15px;
+    -fx-padding: 4px;
+}
+.radio-button .radio:selected {
+    -fx-background-color: #5D7564;
+    -fx-background-image: null;
+    -fx-text-fill:#96BCA0;
+}
+.radio-button:selected .radio .dot {
+    -fx-background-color: #38463C;
+    -fx-background-insets: 0;
+}
+.radio-button -radio:armed {
+    -fx-background-color: #5D7564;
+    -fx-background-image: null;
+}
+.radio-button -radio:determinate {
+    -fx-background-color: #5D7564;
+    -fx-background-image: null;
+}
+.radio-button -radio:indeterminate {
+    -fx-background-color: #5D7564;
+    -fx-background-image: null;
+}
+.radio-button .dot {
+    -fx-background-radius: 15px;
+    -fx-padding: 8px;
+}
+.logInBtn
+{
+-fx-background-color:linear-gradient(#AAEBBD, #1E903F),radial-gradient(center 50% -40%, radius 200%, #95E6AC 45%, #56D77B 50%);
+-fx-background-radius: 6, 5;
+-fx-background-insets: 0, 3;
+-fx-text-fill: #333333;
+-fx-font-size:20px;
+}
+.logInBtn:hover
+{
+	-fx-background-color:linear-gradient(#80E19C, #16672D),radial-gradient(center 50% -40%, radius 200%, #95E6AC 40%, #6BDC8B 50%);
+}
+.pane
+{
+-fx-effect:dropshadow(gaussian,black,10,0,0,4) ;
+-fx-background-color: mintcream;
+}
+.paneTitle
+{
+-fx-effect:dropshadow(gaussian,black,7,0,0,4) ;
+-fx-background-color: seagreen;
+
+}
+.alertPane
+{
+-fx-effect:dropshadow(gaussian,black,15,0.1,0,6) ;
+}
+.danger
+{
+-fx-background-color: #d9534f;
+-fx-text-fill:white;
+}
+.success
+{
+-fx-background-color: #5cb85c;
+-fx-text-fill:white;
+}
+.info
+{
+-fx-background-color: #5bc0de;
+-fx-text-fill:white;
+}
+.text-field
+{
+-fx-border-color: #83A48C;
+-fx-border-width:3px;
+}
+.text-field:focused
+{
+-fx-effect:dropshadow(gaussian,black,10,0.1,0,1) ;
+-fx-border-color: #abc2b1;
+}
+.text-field-Large
+{
+-fx-font-size:25px;
+}
+.text-field-Medium
+{
+-fx-font-size:20px;
+}
+.text-field-Small
+{
+-fx-font-size:15px;
+}
+.labelSmall
+{
+-fx-font-size:18px;
+}
+.labelMedium
+{
+-fx-font-size:25px;
+}
+.labelLarge
+{
+-fx-font-size:30px;
+}
+
+.combo-box .list-cell 
+{
+    -fx-background: white;
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+}
+
+.combo-box-popup .list-view 
+{
+    -fx-background-color: white, white;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 8, 0.0 , 0 , 0 );
+}    
+
+.combo-box-popup .list-view .list-cell 
+{
+    -fx-text-fill: black;
+    -fx-background-color: white;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected,.combo-box-popup .list-view .list-cell:filled:selected:hover
+{
+    -fx-background-color: #6BDC8B;
+    -fx-text-fill: black;
+}
+
+
+.combo-box-popup .list-view .list-cell:filled:hover 
+{
+    -fx-background-color: #BFF0CD;
+    -fx-text-fill: black;
+}
+
+.combo-box-base  
+{
+    -fx-background-color: white, white, white, white;
+    -fx-background-radius: 5, 5, 4, 3;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-padding: 0;
+    -fx-border-color: #83A48C;
+    -fx-border-width:3px;
+}
+
+.combo-box-base:hover
+{
+    -fx-color: -fx-hover-base;
+    
+}
+
+.combo-box-base:showing 
+{
+    -fx-color: -fx-pressed-base;
+}
+
+.combo-box-base:focused {
+-fx-effect:dropshadow(gaussian,black,10,0.1,0,1) ;
+-fx-border-color: #abc2b1;
+}
+
+.check-box .box {
+
+    -fx-border-width: 1px;
+    -fx-border-color: #5D7564;
+    -fx-background-color: #96BCA0;
+    -fx-background-image: null;
+    -fx-padding: 4px;
+
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #5D7564;
+    -fx-background-image: null;
+    -fx-text-fill:#96BCA0;
+}
+
+.check-box:selected .box {
+
+}
+.button{
+	-fx-font-weight:Bold;
+}
+.button:hover{
+-fx-effect:dropshadow(gaussian,black,10,0.5,0,0) ;
+-fx-cursor: hand;
+}
+.primaryTitle{
+	-fx-font-weight:bold;
+	-fx-text-fill:white;
+	-fx-font-size:50px;
+}
+.seconderyTitle
+{
+	-fx-font-weight:bold;
+	-fx-text-fill: #082912;
+	-fx-font-size:40px;
+}
+.scroll-pane{
+   -fx-background-color:transparent;
+}
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.table-column {
+  -fx-alignment: CENTER;
+}
+.warning{
+	-fx-background-color: #FF8800;
+	-fx-text-fill:white;
+}
+.link
+{
+	-fx-background-color:transparent;
+	-fx-text-fill:#5bc0de;
+	
+}
+.link:hover
+{
+	-fx-effect:dropshadow(gaussian,black,0,0,0,0) ;
+	-fx-underline: true;
+}
+.homeTitle{
+-fx-background-color: seagreen;
+-fx-font-size:50px;
+}
