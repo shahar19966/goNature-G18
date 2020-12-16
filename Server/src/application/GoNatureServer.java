@@ -2,11 +2,9 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 package application;
-
-import java.io.IOException;
-
-import gui.ServerScreenController;
-import mysql.MySQLConnection;
+import entity.*;
+import message.*;
+import  mysql.MySQLConnection;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
@@ -53,28 +51,19 @@ public class GoNatureServer extends AbstractServer {
 	 * @param
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-
+		if(msg instanceof ClientMessage) {
+			ClientMessage clientMsg=(ClientMessage)msg;
+			switch(clientMsg.getType()) {
+			case DISCONNECTED:
+				ServerMain.guiController.disconnectClient(client);
+				break;
+			case CONNECTION:
+				break;
+			}		
+		}
+		
 		System.out.println("Message received: " + msg + " from " + client);
 		String splitString[] = msg.toString().split(" ");
-		switch (splitString[0]) {
-		case "start":
-			this.sendToAllClients(mysqlConnection.returnAllData());
-			break;
-		case "update":
-			boolean succeeded = mysqlConnection.updateEmail(splitString[1], splitString[2]);
-			sendToAllClients(succeeded ? "success" : "failed");
-			break;
-		case "disconnect":
-			try {
-				client.sendToClient("");
-				client.close();
-				ServerUI.aFrame.delClient(client, getNumberOfClients());
-			} catch (IOException e) {
-			}
-		default:
-			break;
-		}
-
 	}
 
 	/**
@@ -95,12 +84,12 @@ public class GoNatureServer extends AbstractServer {
 
 	@Override
 	protected void clientConnected(ConnectionToClient client) {
-		ServerUI.aFrame.addClient(client);
+		ServerMain.guiController.connectClient(client);
 	}
 
 	@Override
 	synchronized protected void clientDisconnected(ConnectionToClient client) {
-		ServerUI.aFrame.delClient(client, getNumberOfClients());
+		ServerMain.guiController.disconnectClient(client);
 	}
 }
 //End of EchoServer class
