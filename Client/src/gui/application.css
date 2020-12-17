@@ -43,6 +43,18 @@
 {
 	-fx-background-color:linear-gradient(#80E19C, #16672D),radial-gradient(center 50% -40%, radius 200%, #95E6AC 40%, #6BDC8B 50%);
 }
+.logOutBtn
+{
+-fx-background-color:linear-gradient(#AAEBBD, #1E903F),radial-gradient(center 50% -40%, radius 200%, #95E6AC 45%, #56D77B 50%);
+-fx-background-radius: 6, 5;
+-fx-background-insets: 0, 3;
+-fx-text-fill: #333333;
+-fx-font-size:20px;
+}
+.logOutBtn:hover
+{
+	-fx-background-color:linear-gradient(#80E19C, #16672D),radial-gradient(center 50% -40%, radius 200%, #95E6AC 40%, #6BDC8B 50%);
+}
 .pane
 {
 -fx-effect:dropshadow(gaussian,black,10,0,0,4) ;
