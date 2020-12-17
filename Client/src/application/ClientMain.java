@@ -1,6 +1,7 @@
 package application;
 	
 import client.GoNatureClient;
+import gui.GUIControl;
 import gui.LoginPageController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +20,8 @@ public class ClientMain extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			client=new GoNatureClient("localhost",DEFAULT_PORT);
+			GUIControl guiControl=new GUIControl();
+			guiControl.setClient(client);
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/LoginPage.fxml"));
 			AnchorPane root = fxmlLoader.load();
 			mainController = (LoginPageController)fxmlLoader.getController();
