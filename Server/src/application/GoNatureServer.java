@@ -2,8 +2,7 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 package application;
-import entity.*;
-import message.*;
+import message.ClientMessage;
 import  mysql.MySQLConnection;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -61,9 +60,7 @@ public class GoNatureServer extends AbstractServer {
 				break;
 			}		
 		}
-		
-		System.out.println("Message received: " + msg + " from " + client);
-		String splitString[] = msg.toString().split(" ");
+		System.out.println("Message received: " + msg+ " from " + client);
 	}
 
 	/**

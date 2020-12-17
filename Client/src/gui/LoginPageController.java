@@ -12,6 +12,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import message.ClientMessage;
+import message.ClientMessageType;
 
 public class LoginPageController {
 
@@ -47,7 +49,6 @@ public class LoginPageController {
 
     @FXML
     void loginFunc(ActionEvent event) {
-    	
     }
 
     @FXML

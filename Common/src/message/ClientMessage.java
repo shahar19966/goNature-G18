@@ -21,6 +21,8 @@ public class ClientMessage implements Serializable {
 	public void setMessage(Object message) {
 		this.message = message;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return getType().toString() +" " + message;
+	}
 }
