@@ -1,7 +1,16 @@
 package gui;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import entity.Employee;
+import entity.Subscriber;
+import entity.Visitor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -9,8 +18,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class ClientMainPageController {
-
+public class ClientMainPageController implements Initializable  {
+	private Object user;
+	private ArrayList<Button> btnList;
     @FXML
     private AnchorPane enableDisablePane;
 
@@ -24,19 +34,19 @@ public class ClientMainPageController {
     private Button orderBtn;
 
     @FXML
-    private Button EntryControlBtn;
+    private Button entryControlBtn;
 
     @FXML
-    private Button exitControl;
+    private Button exitControlBtn;
 
     @FXML
-    private Button reports;
+    private Button reportsBtn;
 
     @FXML
     private Button orderTrakingBtn;
 
     @FXML
-    private Button reguestsBtn;
+    private Button requestsBtn;
 
     @FXML
     private Button parametersBtn;
@@ -125,5 +135,69 @@ public class ClientMainPageController {
     void reportsBtnClick(ActionEvent event) {
 
     }
+    public void setUser(Object user) {
+    	this.user=user;
+    	if(user instanceof Visitor) {
+    		setVisitorAndSubscriberButtons(btnList);
+    	}
+    	else if(user instanceof Subscriber) {
+    		setVisitorAndSubscriberButtons(btnList);
+    	}
+    	else { //employee
+    		setEmployeeButtons(btnList);
+    	}
+    }
+    private void setBtnList(List<Button> list) {
+    	list.add(orderBtn);
+    	list.add(entryControlBtn);
+    	list.add(exitControlBtn);
+    	list.add(orderTrakingBtn);
+    	list.add(parametersBtn);
+    	list.add(registrationBtn);
+    	list.add(requestsBtn);
+    	list.add(reportsBtn);
+    	list.add(discountBtn);
+    }
+    private void setVisitorAndSubscriberButtons(List<Button> list) {
+    	list.remove(orderBtn);
+    	list.remove(orderTrakingBtn);
+    	for(Button b:list) {
+    		b.setVisible(false);
+    		b.setManaged(false);
+    	}
+    }
+    private void setEmployeeButtons(List<Button> list) {
+    	Employee emp=(Employee)user;
+    	switch(emp.getRoleEnum()) {
+    	case PARK_MANAGER:
+    		list.remove(parametersBtn);
+    		list.remove(discountBtn);
+    		list.remove(reportsBtn);
+    		break;
+    	case DEP_MANAGER:
+    		list.remove(reportsBtn);
+    		list.remove(requestsBtn);
+    		break;
+    	case SERIVCE:
+    		list.remove(registrationBtn);
+			break;
+    	case REGULAR:
+    		list.remove(orderBtn);
+    		list.remove(entryControlBtn);
+    		list.remove(exitControlBtn);
+			break;
+    	}
+    	for(Button b:list) {
+    		b.setVisible(false);
+    		b.setManaged(false);
+    	}
+    }
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		// TODO Auto-generated method stub
+		btnList=new ArrayList<>();
+		setBtnList(btnList);
+	}
 
 }

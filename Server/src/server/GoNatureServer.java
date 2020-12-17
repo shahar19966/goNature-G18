@@ -1,8 +1,13 @@
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
-package application;
+package server;
+import java.io.IOException;
+
+import application.ServerMain;
 import message.ClientMessage;
+import message.ServerMessage;
+import message.ServerMessageType;
 import  mysql.MySQLConnection;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -50,17 +55,37 @@ public class GoNatureServer extends AbstractServer {
 	 * @param
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
+		Object returnVal=null;
+		ServerMessageType type=null;
 		if(msg instanceof ClientMessage) {
 			ClientMessage clientMsg=(ClientMessage)msg;
 			switch(clientMsg.getType()) {
 			case DISCONNECTED:
 				ServerMain.guiController.disconnectClient(client);
 				break;
+			case VALIDATE_VISITOR:
+				returnVal=MySQLConnection.validateVisitor((String)(clientMsg.getMessage()));
+				type=ServerMessageType.LOGIN;
+				break;
+			case VALIDATE_SUBSCRIBER:
+				returnVal=MySQLConnection.validateSubscriber((String)(clientMsg.getMessage()));
+				type=ServerMessageType.LOGIN;
+				break;
+			case VALIDATE_EMPLOYEE:
+				returnVal=MySQLConnection.validateEmployee((String[])(clientMsg.getMessage()));
+				type=ServerMessageType.LOGIN;
+				break;
 			case CONNECTION:
 				break;
 			}		
 		}
 		System.out.println("Message received: " + msg+ " from " + client);
+		try {
+			client.sendToClient(new ServerMessage(type,returnVal));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

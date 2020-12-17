@@ -28,4 +28,13 @@ public class MySQLConnection {
             System.out.println("VendorError: " + ex.getErrorCode());
             }
    	}
+	public static boolean validateVisitor(String id) {
+		return true;
+	}
+	public static boolean validateSubscriber(String id) {
+		return true;
+	}
+	public static boolean validateEmployee(String[] idAndPassword) {
+		return true;
+	}
 }

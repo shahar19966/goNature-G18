@@ -1,17 +1,21 @@
 package gui;
 
+import java.io.IOException;
+
+import entity.Visitor;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
 
@@ -48,7 +52,19 @@ public class LoginPageController {
     private Label mainLabel;
 
     @FXML
-    void loginFunc(ActionEvent event) {
+    void loginFunc(ActionEvent event) throws IOException {
+    	if(validateLogin()) {
+    		Stage primaryStage=GUIControl.getStage();
+    		primaryStage.hide();
+    		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/ClientMainPage.fxml"));
+    		AnchorPane root = fxmlLoader.load();
+    		ClientMainPageController cmpc = (ClientMainPageController)fxmlLoader.getController();
+    		cmpc.setUser(new Visitor("123"));
+			Scene scene = new Scene (root);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+    	}
+    
     }
 
     @FXML
@@ -70,6 +86,23 @@ public class LoginPageController {
     	passwordTextField.setVisible(false);
     	idBtn.setSelected(false);
     	employeeBtn.setSelected(false);
+    }
+    private boolean validateLogin() {
+    	ClientMessage msg=null;
+    	if(idBtn.isSelected()) 
+    		msg=new ClientMessage(ClientMessageType.VALIDATE_VISITOR,idTextField.getText());
+    	else if(subscriberBtn.isSelected())
+    		msg=new ClientMessage(ClientMessageType.VALIDATE_SUBSCRIBER,idTextField.getText());
+    	else if(employeeBtn.isSelected()) {
+    		String[] idAndPassword={idTextField.getText(),passwordTextField.getText()};
+    		msg=new ClientMessage(ClientMessageType.VALIDATE_EMPLOYEE,idAndPassword);
+    	}
+    	else {};
+    	GUIControl.sendToServer(msg);
+    	if(GUIControl.getServerMsg().getMessage()==null)
+    		return false;
+    	return true;
+
     }
 
 }

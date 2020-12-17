@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import mysql.MySQLConnection;
+import server.GoNatureServer;
 
 
 public class ServerMain extends Application {
