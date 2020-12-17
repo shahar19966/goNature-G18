@@ -7,8 +7,8 @@ import javafx.beans.property.SimpleStringProperty;
 public class Visitor implements Serializable{
 	private SimpleStringProperty id;
 
-	public Visitor(SimpleStringProperty id) {
-		this.id = id;
+	public Visitor(String id) {
+		this.id=new SimpleStringProperty(id);
 	}
 
 	public SimpleStringProperty getId() {

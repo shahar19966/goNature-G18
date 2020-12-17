@@ -1,6 +1,7 @@
 package client;
 import java.io.IOException;
 
+import gui.GUIControl;
 import message.ClientMessage;
 import message.ClientMessageType;
 import message.ServerMessage;
@@ -35,6 +36,7 @@ public class GoNatureClient extends AbstractClient {
 	   * This method handles all data that comes in from the server.
 	   *
 	   * @param msg The message from the server.
+	 * @throws Exception 
 	   */
 	  public void handleMessageFromServer(Object msg) 
 	  {
@@ -42,6 +44,9 @@ public class GoNatureClient extends AbstractClient {
 		  if(msg instanceof ServerMessage) {
 			  ServerMessage serverMsg=(ServerMessage)msg;
 			  switch(serverMsg.getType()) {
+			  case LOGIN:
+				  GUIControl.setServerMsg(serverMsg);
+				  break;
 			  
 			  }
 		  }

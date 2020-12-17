@@ -22,6 +22,7 @@ public class ClientMain extends Application {
 			client=new GoNatureClient("localhost",DEFAULT_PORT);
 			GUIControl guiControl=new GUIControl();
 			guiControl.setClient(client);
+			guiControl.setStage(primaryStage);
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/LoginPage.fxml"));
 			AnchorPane root = fxmlLoader.load();
 			mainController = (LoginPageController)fxmlLoader.getController();
