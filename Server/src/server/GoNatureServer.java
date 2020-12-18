@@ -3,6 +3,8 @@
 // license found at www.lloseng.com 
 package server;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import application.ServerMain;
 import message.ClientMessage;
@@ -40,9 +42,10 @@ public class GoNatureServer extends AbstractServer {
 	 * 
 	 */
 	private MySQLConnection goNatureDB;
-
+	private ArrayList<Object> userList;
 	public GoNatureServer(int port) {
 		super(port);
+		userList=new ArrayList<>();
 	}
 
 	// Instance methods ****************
@@ -61,19 +64,33 @@ public class GoNatureServer extends AbstractServer {
 			ClientMessage clientMsg=(ClientMessage)msg;
 			switch(clientMsg.getType()) {
 			case DISCONNECTED:
+				if(clientMsg.getMessage()!=null)
+					userList.remove(clientMsg.getMessage());
 				ServerMain.guiController.disconnectClient(client);
 				break;
 			case VALIDATE_VISITOR:
 				returnVal=MySQLConnection.validateVisitor((String)(clientMsg.getMessage()));
 				type=ServerMessageType.LOGIN;
+				if(userList.contains(returnVal)) //user already logged in
+					returnVal="logged in";
+				else if(returnVal!=null) //user isn't already logged in and was found in the database
+					userList.add(returnVal);
 				break;
 			case VALIDATE_SUBSCRIBER:
 				returnVal=MySQLConnection.validateSubscriber((String)(clientMsg.getMessage()));
 				type=ServerMessageType.LOGIN;
+				if(userList.contains(returnVal))
+					returnVal="logged in";
+				else if(returnVal!=null)
+					userList.add(returnVal);
 				break;
 			case VALIDATE_EMPLOYEE:
 				returnVal=MySQLConnection.validateEmployee((String[])(clientMsg.getMessage()));
 				type=ServerMessageType.LOGIN;
+				if(userList.contains(returnVal))
+					returnVal="logged in";
+				else if(returnVal!=null)
+					userList.add(returnVal);
 				break;
 			case CONNECTION:
 				break;
