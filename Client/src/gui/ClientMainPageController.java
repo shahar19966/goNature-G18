@@ -1,8 +1,11 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import entity.Employee;
@@ -10,12 +13,14 @@ import entity.Subscriber;
 import entity.Visitor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class ClientMainPageController implements Initializable  {
@@ -25,7 +30,7 @@ public class ClientMainPageController implements Initializable  {
     private AnchorPane enableDisablePane;
 
     @FXML
-    private AnchorPane fillPane;
+    private AnchorPane switchPane;
 
     @FXML
     private VBox buttonVBox;
@@ -61,21 +66,6 @@ public class ClientMainPageController implements Initializable  {
     private Label mainLabel;
 
     @FXML
-    private VBox alertPane;
-
-    @FXML
-    private Label alertTitle;
-
-    @FXML
-    private ScrollPane alertDesPane;
-
-    @FXML
-    private AnchorPane alertBody;
-
-    @FXML
-    private HBox alertButtons;
-
-    @FXML
     private Button homeBtn;
 
     @FXML
@@ -98,7 +88,7 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     void homeBtnClick(ActionEvent event) {
-
+    	setSwitchPane(panesMap.get("home"));
     }
 
     @FXML
@@ -135,17 +125,22 @@ public class ClientMainPageController implements Initializable  {
     void reportsBtnClick(ActionEvent event) {
 
     }
+	private Map<String, Pane> panesMap;
     public void setUser(Object user) {
     	this.user=user;
     	if(user instanceof Visitor) {
     		setVisitorAndSubscriberButtons(btnList);
+    		loadVisitorScreens();
     	}
     	else if(user instanceof Subscriber) {
     		setVisitorAndSubscriberButtons(btnList);
+    		loadSubscriberScreens();
     	}
     	else { //employee
     		setEmployeeButtons(btnList);
+    		loadEmployeeScreens();
     	}
+    	setSwitchPane(panesMap.get("home"));
     }
     private void setBtnList(List<Button> list) {
     	list.add(orderBtn);
@@ -192,12 +187,61 @@ public class ClientMainPageController implements Initializable  {
     		b.setManaged(false);
     	}
     }
-
+	public void setSwitchPane(Pane toSwitch) {
+		switchPane.getChildren().clear();
+		switchPane.getChildren().add(toSwitch);
+		AnchorPane.setLeftAnchor(toSwitch, 20.0);
+		AnchorPane.setRightAnchor(toSwitch, 20.0);
+		AnchorPane.setBottomAnchor(toSwitch, 10.0);
+		AnchorPane.setTopAnchor(toSwitch, 0.0);
+	}
+	private void loadVisitorScreens() {
+		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(ClientConstants.Screens.VISITOR_MAIN_PAGE.toString()));
+		System.out.println(ClientConstants.Screens.VISITOR_MAIN_PAGE.toString());
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		VisitorHomePageController vmpc=fxmlLoader1.getController();
+		vmpc.setId(((Visitor)user).getId().getValue());
+		panesMap.put("home",root );
+	}
+	private void loadSubscriberScreens() {
+		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(
+				user instanceof Subscriber?ClientConstants.Screens.SUBSCRIBER_MAIN_PAGE.toString():
+					ClientConstants.Screens.GUIDE_MAIN_PAGE.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		panesMap.put("home",root );
+	}
+	private void loadEmployeeScreens() {
+		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(ClientConstants.Screens.EMPLOYEE_MAIN_PAGE.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		panesMap.put("home",root );
+	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		btnList=new ArrayList<>();
 		setBtnList(btnList);
+		panesMap = new HashMap<String, Pane>();
 	}
+
+			
+
 
 }

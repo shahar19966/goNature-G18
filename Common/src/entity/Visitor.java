@@ -18,6 +18,4 @@ public class Visitor implements Serializable{
 	public void setId(SimpleStringProperty id) {
 		this.id = id;
 	}
-
-
 }

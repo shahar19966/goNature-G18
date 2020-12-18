@@ -48,7 +48,6 @@ public abstract class Person implements Serializable {
 	public SimpleStringProperty getLastNameProperty() {
 		return lastName;
 	}
-
 	@Override
 	public String toString() {
 		return id.getValue() + " " + firstName.getValue() + " " + lastName.getValue();

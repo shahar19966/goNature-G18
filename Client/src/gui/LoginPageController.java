@@ -59,23 +59,28 @@ public class LoginPageController {
     		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/ClientMainPage.fxml"));
     		AnchorPane root = fxmlLoader.load();
     		ClientMainPageController cmpc = (ClientMainPageController)fxmlLoader.getController();
+    		//setUser needs to be called on the user that DB returned
     		cmpc.setUser(new Visitor("123"));
 			Scene scene = new Scene (root);
 			primaryStage.setScene(scene);
 			primaryStage.show();
     	}
+    	else
+    		GUIControl.popUpError("Invalid information,please try again");
     
     }
 
     @FXML
     void setEmployee(ActionEvent event) {
     	passwordTextField.setVisible(true);
+    	passwordTextField.setText("");
     	subscriberBtn.setSelected(false);
     	idBtn.setSelected(false);
     }
 
     @FXML
     void setId(ActionEvent event) {
+    	idTextField.setText("");
     	passwordTextField.setVisible(false);
     	subscriberBtn.setSelected(false);
     	employeeBtn.setSelected(false);
@@ -83,6 +88,7 @@ public class LoginPageController {
 
     @FXML
     void setSubscriber(ActionEvent event) {
+    	idTextField.setText("");
     	passwordTextField.setVisible(false);
     	idBtn.setSelected(false);
     	employeeBtn.setSelected(false);
@@ -102,7 +108,6 @@ public class LoginPageController {
     	if(GUIControl.getServerMsg().getMessage()==null)
     		return false;
     	return true;
-
     }
 
 }

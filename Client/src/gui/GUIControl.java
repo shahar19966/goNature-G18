@@ -1,6 +1,11 @@
 package gui;
 
 import client.GoNatureClient;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import message.ServerMessage;
 
@@ -31,4 +36,14 @@ public class GUIControl {
 	public static ServerMessage getServerMsg() {
 		return serverMsg;
 	}
+	public static void popUpError(String msg) {
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("");
+			alert.setContentText(msg);
+			alert.showAndWait();
+		});
+	}
+
 }
