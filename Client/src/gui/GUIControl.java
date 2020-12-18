@@ -4,14 +4,15 @@ import client.GoNatureClient;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import message.ClientMessage;
+import message.ClientMessageType;
 import message.ServerMessage;
 
 public class GUIControl {
 //	private static GUIControl instance=new GUIControl();
 	private static  GoNatureClient client;
+	private static Object currentUser;
 	private static Stage primaryStage;
 	private static ServerMessage serverMsg;
 //	private GUIControl() {}
@@ -35,6 +36,13 @@ public class GUIControl {
 	}
 	public static ServerMessage getServerMsg() {
 		return serverMsg;
+	}
+	public static void setUser(Object user) {
+		currentUser=user;
+	}
+	public static void logOut() {
+		ClientMessage cMsg=new ClientMessage(ClientMessageType.DISCONNECTED,currentUser);
+		sendToServer(cMsg);
 	}
 	public static void popUpError(String msg) {
 		Platform.runLater(() -> {

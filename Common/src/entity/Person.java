@@ -5,10 +5,10 @@ import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 
 public abstract class Person implements Serializable {
-	private SimpleStringProperty firstName;
-	private SimpleStringProperty lastName;
-	private SimpleStringProperty id;
-	private SimpleStringProperty email;
+	protected SimpleStringProperty firstName;
+	protected SimpleStringProperty lastName;
+	protected SimpleStringProperty id;
+	protected SimpleStringProperty email;
 
 	public Person(String id, String firstName, String lastName ,String email) {
 		this.id = new SimpleStringProperty(id);

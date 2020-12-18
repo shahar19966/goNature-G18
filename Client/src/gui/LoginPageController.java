@@ -61,13 +61,14 @@ public class LoginPageController {
     		ClientMainPageController cmpc = (ClientMainPageController)fxmlLoader.getController();
     		//setUser needs to be called on the user that DB returned
     		cmpc.setUser(new Visitor("123"));
+    	//	GUIControl.setUser(user);
 			Scene scene = new Scene (root);
 			primaryStage.setScene(scene);
+			primaryStage.setOnCloseRequest(e->{
+				GUIControl.logOut();
+			});
 			primaryStage.show();
-    	}
-    	else
-    		GUIControl.popUpError("Invalid information,please try again");
-    
+    	}   
     }
 
     @FXML
@@ -105,8 +106,15 @@ public class LoginPageController {
     	}
     	else {};
     	GUIControl.sendToServer(msg);
-    	if(GUIControl.getServerMsg().getMessage()==null)
+    	if(GUIControl.getServerMsg().getMessage()==null) {
+    		GUIControl.popUpError("Invalid information,please try again");
     		return false;
+    	}
+    	else if(GUIControl.getServerMsg().getMessage().equals("logged in")) {
+    		GUIControl.popUpError("This user is already logged in");
+    		return false;
+    	}
+    		
     	return true;
     }
 
