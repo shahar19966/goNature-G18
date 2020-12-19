@@ -98,8 +98,16 @@ public class LoginPageController {
     }
     private boolean validateLogin() {
     	ClientMessage msg=null;
+    	if(idTextField.getText().isEmpty()) {
+    		GUIControl.popUpError("Empty identification field\nPlease choose your desired identification and fill in your credentials");
+			return false;
+    	}
+    	if( !idTextField.getText().matches("[0-9]+")) {
+    		GUIControl.popUpError("Invalid credentials!\nOnly digits are permitted");
+			return false;
+    	}
     	if(idBtn.isSelected()) { 
-    		if(idTextField.getText().length()!=9 || !idTextField.getText().matches("[0-9]+")) {
+    		if(idTextField.getText().length()!=9) {
     			GUIControl.popUpError("ID must consist of 9 digits");
     			return false;
     		}	
@@ -108,6 +116,10 @@ public class LoginPageController {
     	else if(subscriberBtn.isSelected())
     		msg=new ClientMessage(ClientMessageType.LOGIN_SUBSCRIBER,idTextField.getText());
     	else if(employeeBtn.isSelected()) {
+    		if(passwordTextField.getText().isEmpty()) {
+    			GUIControl.popUpError("Empty password field\nPlease fill in your password");
+    			return false;
+    		}
     		String[] idAndPassword={idTextField.getText(),passwordTextField.getText()};
     		msg=new ClientMessage(ClientMessageType.LOGIN_EMPLOYEE,idAndPassword);
     	}
