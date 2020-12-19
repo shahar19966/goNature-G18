@@ -2,55 +2,87 @@ package gui;
 
 import client.GoNatureClient;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
 import message.ServerMessage;
 
 public class GUIControl {
-//	private static GUIControl instance=new GUIControl();
-	private static  GoNatureClient client;
-	private static Object currentUser;
-	private static Stage primaryStage;
-	private static ServerMessage serverMsg;
-//	private GUIControl() {}
-//	public static GUIControl getInstance() {
-//		return instance;
-//	}
-	public void setClient(GoNatureClient client) {
+	private static GUIControl instance=new GUIControl();
+	private  GoNatureClient client;
+	private  Object currentUser;
+	private  Stage primaryStage;
+	private  ServerMessage serverMsg;
+	private GUIControl() {}
+	public static GUIControl getInstance() {
+		return instance;
+	}
+	public  void setClient(GoNatureClient client) {
 		this.client=client;
 	}
-	public void setStage(Stage stage) {
+	public  void setStage(Stage stage) {
 		primaryStage=stage;
 	}
-	public static Stage getStage() {
+	public Stage getStage() {
 		return primaryStage;
 	}
-	public static void sendToServer(Object msg) {
+	public void sendToServer(Object msg) {
 		client.handleMessageFromClientUI(msg);
 	}
-	public static void setServerMsg(Object msg) {
+	public void setServerMsg(Object msg) {
 		serverMsg=(ServerMessage)msg;
 	}
-	public static ServerMessage getServerMsg() {
+	public ServerMessage getServerMsg() {
 		return serverMsg;
 	}
-	public static void setUser(Object user) {
+	public void setUser(Object user) {
 		currentUser=user;
 	}
-	public static Object getUser() {
+	public Object getUser() {
 		return currentUser;
 	}
-	public static void logOut() {
+	public void disconnect() {
 		ClientMessage cMsg=new ClientMessage(ClientMessageType.DISCONNECTED,currentUser);
 		sendToServer(cMsg);
+	}
+	public void logOut() {
+		ClientMessage cMsg=new ClientMessage(ClientMessageType.LOGOUT,currentUser);
+		sendToServer(cMsg);
+	}
+	public void openLogInPage() {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(ClientConstants.Screens.LOGIN_PAGE.toString()));
+			AnchorPane root = fxmlLoader.load();
+			Scene scene = new Scene (root);
+			primaryStage.setTitle("goNature");
+			primaryStage.setScene(scene);
+			primaryStage.setOnCloseRequest(e->{
+				ClientMessage msg=new ClientMessage(ClientMessageType.DISCONNECTED,null);
+				client.handleMessageFromClientUI(msg);
+			});
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	public static void popUpError(String msg) {
 		Platform.runLater(() -> {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
+			alert.setHeaderText("");
+			alert.setContentText(msg);
+			alert.showAndWait();
+		});
+	}
+	public static void popUpMessage(String msg) {
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Message");
 			alert.setHeaderText("");
 			alert.setContentText(msg);
 			alert.showAndWait();

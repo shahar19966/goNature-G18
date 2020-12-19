@@ -15,6 +15,7 @@ public class GoNatureClient extends AbstractClient {
 	   * the display method in the client.
 	   */
 	  public static boolean awaitResponse = false;
+	  private GUIControl guiControl=GUIControl.getInstance();
 
 	  //Constructors ****************************************************
 	  
@@ -46,7 +47,14 @@ public class GoNatureClient extends AbstractClient {
 			  ServerMessage serverMsg=(ServerMessage)msg;
 			  switch(serverMsg.getType()) {
 			  case LOGIN:
-				  GUIControl.setServerMsg(serverMsg);
+				  guiControl.setServerMsg(serverMsg);
+				  break;
+			  case SERVER_ERROR:
+				  GUIControl.popUpError("Server encountered an error!");
+				  guiControl.setServerMsg(serverMsg);
+				  break;
+			  case LOGOUT_SUCCESS:
+				  GUIControl.popUpMessage("Logged out");
 				  break;
 			  
 			  }

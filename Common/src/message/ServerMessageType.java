@@ -2,6 +2,7 @@ package message;
 
 public enum ServerMessageType {
 	LOGIN,
+	LOGOUT_SUCCESS,
 	AVAILABLE_DATES,
 	PARK_VISITATION_REPORT,
 	PARK_CAPACITY_REPORT,

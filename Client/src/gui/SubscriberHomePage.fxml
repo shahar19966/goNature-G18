@@ -3,72 +3,126 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="232.0" prefWidth="434.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SubscriberHomePageController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="33.0" layoutY="95.0" onMouseClicked="#setId" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="ID:" textAlignment="CENTER">
-         <font>
-            <Font size="40.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Label>
-      <Label layoutX="60.0" layoutY="100.0" prefHeight="21.0" prefWidth="35.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="135.0" layoutY="14.0" onMouseClicked="#setSubscriber" prefHeight="21.0" prefWidth="158.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 40;" text="Hello ," textAlignment="CENTER">
-         <font>
-            <Font size="40.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="33.0" layoutY="72.0" onMouseClicked="#setId" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Subscription Number:" textAlignment="CENTER">
-         <font>
-            <Font size="40.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Label>
-      <Label layoutX="214.0" layoutY="77.0" prefHeight="21.0" prefWidth="35.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="121.0" onMouseClicked="#setId" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="First Name:" textAlignment="CENTER">
-         <font>
-            <Font size="40.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="145.0" onMouseClicked="#setId" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Last Name:" textAlignment="CENTER">
-         <font>
-            <Font size="40.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="175.0" onMouseClicked="#setId" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Email:" textAlignment="CENTER">
-         <font>
-            <Font size="40.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Label>
-      <Label layoutX="151.0" layoutY="126.0" prefHeight="21.0" prefWidth="35.0" />
-      <Label layoutX="144.0" layoutY="150.0" prefHeight="21.0" prefWidth="35.0" />
-      <Label layoutX="95.0" layoutY="180.0" prefHeight="21.0" prefWidth="35.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="201.0" onMouseClicked="#setId" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Number of members" textAlignment="CENTER">
-         <font>
-            <Font size="40.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Label>
-      <Label layoutX="249.0" layoutY="208.0" prefHeight="21.0" prefWidth="35.0" />
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="434.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="100.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="ID:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label fx:id="idLabel" layoutX="60.0" layoutY="100.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="135.0" layoutY="14.0" prefHeight="21.0" prefWidth="158.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 40;" text="Hello ," textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="70.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Subscription Number:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label fx:id="subNumLabel" layoutX="245.0" layoutY="70.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="130.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="First Name:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="190.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Last Name:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="160.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Phone:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="220.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Email:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label fx:id="firstNameLabel" layoutX="151.0" layoutY="130.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="lastNameLabel" layoutX="144.0" layoutY="190.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="emailLabel" layoutX="95.0" layoutY="220.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="250.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Family Members:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label fx:id="familyMembersLabel" layoutX="211.0" layoutY="250.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="280.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Registered Guide:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label fx:id="isGuideLabel" layoutX="221.0" layoutY="280.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="phoneLabel" layoutX="105.0" layoutY="160.0">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</VBox>

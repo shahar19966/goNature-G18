@@ -20,7 +20,7 @@ import message.ClientMessage;
 import message.ClientMessageType;
 
 public class LoginPageController {
-
+	GUIControl guiControl=GUIControl.getInstance();
     @FXML
     private AnchorPane enableDisablePane;
 
@@ -54,18 +54,16 @@ public class LoginPageController {
     @FXML
     void loginFunc(ActionEvent event) throws IOException {
     	if(validateLogin()) {
-    		Stage primaryStage=GUIControl.getStage();
+    		Stage primaryStage=guiControl.getStage();
     		primaryStage.hide();
     		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/ClientMainPage.fxml"));
     		AnchorPane root = fxmlLoader.load();
     		ClientMainPageController cmpc = (ClientMainPageController)fxmlLoader.getController();
-    		//setUser needs to be called on the user that DB returned
-    		cmpc.setUser(GUIControl.getUser());
-    	//	GUIControl.setUser(user);
+    		cmpc.setUser(guiControl.getUser());
 			Scene scene = new Scene (root);
 			primaryStage.setScene(scene);
 			primaryStage.setOnCloseRequest(e->{
-				GUIControl.logOut();
+				guiControl.disconnect();
 			});
 			primaryStage.show();
     	}   
@@ -100,8 +98,13 @@ public class LoginPageController {
     }
     private boolean validateLogin() {
     	ClientMessage msg=null;
-    	if(idBtn.isSelected()) 
+    	if(idBtn.isSelected()) { 
+    		if(idTextField.getText().length()!=9 || !idTextField.getText().matches("[0-9]+")) {
+    			GUIControl.popUpError("ID must consist of 9 digits");
+    			return false;
+    		}	
     		msg=new ClientMessage(ClientMessageType.LOGIN_VISITOR,idTextField.getText());
+    	}
     	else if(subscriberBtn.isSelected())
     		msg=new ClientMessage(ClientMessageType.LOGIN_SUBSCRIBER,idTextField.getText());
     	else if(employeeBtn.isSelected()) {
@@ -109,16 +112,16 @@ public class LoginPageController {
     		msg=new ClientMessage(ClientMessageType.LOGIN_EMPLOYEE,idAndPassword);
     	}
     	else {};
-    	GUIControl.sendToServer(msg);
-    	if(GUIControl.getServerMsg().getMessage()==null) {
+    	guiControl.sendToServer(msg);
+    	if(guiControl.getServerMsg().getMessage()==null) {
     		GUIControl.popUpError("Invalid information,please try again");
     		return false;
     	}
-    	else if(GUIControl.getServerMsg().getMessage().equals("logged in")) {
+    	else if(guiControl.getServerMsg().getMessage().equals("logged in")) {
     		GUIControl.popUpError("This user is already logged in");
     		return false;
     	}
-    	GUIControl.setUser(GUIControl.getServerMsg().getMessage());	
+    	guiControl.setUser(guiControl.getServerMsg().getMessage());	
     	return true;
     }
 
