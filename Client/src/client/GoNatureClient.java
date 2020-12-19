@@ -1,6 +1,7 @@
 package client;
 import java.io.IOException;
 
+import entity.Employee;
 import gui.GUIControl;
 import message.ClientMessage;
 import message.ClientMessageType;

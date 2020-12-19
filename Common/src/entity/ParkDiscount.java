@@ -1,110 +1,62 @@
 package entity;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 public class ParkDiscount {
-	private SimpleStringProperty discountParkNumber;
-	private SimpleStringProperty parkName;
-	private SimpleStringProperty startDate;
-	private SimpleStringProperty finishDate;
-	private SimpleIntegerProperty discountAmount;
-	private SimpleStringProperty discountStatus;
-	private SimpleStringProperty employeeNumber;
+	private String parkName;
+	private String startDate;
+	private String finishDate;
+	private int discountAmount;
+	private String discountStatus;
 
-	public ParkDiscount(String discountParkNumber, String parkName, String startDate, String finishDate,
+	public ParkDiscount(String parkName, String startDate, String finishDate,
 			int discountAmount, String discountStatus, String employeeNumber) {
-		this.discountParkNumber = new SimpleStringProperty(discountParkNumber);
-		this.parkName = new SimpleStringProperty(parkName);
-		this.startDate = new SimpleStringProperty(startDate);
-		this.finishDate = new SimpleStringProperty(finishDate);
-		this.discountAmount = new SimpleIntegerProperty(discountAmount);
-		this.discountStatus = new SimpleStringProperty(discountStatus);
-		this.employeeNumber = new SimpleStringProperty(employeeNumber);
-	}
-
-	public String getDiscountParkNumber() {
-		return discountParkNumber.getValue();
-	}
-
-	public SimpleStringProperty getDiscountParkNumberProperty() {
-		return discountParkNumber;
-	}
-
-	public void setDiscountParkNumber(String discountParkNumber) {
-		this.discountParkNumber.set(discountParkNumber);
+		this.parkName = parkName;
+		this.startDate = startDate;
+		this.finishDate = finishDate;
+		this.discountAmount = discountAmount;
+		this.discountStatus = discountStatus;
 	}
 
 	public String getParkName() {
-		return parkName.getValue();
-	}
-
-	public SimpleStringProperty getParkNameProperty() {
 		return parkName;
 	}
 
+
 	public void setParkName(String parkName) {
-		this.parkName.set(parkName);
+		this.parkName=parkName;
 	}
 
 	public String getStartDate() {
-		return startDate.getValue();
-	}
-
-	public SimpleStringProperty getStartDateProperty() {
 		return startDate;
 	}
 
 	public void setStartDate(String startDate) {
-		this.startDate.set(startDate);
+		this.startDate=startDate;
 	}
 
 	public String getFinishDate() {
-		return finishDate.getValue();
-	}
-
-	public SimpleStringProperty getFinishDateProperty() {
 		return finishDate;
 	}
 
 	public void setFinishDate(String finishDate) {
-		this.finishDate.set(finishDate);
+		this.finishDate=finishDate;
 	}
 
 	public int getDiscountAmount() {
-		return discountAmount.getValue();
-	}
-
-	public SimpleIntegerProperty getDiscountAmountProperty() {
 		return discountAmount;
 	}
 
+
 	public void setDiscountAmount(int discountAmount) {
-		this.discountAmount.set(discountAmount);
+		this.discountAmount=discountAmount;
 	}
 
 	public String getDiscountStatus() {
-		return discountStatus.getValue();
-	}
-
-	public SimpleStringProperty getDiscountStatusProperty() {
 		return discountStatus;
 	}
 
+
 	public void setDiscountStatus(String discountStatus) {
-		this.discountStatus.set(discountStatus);
-	}
-
-	public String getFmployeeNumber() {
-		return employeeNumber.getValue();
-	}
-
-	public SimpleStringProperty getEmployeeNumberProperty() {
-		return employeeNumber;
-	}
-
-	public void setEmployeeNumber(String employeeNumber) {
-		this.employeeNumber.set(employeeNumber);
+		this.discountStatus=discountStatus;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.ServerMain;
+import entity.Employee;
 import message.ClientMessage;
 import message.ServerMessage;
 import message.ServerMessageType;
@@ -60,42 +61,47 @@ public class GoNatureServer extends AbstractServer {
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		Object returnVal=null;
 		ServerMessageType type=null;
-		if(msg instanceof ClientMessage) {
-			ClientMessage clientMsg=(ClientMessage)msg;
-			switch(clientMsg.getType()) {
-			case DISCONNECTED:
-				if(clientMsg.getMessage()!=null)
-					userList.remove(clientMsg.getMessage());
-				ServerMain.guiController.disconnectClient(client);
-				break;
-			case VALIDATE_VISITOR:
-				returnVal=MySQLConnection.validateVisitor((String)(clientMsg.getMessage()));
-				type=ServerMessageType.LOGIN;
-				if(userList.contains(returnVal)) //user already logged in
-					returnVal="logged in";
-				else if(returnVal!=null) //user isn't already logged in and was found in the database
-					userList.add(returnVal);
-				break;
-			case VALIDATE_SUBSCRIBER:
-				returnVal=MySQLConnection.validateSubscriber((String)(clientMsg.getMessage()));
-				type=ServerMessageType.LOGIN;
-				if(userList.contains(returnVal))
-					returnVal="logged in";
-				else if(returnVal!=null)
-					userList.add(returnVal);
-				break;
-			case VALIDATE_EMPLOYEE:
-				returnVal=MySQLConnection.validateEmployee((String[])(clientMsg.getMessage()));
-				type=ServerMessageType.LOGIN;
-				if(userList.contains(returnVal))
-					returnVal="logged in";
-				else if(returnVal!=null)
-					userList.add(returnVal);
-				break;
-			case CONNECTION:
-				break;
-			}		
-		}
+		try {
+			if(msg instanceof ClientMessage) {
+				ClientMessage clientMsg=(ClientMessage)msg;
+				switch(clientMsg.getType()) {
+				case DISCONNECTED:
+					if(clientMsg.getMessage()!=null)
+						userList.remove(clientMsg.getMessage());
+					ServerMain.guiController.disconnectClient(client);
+					break;
+				case LOGIN_VISITOR:
+					returnVal=MySQLConnection.validateVisitor((String)(clientMsg.getMessage()));
+					type=ServerMessageType.LOGIN;
+					if(userList.contains(returnVal)) //user already logged in
+						returnVal="logged in";
+					else if(returnVal!=null) //user isn't already logged in and was found in the database
+						userList.add(returnVal);
+					break;
+				case LOGIN_SUBSCRIBER:
+					returnVal=MySQLConnection.validateSubscriber((String)(clientMsg.getMessage()));
+					type=ServerMessageType.LOGIN;
+					if(userList.contains(returnVal))
+						returnVal="logged in";
+					else if(returnVal!=null)
+						userList.add(returnVal);
+					break;
+				case LOGIN_EMPLOYEE:
+					returnVal=MySQLConnection.validateEmployee((String[])(clientMsg.getMessage()));
+					type=ServerMessageType.LOGIN;
+					if(userList.contains(returnVal))
+						returnVal="logged in";
+					else if(returnVal!=null)
+						userList.add(returnVal);
+					break;
+				case CONNECTION:
+					break;
+				}		
+			}
+		}catch(Exception e) {try {
+			client.sendToClient(new ServerMessage(ServerMessageType.SERVER_ERROR,null));
+		} catch (IOException e1) {}}
+		
 		System.out.println("Message received: " + msg+ " from " + client);
 		try {
 			client.sendToClient(new ServerMessage(type,returnVal));

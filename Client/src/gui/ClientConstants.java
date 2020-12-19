@@ -2,7 +2,7 @@ package gui;
 
 public class ClientConstants {
 	public enum Screens{
-		VISITOR_MAIN_PAGE("/gui/VisitorMainPage.fxml"),
+		VISITOR_MAIN_PAGE("/gui/VisitorHomePage.fxml"),
 		SUBSCRIBER_MAIN_PAGE("/gui/SubscriberHomePage.fxml"),
 		GUIDE_MAIN_PAGE("/gui/GuideHomePage.fxml"),
 		EMPLOYEE_MAIN_PAGE("/gui/EmployeeHomePage.fxml");

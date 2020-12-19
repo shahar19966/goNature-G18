@@ -40,6 +40,9 @@ public class GUIControl {
 	public static void setUser(Object user) {
 		currentUser=user;
 	}
+	public static Object getUser() {
+		return currentUser;
+	}
 	public static void logOut() {
 		ClientMessage cMsg=new ClientMessage(ClientMessageType.DISCONNECTED,currentUser);
 		sendToServer(cMsg);

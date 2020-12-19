@@ -2,7 +2,14 @@ package mysql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import entity.Employee;
+import entity.EntityConstants;
+import entity.Subscriber;
+import entity.Visitor;
 
 public class MySQLConnection {
 	private static Connection con;
@@ -19,7 +26,7 @@ public class MySQLConnection {
         
         try 
         {
-        	con = DriverManager.getConnection("jdbc:mysql://db4free.net:3306/gonatue_team18?serverTimezone=IST", "gonature", "goNatureTeam!8");
+        	con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/S7BzDq6Xs6?serverTimezone=IST", "S7BzDq6Xs6", "puC0UgMgeM");
             System.out.println("SQL connection succeed");
      	} catch (SQLException ex) 
      	    {/* handle any errors*/
@@ -28,13 +35,36 @@ public class MySQLConnection {
             System.out.println("VendorError: " + ex.getErrorCode());
             }
    	}
-	public static boolean validateVisitor(String id) {
-		return true;
+	public static Visitor validateVisitor(String id) throws SQLException {
+		PreparedStatement logInPreparedStatement;
+		logInPreparedStatement = con.prepareStatement("SELECT * FROM visitor where id=? LIMIT 1;");
+		logInPreparedStatement.setString(1, id);
+		ResultSet rs = logInPreparedStatement.executeQuery();
+		if (rs.next()) {
+			return new Visitor(rs.getString(1));
+		}
+		return null;
 	}
-	public static boolean validateSubscriber(String id) {
-		return true;
+	public static Subscriber validateSubscriber(String subNum) throws SQLException {
+		PreparedStatement logInPreparedStatement;
+		logInPreparedStatement = con.prepareStatement("SELECT * FROM subscriber where subNum=? LIMIT 1;");
+		logInPreparedStatement.setString(1, subNum);
+		ResultSet rs = logInPreparedStatement.executeQuery();
+		if (rs.next()) {
+			return new Subscriber(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),rs.getString(6),
+					Integer.parseInt(rs.getString(7)),rs.getString(8),Boolean.parseBoolean(rs.getString(9)));
+		}
+		return null;
 	}
-	public static boolean validateEmployee(String[] idAndPassword) {
-		return true;
+	public static Employee validateEmployee(String[] idAndPassword) throws SQLException {
+		PreparedStatement logInPreparedStatement;
+		logInPreparedStatement = con.prepareStatement("SELECT * FROM employee where employeeNum=? AND password=? LIMIT 1;");
+		logInPreparedStatement.setString(1, idAndPassword[0]);
+		logInPreparedStatement.setString(2, idAndPassword[1]);
+		ResultSet rs = logInPreparedStatement.executeQuery();
+		if (rs.next()) {
+			return new Employee(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),EntityConstants.EmployeeRole.valueOf(rs.getString(6)),rs.getString(8));
+		}
+		return null;
 	}
 }

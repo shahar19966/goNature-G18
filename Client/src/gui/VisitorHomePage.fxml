@@ -18,7 +18,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Label>
-            <Label fx:id="idLabel" layoutX="60.0" layoutY="100.0" prefHeight="21.0" prefWidth="35.0">
+            <Label fx:id="idLabel" layoutX="60.0" layoutY="100.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>

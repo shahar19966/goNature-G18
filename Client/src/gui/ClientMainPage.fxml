@@ -68,7 +68,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="requestsBtn" alignment="BOTTOM_CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#reguestsBtnClick" prefHeight="80.0" prefWidth="140.0" styleClass="homePageBtn" text="Requests">
+                        <Button fx:id="requestsBtn" alignment="BOTTOM_CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#requestsBtnClick" prefHeight="80.0" prefWidth="140.0" styleClass="homePageBtn" text="Requests">
                            <graphic>
                               <ImageView fitHeight="44.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

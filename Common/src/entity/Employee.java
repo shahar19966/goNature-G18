@@ -1,39 +1,37 @@
 package entity;
 
-import javafx.beans.property.SimpleStringProperty;
+import java.io.Serializable;
 
-public class Employee extends Person {
-	private SimpleStringProperty employeeNumber;
+public class Employee extends Person implements Serializable {
+
+	private String employeeNumber;
 	private EntityConstants.EmployeeRole role;
+	private String parkName;
 
-	public Employee(String employeeNumber, String id, String firstName, String lastName, String email, EntityConstants.EmployeeRole role) {
+	public Employee(String employeeNumber, String id, String firstName, String lastName, String email, EntityConstants.EmployeeRole role,String parkName) {
 		super(id, firstName, lastName,email);
 		this.role = role;
-		this.employeeNumber = new SimpleStringProperty(employeeNumber);
+		this.employeeNumber = employeeNumber;
+		this.parkName=parkName;
 	}
 
 	@Override
 	public String toString() {
-		return ("Employee " + employeeNumber.getValue() + " " + super.toString() + " " + getEmail() + " "
+		return ("Employee " + employeeNumber + " " + super.toString() + " " + getEmail() + " "
 				+ role);
 	}
 
+
 	public String getEmployeeNumber() {
-		return employeeNumber.getValue();
+		return employeeNumber;
 	}
 
 
 	public String getRole() {
 		return role.toString();
 	}
-
-	public SimpleStringProperty getEmployeeNumberProperty() {
-		return employeeNumber;
-	}
-
-
-	public void setEmail(String newEmail) {
-		getEmailProperty().set(newEmail);
+	public String getParkName() {
+		return parkName;
 	}
 
 	public EntityConstants.EmployeeRole getRoleEnum() {
@@ -43,7 +41,7 @@ public class Employee extends Person {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.getValue().hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -59,7 +57,7 @@ public class Employee extends Person {
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.getValue().equals(other.id.getValue()))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
