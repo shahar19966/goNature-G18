@@ -2,6 +2,7 @@ package message;
 
 public enum ClientMessageType {
 	DISCONNECTED,
+	LOGOUT,
 	CONNECTION,
 	LOGIN_VISITOR,
 	LOGIN_SUBSCRIBER,

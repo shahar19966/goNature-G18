@@ -70,6 +70,12 @@ public class GoNatureServer extends AbstractServer {
 						userList.remove(clientMsg.getMessage());
 					ServerMain.guiController.disconnectClient(client);
 					break;
+				case LOGOUT:
+					if(clientMsg.getMessage()!=null)
+						userList.remove(clientMsg.getMessage());
+					returnVal=null;
+					type=ServerMessageType.LOGOUT_SUCCESS;
+					break;
 				case LOGIN_VISITOR:
 					returnVal=MySQLConnection.validateVisitor((String)(clientMsg.getMessage()));
 					type=ServerMessageType.LOGIN;
@@ -100,6 +106,7 @@ public class GoNatureServer extends AbstractServer {
 			}
 		}catch(Exception e) {try {
 			client.sendToClient(new ServerMessage(ServerMessageType.SERVER_ERROR,null));
+			e.printStackTrace();
 		} catch (IOException e1) {}}
 		
 		System.out.println("Message received: " + msg+ " from " + client);

@@ -18,6 +18,10 @@ public class Visitor implements Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
+	@Override
+	public String toString() {
+		return "Visitor "+ id;
+	}
 
 	@Override
 	public int hashCode() {

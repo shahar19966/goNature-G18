@@ -9,6 +9,7 @@ public class Subscriber extends Person {
 	public Subscriber(String subscriberNumber, String id, String firstName, String lastName, String phone, String mail,
 			int subscriberFamilyMembers, String subscriberCardDetails,boolean isGuide) {
 		super(id, firstName, lastName, mail);
+		this.phone=phone;
 		this.subscriberCardDetails = subscriberCardDetails;
 		this.subscriberFamilyMembers =subscriberFamilyMembers;
 		this.subscriberNumber = subscriberNumber;
@@ -32,6 +33,9 @@ public class Subscriber extends Person {
 
 	public String getSubscriberCardDetails() {
 		return subscriberCardDetails;
+	}
+	public String getPhone() {
+		return phone;
 	}
 
 

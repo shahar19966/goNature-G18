@@ -1,5 +1,7 @@
 package application;
 	
+import java.io.IOException;
+
 import client.GoNatureClient;
 import gui.GUIControl;
 import gui.LoginPageController;
@@ -15,28 +17,18 @@ import message.ClientMessageType;
 public class ClientMain extends Application {
 	private final int DEFAULT_PORT=5555;
 	GoNatureClient client;
-	LoginPageController mainController;
+	GUIControl guiControl=GUIControl.getInstance();
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			client=new GoNatureClient("localhost",DEFAULT_PORT);
-			GUIControl guiControl=new GUIControl();
-			guiControl.setClient(client);
-			guiControl.setStage(primaryStage);
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/LoginPage.fxml"));
-			AnchorPane root = fxmlLoader.load();
-			mainController = (LoginPageController)fxmlLoader.getController();
-			Scene scene = new Scene (root);
-			primaryStage.setTitle("goNature");
-			primaryStage.setScene(scene);
-			primaryStage.setOnCloseRequest(e->{
-				ClientMessage msg=new ClientMessage(ClientMessageType.DISCONNECTED,null);
-				client.handleMessageFromClientUI(msg);
-			});
-			primaryStage.show();
-		} catch(Exception e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		guiControl.setClient(client);
+		guiControl.setStage(primaryStage);
+		guiControl.openLogInPage();
 	}
 	
 	public static void main(String[] args) {

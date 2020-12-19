@@ -25,6 +25,7 @@ import javafx.scene.layout.VBox;
 
 public class ClientMainPageController implements Initializable  {
 	private Object user;
+	private GUIControl guiControl=GUIControl.getInstance();
 	private ArrayList<Button> btnList;
     @FXML
     private AnchorPane enableDisablePane;
@@ -93,7 +94,8 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     void logOutBtnClick(ActionEvent event) {
-
+    	guiControl.logOut();
+    	guiControl.openLogInPage();
     }
 
     @FXML
@@ -197,7 +199,6 @@ public class ClientMainPageController implements Initializable  {
 	}
 	private void loadVisitorScreens() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(ClientConstants.Screens.VISITOR_MAIN_PAGE.toString()));
-		System.out.println(ClientConstants.Screens.VISITOR_MAIN_PAGE.toString());
 		VBox root=null;
 		try {
 			root = fxmlLoader1.load();
@@ -220,6 +221,8 @@ public class ClientMainPageController implements Initializable  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		SubscriberHomePageController shpc=fxmlLoader1.getController();
+		shpc.setLabels((Subscriber)user);
 		panesMap.put("home",root );
 	}
 	private void loadEmployeeScreens() {

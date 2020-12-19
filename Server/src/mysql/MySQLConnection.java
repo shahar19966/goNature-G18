@@ -43,7 +43,13 @@ public class MySQLConnection {
 		if (rs.next()) {
 			return new Visitor(rs.getString(1));
 		}
-		return null;
+		else {
+			PreparedStatement insertVisitorPreparedStatement;
+			insertVisitorPreparedStatement=con.prepareStatement("INSERT INTO visitor (id) VALUES (?);");
+			insertVisitorPreparedStatement.setString(1, id);
+			insertVisitorPreparedStatement.executeUpdate();
+			return new Visitor(id);
+			}
 	}
 	public static Subscriber validateSubscriber(String subNum) throws SQLException {
 		PreparedStatement logInPreparedStatement;
@@ -52,7 +58,8 @@ public class MySQLConnection {
 		ResultSet rs = logInPreparedStatement.executeQuery();
 		if (rs.next()) {
 			return new Subscriber(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),rs.getString(6),
-					Integer.parseInt(rs.getString(7)),rs.getString(8),Boolean.parseBoolean(rs.getString(9)));
+					Integer.parseInt(rs.getString(7)),rs.getString(8),
+					rs.getString(9).contentEquals("0")?false:true);
 		}
 		return null;
 	}
