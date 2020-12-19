@@ -117,7 +117,7 @@ public class ClientMainPageController implements Initializable  {
     }
 
     @FXML
-    void reguestsBtnClick(ActionEvent event) {
+    void requestsBtnClick(ActionEvent event) {
 
     }
 
@@ -173,7 +173,7 @@ public class ClientMainPageController implements Initializable  {
     		list.remove(reportsBtn);
     		list.remove(requestsBtn);
     		break;
-    	case SERIVCE:
+    	case SERVICE:
     		list.remove(registrationBtn);
 			break;
     	case REGULAR:
@@ -206,7 +206,7 @@ public class ClientMainPageController implements Initializable  {
 			e.printStackTrace();
 		}
 		VisitorHomePageController vmpc=fxmlLoader1.getController();
-		vmpc.setId(((Visitor)user).getId().getValue());
+		vmpc.setId(((Visitor)user).getId());
 		panesMap.put("home",root );
 	}
 	private void loadSubscriberScreens() {
@@ -231,6 +231,8 @@ public class ClientMainPageController implements Initializable  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		EmployeeHomePageController ehpc=fxmlLoader1.getController();
+		ehpc.setLabels((Employee)user);
 		panesMap.put("home",root );
 	}
 	@Override

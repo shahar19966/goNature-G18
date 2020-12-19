@@ -60,7 +60,7 @@ public class LoginPageController {
     		AnchorPane root = fxmlLoader.load();
     		ClientMainPageController cmpc = (ClientMainPageController)fxmlLoader.getController();
     		//setUser needs to be called on the user that DB returned
-    		cmpc.setUser(new Visitor("123"));
+    		cmpc.setUser(GUIControl.getUser());
     	//	GUIControl.setUser(user);
 			Scene scene = new Scene (root);
 			primaryStage.setScene(scene);
@@ -73,6 +73,8 @@ public class LoginPageController {
 
     @FXML
     void setEmployee(ActionEvent event) {
+    	idTextField.setPromptText("Enter Employee Number");
+    	idTextField.setText("");
     	passwordTextField.setVisible(true);
     	passwordTextField.setText("");
     	subscriberBtn.setSelected(false);
@@ -81,6 +83,7 @@ public class LoginPageController {
 
     @FXML
     void setId(ActionEvent event) {
+    	idTextField.setPromptText("Enter ID Number");
     	idTextField.setText("");
     	passwordTextField.setVisible(false);
     	subscriberBtn.setSelected(false);
@@ -89,6 +92,7 @@ public class LoginPageController {
 
     @FXML
     void setSubscriber(ActionEvent event) {
+    	idTextField.setPromptText("Enter Subscriber Number");
     	idTextField.setText("");
     	passwordTextField.setVisible(false);
     	idBtn.setSelected(false);
@@ -97,12 +101,12 @@ public class LoginPageController {
     private boolean validateLogin() {
     	ClientMessage msg=null;
     	if(idBtn.isSelected()) 
-    		msg=new ClientMessage(ClientMessageType.VALIDATE_VISITOR,idTextField.getText());
+    		msg=new ClientMessage(ClientMessageType.LOGIN_VISITOR,idTextField.getText());
     	else if(subscriberBtn.isSelected())
-    		msg=new ClientMessage(ClientMessageType.VALIDATE_SUBSCRIBER,idTextField.getText());
+    		msg=new ClientMessage(ClientMessageType.LOGIN_SUBSCRIBER,idTextField.getText());
     	else if(employeeBtn.isSelected()) {
     		String[] idAndPassword={idTextField.getText(),passwordTextField.getText()};
-    		msg=new ClientMessage(ClientMessageType.VALIDATE_EMPLOYEE,idAndPassword);
+    		msg=new ClientMessage(ClientMessageType.LOGIN_EMPLOYEE,idAndPassword);
     	}
     	else {};
     	GUIControl.sendToServer(msg);
@@ -114,7 +118,7 @@ public class LoginPageController {
     		GUIControl.popUpError("This user is already logged in");
     		return false;
     	}
-    		
+    	GUIControl.setUser(GUIControl.getServerMsg().getMessage());	
     	return true;
     }
 

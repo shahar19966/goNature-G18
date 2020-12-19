@@ -5,17 +5,17 @@ import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Visitor implements Serializable{
-	private SimpleStringProperty id;
+	private String id;
 
 	public Visitor(String id) {
-		this.id=new SimpleStringProperty(id);
+		this.id=id;
 	}
 
-	public SimpleStringProperty getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(SimpleStringProperty id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -23,7 +23,7 @@ public class Visitor implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.getValue().hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -39,7 +39,7 @@ public class Visitor implements Serializable{
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.getValue().equals(other.id.getValue()))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}

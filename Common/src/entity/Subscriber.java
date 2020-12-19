@@ -1,63 +1,49 @@
 package entity;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 public class Subscriber extends Person {
-	private SimpleStringProperty subscriberNumber;
-	private SimpleIntegerProperty subscriberFamilyMembers;
-	private SimpleStringProperty subscriberCardDetails;
-	private SimpleStringProperty phone;
-	private SimpleBooleanProperty isGuide;
+	private String subscriberNumber;
+	private int subscriberFamilyMembers;
+	private String subscriberCardDetails;
+	private String phone;
+	private boolean isGuide;
 	public Subscriber(String subscriberNumber, String id, String firstName, String lastName, String phone, String mail,
 			int subscriberFamilyMembers, String subscriberCardDetails,boolean isGuide) {
 		super(id, firstName, lastName, mail);
-		this.subscriberCardDetails = new SimpleStringProperty(subscriberCardDetails);
-		this.subscriberFamilyMembers = new SimpleIntegerProperty(subscriberFamilyMembers);
-		this.subscriberNumber = new SimpleStringProperty(subscriberNumber);
-		this.isGuide=new SimpleBooleanProperty(isGuide);
+		this.subscriberCardDetails = subscriberCardDetails;
+		this.subscriberFamilyMembers =subscriberFamilyMembers;
+		this.subscriberNumber = subscriberNumber;
+		this.isGuide=isGuide;
 	}
 
 	public String toString() {
-		return "Subscriber" + " " + subscriberNumber.getValue() + " " + super.getID() + " " + getFirstName() + " "
-				+ getLastName() + " " + phone.getValue() + " " + getEmail() + " " + subscriberFamilyMembers.getValue() + " "
-				+ subscriberCardDetails.getValue();
+		return "Subscriber" + " " + subscriberNumber + " " + super.getID() + " " + getFirstName() + " "
+				+ getLastName() + " " + phone + " " + getEmail() + " " + subscriberFamilyMembers + " "
+				+ subscriberCardDetails;
 	}
 
 	public String getSubscriberNumber() {
-		return subscriberNumber.getValue();
-	}
-
-	public SimpleStringProperty getSubscriberNumberProperty() {
 		return subscriberNumber;
 	}
 
+
 	public int getSubscriberFamilyMembers() {
-		return subscriberFamilyMembers.getValue();
-	}
-	public SimpleIntegerProperty getSubscriberFamilyMembersProperty() {
 		return subscriberFamilyMembers;
 	}
-	public String getSubscriberCardDetails() {
-		return subscriberCardDetails.getValue();
-	}
 
-	public SimpleStringProperty getSubscriberCardDetailsProperty() {
+	public String getSubscriberCardDetails() {
 		return subscriberCardDetails;
 	}
-	public boolean getIsGuide() {
-		return isGuide.getValue();
-	}
 
-	public SimpleBooleanProperty getIsGuideProperty() {
+
+	public boolean getIsGuide() {
 		return isGuide;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.getValue().hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -73,7 +59,7 @@ public class Subscriber extends Person {
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.getValue().equals(other.id.getValue()))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}

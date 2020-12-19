@@ -9,13 +9,14 @@ public class EntityConstants{
 	public enum EmployeeRole{
 		PARK_MANAGER,
 		DEP_MANAGER,
-		SERIVCE,
+		SERVICE,
 		REGULAR
 	}
 	public enum OrderStatus{
 		WAITING,
-		PENDING_APPROVAL,
+		PENDING_APPROVAL_FROM_WAITING_LIST,
 		ACTIVE,
+		PENDING_FINAL_APPROVAL,
 		CANCELLED,
 		DONE
 	}

@@ -1,81 +1,61 @@
 package entity;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 public class Parks {
-	private SimpleStringProperty parkName;
-	private SimpleIntegerProperty parkMaxVisitorsDefault;
-	private SimpleIntegerProperty parkDiffFromMax;
-	private SimpleIntegerProperty parkVisitDuration;
-	private SimpleIntegerProperty parkCurrentVisitors;
+	private String parkName;
+	private int maxVisitors;
+	private int diffFromMax;
+	private int visitDuration;
+	private int currentVisitors;
 
-	public Parks(String parkName, int parkMaxVisitorsDefault, int parkDiffFromMax, int parkVisitDuration,
-			int parkCurrentVisitors) {
-		this.parkName = new SimpleStringProperty(parkName);
-		this.parkMaxVisitorsDefault = new SimpleIntegerProperty(parkMaxVisitorsDefault);
-		this.parkDiffFromMax = new SimpleIntegerProperty(parkDiffFromMax);
-		this.parkVisitDuration = new SimpleIntegerProperty(parkVisitDuration);
-		this.parkCurrentVisitors = new SimpleIntegerProperty(parkCurrentVisitors);
+	public Parks(String parkName, int maxVisitors, int diffFromMax, int visitDuration,
+			int currentVisitors) {
+		this.parkName = parkName;
+		this.maxVisitors = maxVisitors;
+		this.diffFromMax = diffFromMax;
+		this.visitDuration =visitDuration;
+		this.currentVisitors = currentVisitors;
 	}
 
 	public String getParkName() {
-		return parkName.getValue();
-	}
-
-	public SimpleStringProperty getParkNameProperty() {
 		return parkName;
 	}
 
+
+
 	public void setParkName(String parkName) {
-		this.parkName.set(parkName);
+		this.parkName=parkName;
 	}
 
 	public int getParkMaxVisitorsDefault() {
-		return parkMaxVisitorsDefault.getValue();
+		return maxVisitors;
 	}
 
-	public SimpleIntegerProperty getParkMaxVisitorsDefaultProperty() {
-		return parkMaxVisitorsDefault;
-	}
 
-	public void setParkMaxVisitorsDefault(int parkMaxVisitorsDefault) {
-		this.parkMaxVisitorsDefault.set(parkMaxVisitorsDefault);
+	public void setParkMaxVisitorsDefault(int maxVisitors) {
+		this.maxVisitors=maxVisitors;
 	}
 
 	public int getParkDiffFromMax() {
-		return parkDiffFromMax.getValue();
+		return diffFromMax;
 	}
 
-	public SimpleIntegerProperty getParkDiffFromMaxProperty() {
-		return parkDiffFromMax;
-	}
-
-	public void setParkDiffFromMax(int parkDiffFromMax) {
-		this.parkDiffFromMax.set(parkDiffFromMax);
+	public void setParkDiffFromMax(int diffFromMax) {
+		this.diffFromMax=diffFromMax;
 	}
 
 	public int getParkVisitDuration() {
-		return parkVisitDuration.getValue();
+		return visitDuration;
 	}
 
-	public SimpleIntegerProperty getParkVisitDurationProperty() {
-		return parkVisitDuration;
-	}
-
-	public void setParkVisitDuration(int parkVisitDuration) {
-		this.parkVisitDuration.set(parkVisitDuration);
+	public void setParkVisitDuration(int visitDuration) {
+		this.visitDuration=visitDuration;
 	}
 
 	public int getParkCurrentVisitors() {
-		return parkCurrentVisitors.getValue();
+		return currentVisitors;
 	}
 
-	public SimpleIntegerProperty getParkCurrentVisitorsProperty() {
-		return parkCurrentVisitors;
-	}
-
-	public void setParkCurrentVisitors(int parkCurrentVisitors) {
-		this.parkCurrentVisitors.set(parkCurrentVisitors);
+	public void setParkCurrentVisitors(int currentVisitors) {
+		this.currentVisitors=currentVisitors;
 	}
 }

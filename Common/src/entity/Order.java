@@ -8,60 +8,50 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Order implements Serializable{
-	private SimpleStringProperty id;
-	private SimpleStringProperty parkName;
-	private SimpleStringProperty orderNum;
-	private SimpleStringProperty orderCreationDate;
-	private SimpleIntegerProperty numOfVisitors;
+	private String id;
+	private String parkName;
+	private String orderNum;
+	private String orderCreationDate;
+	private int numOfVisitors;
 	private EntityConstants.OrderStatus status;
 	private EntityConstants.OrderType type;
-	private SimpleStringProperty dateOfOrder;
-	private SimpleStringProperty timeOfOrder;
-	private SimpleIntegerProperty actualNumOfVisitors;
+	private String dateOfOrder;
+	private String timeOfOrder;
+	private int price;
 	public Order(String id, String parkName, String orderNum,
 			String orderCreationDate, int numOfVisitors, OrderStatus status,
 			OrderType type, String dateOfOrder, String timeOfOrder,
-			int actualNumOfVisitors) {
-		this.id=new SimpleStringProperty(id);
-		this.parkName = new SimpleStringProperty(parkName);
-		this.orderNum = new SimpleStringProperty(orderNum);
-		this.orderCreationDate = new SimpleStringProperty(orderCreationDate);
-		this.numOfVisitors =new SimpleIntegerProperty(numOfVisitors);
+			int price) {
+		this.id=id;
+		this.parkName = parkName;
+		this.orderNum = orderNum;
+		this.orderCreationDate = orderCreationDate;
+		this.numOfVisitors =numOfVisitors;
 		this.status = status;
 		this.type = type;
-		this.dateOfOrder =new SimpleStringProperty(dateOfOrder); 
-		this.timeOfOrder =new SimpleStringProperty(timeOfOrder); 
-		this.actualNumOfVisitors =new SimpleIntegerProperty(actualNumOfVisitors);
+		this.dateOfOrder =dateOfOrder; 
+		this.timeOfOrder =timeOfOrder; 
+		this.price =price;
 	}
-	public SimpleStringProperty getIdProperty() {
-		return id;
-	}
+
 	public void setId(String id) {
-		this.id.setValue(id);
+		this.id=id;
 	}
-	public SimpleStringProperty getParkNameProperty() {
-		return parkName;
-	}
+
 	public void setParkName(String parkName) {
-		this.parkName.setValue(parkName);
+		this.parkName=parkName;
 	}
-	public SimpleStringProperty getOrderNumProperty() {
-		return orderNum;
-	}
+
 	public void setOrderNum(String orderNum) {
-		this.orderNum.setValue(orderNum);
+		this.orderNum=orderNum;
 	}
-	public SimpleStringProperty getOrderCreationDateProperty() {
-		return orderCreationDate;
-	}
+
 	public void setOrderCreationDate(String orderCreationDate) {
-		this.orderCreationDate.setValue(orderCreationDate);
+		this.orderCreationDate=orderCreationDate;
 	}
-	public SimpleIntegerProperty getNumOfVisitorsProperty() {
-		return numOfVisitors;
-	}
+
 	public void setNumOfVisitors(int numOfVisitors) {
-		this.numOfVisitors.setValue(numOfVisitors);
+		this.numOfVisitors=numOfVisitors;
 	}
 	public EntityConstants.OrderStatus getStatus() {
 		return status;
@@ -75,23 +65,16 @@ public class Order implements Serializable{
 	public void setType(EntityConstants.OrderType type) {
 		this.type = type;
 	}
-	public SimpleStringProperty getDateOfOrderProperty() {
-		return dateOfOrder;
-	}
+
 	public void setDateOfOrder(String dateOfOrder) {
-		this.dateOfOrder.setValue(dateOfOrder);
+		this.dateOfOrder=dateOfOrder;
 	}
-	public SimpleStringProperty getTimeOfOrderProperty() {
-		return timeOfOrder;
-	}
+
 	public void setTimeOfOrder(String timeOfOrder) {
-		this.timeOfOrder.setValue(timeOfOrder);
+		this.timeOfOrder=timeOfOrder;
 	}
-	public SimpleIntegerProperty getActualNumOfVisitorsProperty() {
-		return actualNumOfVisitors;
-	}
-	public void setActualNumOfVisitors(int actualNumOfVisitors) {
-		this.actualNumOfVisitors.setValue(actualNumOfVisitors);
+	public void setPrice(int price) {
+		this.price=price;
 	}
 	
 
