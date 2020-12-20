@@ -17,7 +17,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import ocsf.server.ConnectionToClient;
-
+/*
+ * controller class for the server UI
+ */
 public class ServerScreenController {
     @FXML
     private AnchorPane enableDisablePane;
@@ -48,9 +50,14 @@ public class ServerScreenController {
 
     @FXML
     private ImageView goNatureSymbol;
-    
+    /*
+     * client list in order to show connected clients in GUI
+     */
     ObservableList<ConnectionToClient> clientsConnectedObservableList;
-
+    /*
+     * method that's called upon pressing the start button,sets up the client list in the GUI and calls ServerMain.runServer()
+     * note that upon being pressed,the button changes it's text to Exit, and upon being pressed again it shuts down the server
+     */
     @FXML
     void startServerClicked(ActionEvent event) {
     	if(_startBtn.getText().equals("Start")) {

@@ -25,14 +25,14 @@ import ocsf.server.ConnectionToClient;
  * @author Paul Holden
  * @version July 2000
  */
-
+/*
+ * GoNatureServer is responsible to handling client messages and sending messages to client
+ */
 public class GoNatureServer extends AbstractServer {
 	// Class variables *****************
+	private MySQLConnection goNatureDB;
+	private ArrayList<Object> userList;
 
-	/**
-	 * The default port to listen on.
-	 */
-	// final public static int DEFAULT_PORT = 5555;
 
 	// Constructors ******************
 
@@ -42,8 +42,6 @@ public class GoNatureServer extends AbstractServer {
 	 * @param port The port number to connect on.
 	 * 
 	 */
-	private MySQLConnection goNatureDB;
-	private ArrayList<Object> userList;
 	public GoNatureServer(int port) {
 		super(port);
 		userList=new ArrayList<>();

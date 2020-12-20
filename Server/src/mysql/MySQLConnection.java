@@ -10,7 +10,9 @@ import entity.Employee;
 import entity.EntityConstants;
 import entity.Subscriber;
 import entity.Visitor;
-
+/*
+ * class that holds static methods related to database actions such as connection, queries,updates and more
+ */
 public class MySQLConnection {
 	private static Connection con;
 	public static void ConnectToDB()
@@ -35,6 +37,9 @@ public class MySQLConnection {
             System.out.println("VendorError: " + ex.getErrorCode());
             }
    	}
+	/*
+	 * 
+	 */
 	public static Visitor validateVisitor(String id) throws SQLException {
 		PreparedStatement logInPreparedStatement;
 		logInPreparedStatement = con.prepareStatement("SELECT * FROM visitor where id=? LIMIT 1;");

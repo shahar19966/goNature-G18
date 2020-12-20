@@ -13,7 +13,9 @@ import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
 
-
+/*
+ * main class for running the application,sets up a client,connects to default port and opens the login scene
+ */
 public class ClientMain extends Application {
 	private final int DEFAULT_PORT=5555;
 	GoNatureClient client;
