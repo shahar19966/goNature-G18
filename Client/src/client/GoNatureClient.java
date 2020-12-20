@@ -7,6 +7,9 @@ import message.ClientMessage;
 import message.ClientMessageType;
 import message.ServerMessage;
 import ocsf.client.AbstractClient;
+/*
+ * This class controls the communication between the client and the server using handleMessageFromClientUI and handleMessageFromClient
+ */
 public class GoNatureClient extends AbstractClient {
 	  //Instance variables **********************************************
 	  
@@ -50,13 +53,24 @@ public class GoNatureClient extends AbstractClient {
 				  guiControl.setServerMsg(serverMsg);
 				  break;
 			  case SERVER_ERROR:
-				  GUIControl.popUpError("Server encountered an error!");
-				  guiControl.setServerMsg(serverMsg);
+				  if(serverMsg.getMessage()==null) {
+					  GUIControl.popUpError("Server encountered an error!");
+					  guiControl.setServerMsg(serverMsg);
+				  }
+				  else {
+					  GUIControl.popUpError((String)serverMsg.getMessage());
+					  try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					  System.exit(0);
+				  }
 				  break;
 			  case LOGOUT_SUCCESS:
 				  GUIControl.popUpMessage("Logged out");
 				  break;
-			  
 			  }
 		  }
 		  awaitResponse=false;

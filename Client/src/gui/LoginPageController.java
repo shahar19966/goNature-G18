@@ -18,7 +18,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/*
+ * controller for the login page
+ */
 public class LoginPageController {
 	GUIControl guiControl=GUIControl.getInstance();
     @FXML
@@ -50,7 +52,9 @@ public class LoginPageController {
 
     @FXML
     private Label mainLabel;
-
+    /*
+     * method called upon clicking the login button, calls validateLogin() and incase it's validated opens up the user's main screen to display
+     */
     @FXML
     void loginFunc(ActionEvent event) throws IOException {
     	if(validateLogin()) {
@@ -96,6 +100,10 @@ public class LoginPageController {
     	idBtn.setSelected(false);
     	employeeBtn.setSelected(false);
     }
+    /*
+     * method that asks the server for a certain user given the fields that were selected and filled
+     * @return true if user was found (and holds the object of the user in GUIControl) or false if user wasn't found in database
+     */
     private boolean validateLogin() {
     	ClientMessage msg=null;
     	if(idTextField.getText().isEmpty()) {

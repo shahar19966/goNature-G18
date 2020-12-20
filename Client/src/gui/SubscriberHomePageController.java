@@ -5,7 +5,9 @@ import entity.EntityConstants;
 import entity.Subscriber;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-
+/*
+ * controller for subscriber home page,fills labels with given subscriber's details
+ */
 public class SubscriberHomePageController {
 
     @FXML

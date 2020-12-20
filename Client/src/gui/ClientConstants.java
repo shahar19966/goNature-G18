@@ -1,5 +1,7 @@
 package gui;
-
+/*
+ *this class holds the relative paths of fxml files
+ */
 public class ClientConstants {
 	public enum Screens{
 		LOGIN_PAGE("/gui/LoginPage.fxml"),
