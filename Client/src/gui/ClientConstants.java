@@ -7,8 +7,8 @@ public class ClientConstants {
 		SUBSCRIBER_MAIN_PAGE("/gui/SubscriberHomePage.fxml"),
 		GUIDE_MAIN_PAGE("/gui/GuideHomePage.fxml"),
 		EMPLOYEE_MAIN_PAGE("/gui/EmployeeHomePage.fxml"),
-		PARK_MANAGER_REPOTRS("/gui/ParkManagerReportsController"),
-		DEPARTMENT_MANAGER_REPOTRS("/gui/ParkManagerReportsController");
+		PARK_MANAGER_REPOTRS("/gui/ParkManagerReports.fxml"),
+		DEPARTMENT_MANAGER_REPOTRS("/gui/DepartmentManagerProduceReportsPage.fxml");
 		
 		
 		public final String path;
