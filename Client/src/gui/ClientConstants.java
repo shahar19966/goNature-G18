@@ -6,7 +6,10 @@ public class ClientConstants {
 		VISITOR_MAIN_PAGE("/gui/VisitorHomePage.fxml"),
 		SUBSCRIBER_MAIN_PAGE("/gui/SubscriberHomePage.fxml"),
 		GUIDE_MAIN_PAGE("/gui/GuideHomePage.fxml"),
-		EMPLOYEE_MAIN_PAGE("/gui/EmployeeHomePage.fxml");
+		EMPLOYEE_MAIN_PAGE("/gui/EmployeeHomePage.fxml"),
+		PARK_MANAGER_REPOTRS("/gui/ParkManagerReportsController"),
+		DEPARTMENT_MANAGER_REPOTRS("/gui/ParkManagerReportsController");
+		
 		
 		public final String path;
 		private Screens(String path) {

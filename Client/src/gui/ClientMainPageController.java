@@ -125,7 +125,13 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     void reportsBtnClick(ActionEvent event) {
-
+    	Employee emp=(Employee)user;
+    	if(emp.getRole().equals("PARK_MANAGER"))
+    		loadParkManagerReports();
+    	else
+    		loadDepartmentManagerReports();
+    	setSwitchPane(panesMap.get("reports"));
+   
     }
 	private Map<String, Pane> panesMap;
     public void setUser(Object user) {
@@ -209,6 +215,31 @@ public class ClientMainPageController implements Initializable  {
 		VisitorHomePageController vmpc=fxmlLoader1.getController();
 		vmpc.setId(((Visitor)user).getId());
 		panesMap.put("home",root );
+	}
+	
+	private void loadParkManagerReports() {
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.PARK_MANAGER_REPOTRS.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//ParkManagerReportsController pmrc=fxmlLoader1.getController();
+		panesMap.put("reports",root );
+	}
+	private void loadDepartmentManagerReports() {
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.DEPARTMENT_MANAGER_REPOTRS.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	//	DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
+		panesMap.put("reports",root );
 	}
 	private void loadSubscriberScreens() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(
