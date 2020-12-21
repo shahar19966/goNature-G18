@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -104,7 +105,8 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     void orderBtnClick(ActionEvent event) {
-
+    	loadSubAndVisitorOrder();
+    	setSwitchPane(panesMap.get("order"));
     }
 
     @FXML
@@ -309,7 +311,19 @@ public class ClientMainPageController implements Initializable  {
 		ehpc.setLabels((Employee)user);
 		panesMap.put("home",root );
 	}
-	//shahar
+	private void loadSubAndVisitorOrder() {
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.SUB_AND_VISITOR_ORDER_PAGE.toString()));
+		GridPane root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	//	DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
+		panesMap.put("order",root );
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

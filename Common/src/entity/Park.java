@@ -1,13 +1,15 @@
 package entity;
 
-public class Parks {
+import java.io.Serializable;
+
+public class Park implements Serializable{
 	private String parkName;
 	private int maxVisitors;
 	private int diffFromMax;
 	private int visitDuration;
 	private int currentVisitors;
 
-	public Parks(String parkName, int maxVisitors, int diffFromMax, int visitDuration,
+	public Park(String parkName, int maxVisitors, int diffFromMax, int visitDuration,
 			int currentVisitors) {
 		this.parkName = parkName;
 		this.maxVisitors = maxVisitors;
@@ -19,7 +21,6 @@ public class Parks {
 	public String getParkName() {
 		return parkName;
 	}
-
 
 
 	public void setParkName(String parkName) {
