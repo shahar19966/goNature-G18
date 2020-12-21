@@ -113,8 +113,13 @@ public class ClientMainPageController implements Initializable  {
     }
 
     @FXML
-    void parametersBtnClick(ActionEvent event) {
-
+    void parametersBtnClick(ActionEvent event) {//liron
+    	//Employee emp=(Employee)user;
+    	
+    	loadParkManagerParametersUpdate();
+    	
+    	setSwitchPane(panesMap.get("parameters"));
+    	
     }
 
     @FXML
@@ -250,6 +255,20 @@ public class ClientMainPageController implements Initializable  {
 		//ParkManagerReportsController pmrc=fxmlLoader1.getController();
 		panesMap.put("reports",root );
 	}
+	private void loadParkManagerParametersUpdate()//liron
+	{
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.PARK_MANAGER_PATAMETERS_UPDATE.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//ParametersUpdatePage 
+		panesMap.put("parameters",root );
+	}
+	
 	private void loadDepartmentManagerReports() {
 		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.DEPARTMENT_MANAGER_REPOTRS.toString()));
 		VBox root=null;
