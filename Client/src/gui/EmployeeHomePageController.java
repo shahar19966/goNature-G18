@@ -4,7 +4,9 @@ import entity.Employee;
 import entity.EntityConstants;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-
+/*
+ * controller for employee home page, sets the labels according to the given employee
+ */
 public class EmployeeHomePageController {
 
     @FXML

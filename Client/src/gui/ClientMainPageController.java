@@ -22,7 +22,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
+/*
+ * this class is the controller of the client's main page after logging in
+ * initially it consists of all user's buttons,but upon being created it removes every button that doesn't concern the connected user
+ * additionally it holds the functionality of the client main frames
+ */
 public class ClientMainPageController implements Initializable  {
 	private Object user;
 	private GUIControl guiControl=GUIControl.getInstance();
@@ -71,7 +75,7 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     private Button logOutClick;
-
+    
     @FXML
     void EntryControlBtnClick(ActionEvent event) {
 
@@ -125,6 +129,7 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     void reportsBtnClick(ActionEvent event) {
+
     	Employee emp=(Employee)user;
     	if(emp.getRole().equals("PARK_MANAGER"))
     		loadParkManagerReports();
@@ -132,8 +137,12 @@ public class ClientMainPageController implements Initializable  {
     		loadDepartmentManagerReports();
     	setSwitchPane(panesMap.get("reports"));
    
+
     }
 	private Map<String, Pane> panesMap;
+	/*
+	 * method called to set the user currently connected to the client and show his main screen and buttons
+	 */
     public void setUser(Object user) {
     	this.user=user;
     	if(user instanceof Visitor) {
@@ -150,6 +159,9 @@ public class ClientMainPageController implements Initializable  {
     	}
     	setSwitchPane(panesMap.get("home"));
     }
+    /*
+     * method that adds every button loaded into a button list
+     */
     private void setBtnList(List<Button> list) {
     	list.add(orderBtn);
     	list.add(entryControlBtn);
@@ -161,6 +173,9 @@ public class ClientMainPageController implements Initializable  {
     	list.add(reportsBtn);
     	list.add(discountBtn);
     }
+    /*
+     * method that removes every button that doesn't concern a visitor and a subscriber from display
+     */
     private void setVisitorAndSubscriberButtons(List<Button> list) {
     	list.remove(orderBtn);
     	list.remove(orderTrakingBtn);
@@ -169,6 +184,9 @@ public class ClientMainPageController implements Initializable  {
     		b.setManaged(false);
     	}
     }
+    /*
+     * method that removes every button that doesn't concern a certain employee type (decided by the type of employee that connected)
+     */
     private void setEmployeeButtons(List<Button> list) {
     	Employee emp=(Employee)user;
     	switch(emp.getRoleEnum()) {
@@ -195,6 +213,9 @@ public class ClientMainPageController implements Initializable  {
     		b.setManaged(false);
     	}
     }
+    /*
+     * method that takes a pane and displays it and it's content in the small window set for it in the client display
+     */
 	public void setSwitchPane(Pane toSwitch) {
 		switchPane.getChildren().clear();
 		switchPane.getChildren().add(toSwitch);
