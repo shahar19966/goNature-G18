@@ -98,6 +98,9 @@ public class GoNatureServer extends AbstractServer {
 					else if(returnVal!=null)
 						userList.add(returnVal);
 					break;
+				case GET_PARKS:
+					returnVal=MySQLConnection.getParks();
+					type=ServerMessageType.PARK_LIST;
 				case CONNECTION:
 					break;
 				}		

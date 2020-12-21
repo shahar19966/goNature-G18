@@ -50,7 +50,7 @@ public class ServerMain extends Application {
 	          System.out.println("ERROR - Could not listen for clients!");
 	        }
 	        guiController.serverConnected();
-	        MySQLConnection.ConnectToDB();
+	        MySQLConnection.connectToDB();
 	        guiController.dataBaseConnected();
 	}
 	/*
