@@ -269,6 +269,7 @@ public class ClientMainPageController implements Initializable  {
 		ehpc.setLabels((Employee)user);
 		panesMap.put("home",root );
 	}
+	//shahar
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
