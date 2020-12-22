@@ -116,10 +116,7 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     void parametersBtnClick(ActionEvent event) {//liron
-    	//Employee emp=(Employee)user;
-    	
     	loadParkManagerParametersUpdate();
-    	
     	setSwitchPane(panesMap.get("parameters"));
     	
     }
@@ -267,7 +264,7 @@ public class ClientMainPageController implements Initializable  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//ParametersUpdatePage 
+ 
 		panesMap.put("parameters",root );
 	}
 	
