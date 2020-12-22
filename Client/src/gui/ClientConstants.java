@@ -12,7 +12,7 @@ public class ClientConstants {
 		EMPLOYEE_MAIN_PAGE("/gui/EmployeeHomePage.fxml"),
 		PARK_MANAGER_REPOTRS("/gui/ParkManagerReports.fxml"),
 		DEPARTMENT_MANAGER_REPOTRS("/gui/DepartmentManagerProduceReportsPage.fxml"),
-		PARK_MNG_VISIT_REPORT("/gui/ParkManagerVisitaoinReport.fxml");
+		PARK_MNG_VISIT_REPORT("/gui/ParkManagerVisitaoinReport.fxml"),
 		PARK_MANAGER_PATAMETERS_UPDATE("/gui/ParameterUpdatePage.fxml"),
 		SUB_AND_VISITOR_ORDER_PAGE("/gui/OrderPane.fxml");
 
