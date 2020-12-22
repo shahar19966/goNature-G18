@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class ParkManagerParametersUpdateController {
-
     @FXML
     private Button updateCapacity;
 
