@@ -6,7 +6,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 
-public class RegisterSubscriberController {
+public class RegisterSubscriberAndGuideController {
 
     @FXML
     private TextField idTextFiled;
