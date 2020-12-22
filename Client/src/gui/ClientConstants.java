@@ -15,7 +15,9 @@ public class ClientConstants {
 		PARK_MNG_VISIT_REPORT("/gui/ParkManagerVisitaoinReport.fxml"),
 		PARK_MANAGER_PATAMETERS_UPDATE("/gui/ParameterUpdatePage.fxml"),
 		SUB_AND_VISITOR_ORDER_PAGE("/gui/OrderPane.fxml"),
-		VISITATION_TIME_UPDATE("/gui/VisitationTimeUpdate.fxml");
+		VISITATION_TIME_UPDATE("/gui/VisitationTimeUpdate.fxml"),
+		CAPACITY_UPDATE("/gui/CapacityUpdate.fxml"),
+		DIFFERENCE_PARAMETER_UPDATE("/gui/DifferenceParameterUpdate.fxml");
 
 		
 		public final String path;
