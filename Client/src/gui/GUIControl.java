@@ -1,5 +1,7 @@
 package gui;
 
+import java.util.regex.Pattern;
+
 import client.GoNatureClient;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +13,10 @@ import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
 import message.ServerMessage;
-
+/*
+ * service class for the client with various service methods
+ * this class is implemented as a singleton so that every instance of it holds the same values.
+ */
 public class GUIControl {
 	private static GUIControl instance=new GUIControl();
 	private  GoNatureClient client;
@@ -88,5 +93,14 @@ public class GUIControl {
 			alert.showAndWait();
 		});
 	}
+	public static boolean isEmailValid(String email) {
+		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
+				+ "A-Z]{2,7}$";
+		Pattern pat = Pattern.compile(emailRegex);
+		if (email == null)
+			return false;
+		return pat.matcher(email).matches();
+	}
+
 
 }

@@ -19,10 +19,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
+/*
+ * this class is the controller of the client's main page after logging in
+ * initially it consists of all user's buttons,but upon being created it removes every button that doesn't concern the connected user
+ * additionally it holds the functionality of the client main frames
+ */
 public class ClientMainPageController implements Initializable  {
 	private Object user;
 	private GUIControl guiControl=GUIControl.getInstance();
@@ -71,7 +76,7 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     private Button logOutClick;
-
+    
     @FXML
     void EntryControlBtnClick(ActionEvent event) {
 
@@ -100,7 +105,8 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     void orderBtnClick(ActionEvent event) {
-
+    	loadSubAndVisitorOrder();
+    	setSwitchPane(panesMap.get("order"));
     }
 
     @FXML
@@ -109,8 +115,10 @@ public class ClientMainPageController implements Initializable  {
     }
 
     @FXML
-    void parametersBtnClick(ActionEvent event) {
-
+    void parametersBtnClick(ActionEvent event) {//liron
+    	loadParkManagerParametersUpdate();
+    	setSwitchPane(panesMap.get("parameters"));
+    	
     }
 
     @FXML
@@ -126,8 +134,19 @@ public class ClientMainPageController implements Initializable  {
     @FXML
     void reportsBtnClick(ActionEvent event) {
 
+    	Employee emp=(Employee)user;
+    	if(emp.getRole().equals("PARK_MANAGER"))
+    		loadParkManagerReports();
+    	else
+    		loadDepartmentManagerReports();
+    	setSwitchPane(panesMap.get("reports"));
+   
+
     }
 	private Map<String, Pane> panesMap;
+	/*
+	 * method called to set the user currently connected to the client and show his main screen and buttons
+	 */
     public void setUser(Object user) {
     	this.user=user;
     	if(user instanceof Visitor) {
@@ -144,6 +163,9 @@ public class ClientMainPageController implements Initializable  {
     	}
     	setSwitchPane(panesMap.get("home"));
     }
+    /*
+     * method that adds every button loaded into a button list
+     */
     private void setBtnList(List<Button> list) {
     	list.add(orderBtn);
     	list.add(entryControlBtn);
@@ -155,6 +177,9 @@ public class ClientMainPageController implements Initializable  {
     	list.add(reportsBtn);
     	list.add(discountBtn);
     }
+    /*
+     * method that removes every button that doesn't concern a visitor and a subscriber from display
+     */
     private void setVisitorAndSubscriberButtons(List<Button> list) {
     	list.remove(orderBtn);
     	list.remove(orderTrakingBtn);
@@ -163,6 +188,9 @@ public class ClientMainPageController implements Initializable  {
     		b.setManaged(false);
     	}
     }
+    /*
+     * method that removes every button that doesn't concern a certain employee type (decided by the type of employee that connected)
+     */
     private void setEmployeeButtons(List<Button> list) {
     	Employee emp=(Employee)user;
     	switch(emp.getRoleEnum()) {
@@ -189,6 +217,9 @@ public class ClientMainPageController implements Initializable  {
     		b.setManaged(false);
     	}
     }
+    /*
+     * method that takes a pane and displays it and it's content in the small window set for it in the client display
+     */
 	public void setSwitchPane(Pane toSwitch) {
 		switchPane.getChildren().clear();
 		switchPane.getChildren().add(toSwitch);
@@ -209,6 +240,45 @@ public class ClientMainPageController implements Initializable  {
 		VisitorHomePageController vmpc=fxmlLoader1.getController();
 		vmpc.setId(((Visitor)user).getId());
 		panesMap.put("home",root );
+	}
+	
+	private void loadParkManagerReports() {
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.PARK_MANAGER_REPOTRS.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//ParkManagerReportsController pmrc=fxmlLoader1.getController();
+		panesMap.put("reports",root );
+	}
+	private void loadParkManagerParametersUpdate()//liron
+	{
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.PARK_MANAGER_PATAMETERS_UPDATE.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ 
+		panesMap.put("parameters",root );
+	}
+	
+	private void loadDepartmentManagerReports() {
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.DEPARTMENT_MANAGER_REPOTRS.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	//	DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
+		panesMap.put("reports",root );
 	}
 	private void loadSubscriberScreens() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(
@@ -238,6 +308,19 @@ public class ClientMainPageController implements Initializable  {
 		ehpc.setLabels((Employee)user);
 		panesMap.put("home",root );
 	}
+	private void loadSubAndVisitorOrder() {
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.SUB_AND_VISITOR_ORDER_PAGE.toString()));
+		GridPane root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	//	DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
+		panesMap.put("order",root );
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

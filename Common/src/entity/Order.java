@@ -33,15 +33,36 @@ public class Order implements Serializable{
 		this.timeOfOrder =timeOfOrder; 
 		this.price =price;
 	}
+	/*
+	 * for validation
+	 */
+	public Order(String id,String parkName,int numOfVisitors,
+			OrderType type,String dateOfOrder,String timeOfOrder,int price) {
+		this.id=id;
+		this.parkName = parkName;
+		this.numOfVisitors =numOfVisitors;
+		this.type = type;
+		this.dateOfOrder =dateOfOrder; 
+		this.timeOfOrder =timeOfOrder; 
+		this.price =price;	
+	}
 
 	public void setId(String id) {
 		this.id=id;
 	}
 
-	public void setParkName(String parkName) {
-		this.parkName=parkName;
+	public String getParkName() {
+		return parkName;
 	}
-
+	public String getDateOfOrder() {
+		return dateOfOrder;
+	}
+	public String getTimeOfOrder() {
+		return timeOfOrder;
+	}
+	public int getNumOfVisitors() {
+		return numOfVisitors;
+	}
 	public void setOrderNum(String orderNum) {
 		this.orderNum=orderNum;
 	}

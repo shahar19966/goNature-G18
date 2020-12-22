@@ -3,6 +3,7 @@
 	<name>goNature-G18</name>
 	<comment></comment>
 	<projects>
+		<project>Common</project>
 	</projects>
 	<buildSpec>
 	</buildSpec>
