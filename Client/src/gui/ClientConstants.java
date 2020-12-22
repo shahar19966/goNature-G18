@@ -10,8 +10,8 @@ public class ClientConstants {
 		GUIDE_MAIN_PAGE("/gui/GuideHomePage.fxml"),
 		EMPLOYEE_MAIN_PAGE("/gui/EmployeeHomePage.fxml"),
 		PARK_MANAGER_REPOTRS("/gui/ParkManagerReports.fxml"),
-		DEPARTMENT_MANAGER_REPOTRS("/gui/DepartmentManagerProduceReportsPage.fxml");
-		
+		DEPARTMENT_MANAGER_REPOTRS("/gui/DepartmentManagerProduceReportsPage.fxml"),
+		PARK_MNG_VISIT_REPORT("/gui/ParkManagerVisitaoinReport.fxml");
 		
 		public final String path;
 		private Screens(String path) {
