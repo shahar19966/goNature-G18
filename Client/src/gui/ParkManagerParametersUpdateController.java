@@ -23,7 +23,6 @@ public class ParkManagerParametersUpdateController {
     void capacityUpdate(ActionEvent event) {
 
     }
-
     @FXML
     void differenceUpdate(ActionEvent event) {
 
