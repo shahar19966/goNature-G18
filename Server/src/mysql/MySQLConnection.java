@@ -21,6 +21,7 @@ import entity.Order;
 import entity.Park;
 import entity.Subscriber;
 import entity.Visitor;
+import entity.VisitorReport;
 import entity.EntityConstants.OrderType;
 
 /*
@@ -118,6 +119,47 @@ public class MySQLConnection {
 		}
 		return null;
 	}
+	public static List<VisitorReport> getVisitorReport() throws SQLException
+	{
+		List<VisitorReport> reportVisitorList = new ArrayList<>();
+		Statement getReportVisitorStatement;
+		 getReportVisitorStatement= con.createStatement();
+		ResultSet rs = getReportVisitorStatement.executeQuery("SELECT  orders.parkName_fk,orders.type,sum(finishedOrders.actualNumOfVisitors ) as sumvisit "
+				+ "FROM orders"
+				+ " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
+				+ "GROUP by orders.type, orders.parkName_fk");
+		int countSubscriber=0;
+		int countRegular=0;
+		int countGuid=0;
+		
+		if(!rs.next())
+		{
+			List<Park>parkList =  getParks(); 
+			for(Park p:parkList)
+				reportVisitorList.add(new VisitorReport(p.getParkName(), countSubscriber, countGuid, countRegular));
+			return reportVisitorList;
+		}
+		String namePark=rs.getString(1);
+		
+		do {
+			System.out.print("Hello ");
+			if(!rs.getString(1).equals(namePark))
+			{reportVisitorList.add(new VisitorReport(namePark, countSubscriber, countGuid, countRegular));
+				namePark=rs.getString(1);	
+			}
+			if(rs.getString(2).equals("GUIDE"))
+				countGuid=Integer.parseInt(rs.getString(3));
+			if(rs.getString(2).equals("SUBSCRIBER"))
+				countSubscriber=Integer.parseInt(rs.getString(3));
+			if(rs.getString(2).equals("REGULAR"))
+				countRegular=Integer.parseInt(rs.getString(3));
+		}while (rs.next());
+		reportVisitorList.add(new VisitorReport(namePark, countSubscriber, countGuid, countRegular));
+		System.out.print(reportVisitorList);
+		return reportVisitorList;
+		
+	}
 
 	public static boolean validateDate(Order orderToValidate)
 			throws NumberFormatException, SQLException, ParseException {
@@ -173,4 +215,5 @@ public class MySQLConnection {
 			e.printStackTrace();
 		}
 	}
+	
 }
