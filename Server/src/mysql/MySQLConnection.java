@@ -120,46 +120,36 @@ public class MySQLConnection {
 		}
 		return null;
 	}
-	public static List<VisitorReport> getVisitorReport() throws SQLException
-	{
-		List<VisitorReport> reportVisitorList = new ArrayList<>();
+
+	public static Map<String, VisitorReport> getVisitorReport() throws SQLException {
+		Map<String, VisitorReport> reportVisitorMap = new HashMap<String, VisitorReport>();
+		// List<VisitorReport> reportVisitorList = new ArrayList<>();
 		Statement getReportVisitorStatement;
-		 getReportVisitorStatement= con.createStatement();
-		ResultSet rs = getReportVisitorStatement.executeQuery("SELECT  orders.parkName_fk,orders.type,sum(finishedOrders.actualNumOfVisitors ) as sumvisit "
-				+ "FROM orders"
-				+ " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
-				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
-				+ "GROUP by orders.type, orders.parkName_fk");
-		int countSubscriber=0;
-		int countRegular=0;
-		int countGuid=0;
-		
-		if(!rs.next())
-		{
-			List<Park>parkList =  getParks(); 
-			for(Park p:parkList)
-				reportVisitorList.add(new VisitorReport(p.getParkName(), countSubscriber, countGuid, countRegular));
-			return reportVisitorList;
+		getReportVisitorStatement = con.createStatement();
+		ResultSet rs = getReportVisitorStatement.executeQuery(
+				"SELECT  orders.parkName_fk,orders.type,sum(finishedOrders.actualNumOfVisitors ) as sumvisit "
+						+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
+						+ "GROUP by orders.type, orders.parkName_fk");
+		List<Park> parkList = getParks();
+		for (Park p : parkList)
+			reportVisitorMap.put(p.getParkName(), new VisitorReport(p.getParkName()));
+		if (!rs.next()) {
+			return reportVisitorMap;
 		}
-		String namePark=rs.getString(1);
-		
+		String namePark = rs.getString(1);
 		do {
-			System.out.print("Hello ");
-			if(!rs.getString(1).equals(namePark))
-			{reportVisitorList.add(new VisitorReport(namePark, countSubscriber, countGuid, countRegular));
-				namePark=rs.getString(1);	
-			}
-			if(rs.getString(2).equals("GUIDE"))
-				countGuid=Integer.parseInt(rs.getString(3));
-			if(rs.getString(2).equals("SUBSCRIBER"))
-				countSubscriber=Integer.parseInt(rs.getString(3));
-			if(rs.getString(2).equals("REGULAR"))
-				countRegular=Integer.parseInt(rs.getString(3));
-		}while (rs.next());
-		reportVisitorList.add(new VisitorReport(namePark, countSubscriber, countGuid, countRegular));
-		System.out.print(reportVisitorList);
-		return reportVisitorList;
-		
+			if (!rs.getString(1).equals(namePark))
+				namePark = rs.getString(1);
+			if (rs.getString(2).equals("GUIDE"))
+				reportVisitorMap.get(namePark).setCountGuid(Integer.parseInt(rs.getString(3)));
+			if (rs.getString(2).equals("SUBSCRIBER"))
+				reportVisitorMap.get(namePark).setCountSubscriber(Integer.parseInt(rs.getString(3)));
+			if (rs.getString(2).equals("REGULAR"))
+				reportVisitorMap.get(namePark).setCountRegular(Integer.parseInt(rs.getString(3)));
+		} while (rs.next());
+		return reportVisitorMap;
+
 	}
 
 	public static boolean validateDate(Order orderToValidate)
@@ -195,6 +185,7 @@ public class MySQLConnection {
 				if (timeOfOrderForHour.containsKey(i - j))
 					sum += timeOfOrderForHour.get(i - j);
 			}
+
 			if (orderToValidate.getNumOfVisitors() + sum > park.getParkMaxVisitorsDefault() - park.getParkDiffFromMax())
 				return false;
 		}
@@ -309,5 +300,5 @@ public class MySQLConnection {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
