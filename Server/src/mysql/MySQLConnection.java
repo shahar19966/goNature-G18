@@ -305,7 +305,7 @@ public class MySQLConnection {
 		}
 		return null;
 	}
-	public static Order enterWatingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException
+	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException
 	{
 		return insertNewOrder(orderRequest,OrderStatus.WAITING);
 	}

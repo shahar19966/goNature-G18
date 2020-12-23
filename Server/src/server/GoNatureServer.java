@@ -117,7 +117,7 @@ public class GoNatureServer extends AbstractServer {
 						type = ServerMessageType.ORDER_SUCCESS;
 					break;
 				case WAITING_LIST:
-					returnVal = MySQLConnection.enterWatingist((Order) clientMsg.getMessage());
+					returnVal = MySQLConnection.enterWaitingist((Order) clientMsg.getMessage());
 					type = ServerMessageType.WAITING_LIST;
 					break;
 				case INCOME_REPORT:
