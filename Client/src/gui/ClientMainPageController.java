@@ -28,123 +28,124 @@ import javafx.scene.layout.VBox;
  * initially it consists of all user's buttons,but upon being created it removes every button that doesn't concern the connected user
  * additionally it holds the functionality of the client main frames
  */
-public class ClientMainPageController implements Initializable  {
+public class ClientMainPageController implements Initializable {
 	private Object user;
-	private GUIControl guiControl=GUIControl.getInstance();
+	private GUIControl guiControl = GUIControl.getInstance();
 	private ArrayList<Button> btnList;
-    @FXML
-    private AnchorPane enableDisablePane;
+	@FXML
+	private AnchorPane enableDisablePane;
 
-    @FXML
-    private AnchorPane switchPane;
+	@FXML
+	private AnchorPane switchPane;
 
-    @FXML
-    private VBox buttonVBox;
+	@FXML
+	private VBox buttonVBox;
 
-    @FXML
-    private Button orderBtn;
+	@FXML
+	private Button orderBtn;
 
-    @FXML
-    private Button entryControlBtn;
+	@FXML
+	private Button entryControlBtn;
 
-    @FXML
-    private Button exitControlBtn;
+	@FXML
+	private Button exitControlBtn;
 
-    @FXML
-    private Button reportsBtn;
+	@FXML
+	private Button reportsBtn;
 
-    @FXML
-    private Button orderTrakingBtn;
+	@FXML
+	private Button orderTrakingBtn;
 
-    @FXML
-    private Button requestsBtn;
+	@FXML
+	private Button requestsBtn;
 
-    @FXML
-    private Button parametersBtn;
+	@FXML
+	private Button parametersBtn;
 
-    @FXML
-    private Button discountBtn;
+	@FXML
+	private Button discountBtn;
 
-    @FXML
-    private Button registrationBtn;
+	@FXML
+	private Button registrationBtn;
 
-    @FXML
-    private Label mainLabel;
+	@FXML
+	private Label mainLabel;
 
-    @FXML
-    private Button homeBtn;
+	@FXML
+	private Button homeBtn;
 
-    @FXML
-    private Button logOutClick;
-    
-    @FXML
-    void EntryControlBtnClick(ActionEvent event) {
+	@FXML
+	private Button logOutClick;
 
-    }
+	@FXML
+	void EntryControlBtnClick(ActionEvent event) {
 
-    @FXML
-    void discountBtnClick(ActionEvent event) {
-    	loadParkManagerDiscountRequests();
+	}
+
+	@FXML
+	void discountBtnClick(ActionEvent event) {
+		loadParkManagerDiscountRequests();
     	setSwitchPane(panesMap.get("discount"));
-    }
+	}
 
-    @FXML
-    void exitControlBtnClick(ActionEvent event) {
+	@FXML
+	void exitControlBtnClick(ActionEvent event) {
 
-    }
+	}
 
-    @FXML
-    void homeBtnClick(ActionEvent event) {
-    	setSwitchPane(panesMap.get("home"));
-    	
-    }
+	@FXML
+	void homeBtnClick(ActionEvent event) {
+		setSwitchPane(panesMap.get("home"));
+	}
 
-    @FXML
-    void logOutBtnClick(ActionEvent event) {
-    	guiControl.logOut();
-    	guiControl.openLogInPage();
-    }
+	@FXML
+	void logOutBtnClick(ActionEvent event) {
+		guiControl.logOut();
+		guiControl.openLogInPage();
+	}
 
-    @FXML
-    void orderBtnClick(ActionEvent event) {
-    	loadSubAndVisitorOrder();
-    	setSwitchPane(panesMap.get("order"));
-    }
+	@FXML
+	void orderBtnClick(ActionEvent event) {
+		loadSubAndVisitorOrder();
+		setSwitchPane(panesMap.get("order"));
+	}
 
-    @FXML
-    void orderTrakingBtnClick(ActionEvent event) {
+	@FXML
+	void orderTrakingBtnClick(ActionEvent event) {
 
-    }
+	}
 
-    @FXML
-    void parametersBtnClick(ActionEvent event) {//liron
-    	loadParkManagerParametersUpdate();
-    	setSwitchPane(panesMap.get("parameters"));
-    	
-    }
+	@FXML
+	void parametersBtnClick(ActionEvent event) {// liron
+		loadParkManagerParametersUpdate();
+		setSwitchPane(panesMap.get("parameters"));
 
-    @FXML
-    void registrationBtnClick(ActionEvent event) {
+	}
 
-    }
+	// Switch to registration screen when the registration button is clicked- OR
+	@FXML
+	void registrationBtnClick(ActionEvent event) {
+		loadRegistrationAndGuideScreen();
+		setSwitchPane(panesMap.get("registration"));
+	}
 
-    @FXML
-    void requestsBtnClick(ActionEvent event) {
+	@FXML
+	void requestsBtnClick(ActionEvent event) {
 
-    }
+	}
 
-    @FXML
-    void reportsBtnClick(ActionEvent event) {
+	@FXML
+	void reportsBtnClick(ActionEvent event) {
 
-    	Employee emp=(Employee)user;
-    	if(emp.getRole().equals("PARK_MANAGER"))
-    		loadParkManagerReports();
-    	else
-    		loadDepartmentManagerReports();
-    	setSwitchPane(panesMap.get("reports"));
-   
+		Employee emp = (Employee) user;
+		if (emp.getRole().equals("PARK_MANAGER"))
+			loadParkManagerReports();
+		else
+			loadDepartmentManagerReports();
+		setSwitchPane(panesMap.get("reports"));
 
-    }
+	}
+
 	private Map<String, Pane> panesMap;
 	/*
 	 * method called to set the user currently connected to the client and show his main screen and buttons
@@ -344,7 +345,17 @@ public class ClientMainPageController implements Initializable  {
 		panesMap = new HashMap<String, Pane>();
 	}
 
-			
-
-
+	// Load subscriber and guide registration screen- OR
+	private void loadRegistrationAndGuideScreen() {
+		FXMLLoader fxmlLoader1 = new FXMLLoader(
+				getClass().getResource(ClientConstants.Screens.REGISTRATION_PAGE.toString()));
+		AnchorPane root = null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		panesMap.put("registration", root);
+	}	
 }

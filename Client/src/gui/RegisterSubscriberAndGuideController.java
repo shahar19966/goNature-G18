@@ -31,16 +31,20 @@ public class RegisterSubscriberAndGuideController {
 
     }
 
-//    @FXML
-//    void registerBtnClick(ActionEvent event) {
-//    	if(!IsInputFieldsForRegister())
-//    	{
-//    		// show error 
-//    		return;
-//    	}
-//    	SendInfoToServer();
-//    }
-//    
+    @FXML
+    void registerBtnClick(ActionEvent event) {
+    	if(!IsValidInputFieldsForRegister())
+    	{
+    		// show error 
+    		return;
+    	}
+    	//SendInfoToServer();
+    }
     
+    public boolean IsValidInputFieldsForRegister() {
+    	
+    	
+    	return true;
+    }
 
 }
