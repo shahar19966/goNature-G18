@@ -127,7 +127,8 @@ public class Order implements Serializable {
 		orderDetails.append("Date:"+dateOfOrder+"\n");
 		orderDetails.append("Creation Date:"+orderCreationDate+"\n");
 		orderDetails.append("Time:"+timeOfOrder+"\n");
-		orderDetails.append("Email:"+email);
+		orderDetails.append("Email:"+email+"\n");
+		orderDetails.append("Total Price:"+price);
 		return orderDetails.toString();
 	}
 

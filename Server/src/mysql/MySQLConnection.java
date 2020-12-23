@@ -263,7 +263,7 @@ public class MySQLConnection {
 		return priceForOrder;
 		
 	}
-	private static Order insertNewOrder(Order orderToRequest) throws SQLException
+	private static Order insertNewOrder(Order orderToRequest,OrderStatus orderStatus) throws SQLException
 	{
 		PreparedStatement insertOrderStatement = con.prepareStatement("INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
@@ -273,7 +273,7 @@ public class MySQLConnection {
 		insertOrderStatement.setString(2, orderToRequest.getParkName());
 		insertOrderStatement.setString(3, dateNow);
 		insertOrderStatement.setString(4, String.valueOf(orderToRequest.getNumOfVisitors()));
-		insertOrderStatement.setString(5, EntityConstants.OrderStatus.ACTIVE.name());
+		insertOrderStatement.setString(5, orderStatus.name());
 		insertOrderStatement.setString(6, orderToRequest.getType().name());
 		insertOrderStatement.setString(7, orderToRequest.getDateOfOrder());
 		insertOrderStatement.setString(8, orderToRequest.getTimeOfOrder());
@@ -292,7 +292,7 @@ public class MySQLConnection {
 			orderToRequest.setOrderNum(rs.getString(1));
 			orderToRequest.setOrderCreationDate(dateNow);
 			orderToRequest.setPrice((int) price);
-			orderToRequest.setStatus(OrderStatus.ACTIVE);
+			orderToRequest.setStatus(orderStatus);
 			return orderToRequest;
 		}
 		throw new SQLException();
@@ -301,9 +301,13 @@ public class MySQLConnection {
 	{
 		if(validateDate(orderRequest))
 		{
-			return insertNewOrder(orderRequest);
+			return insertNewOrder(orderRequest,OrderStatus.ACTIVE);
 		}
 		return null;
+	}
+	public static Order enterWatingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException
+	{
+		return insertNewOrder(orderRequest,OrderStatus.WAITING);
 	}
 	
 	public static void main(String[] args) {

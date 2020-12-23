@@ -63,6 +63,7 @@ public class LoginPageController {
     		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/ClientMainPage.fxml"));
     		AnchorPane root = fxmlLoader.load();
     		ClientMainPageController cmpc = (ClientMainPageController)fxmlLoader.getController();
+    		guiControl.setClientMainPageController(cmpc);
     		cmpc.setUser(guiControl.getUser());
 			Scene scene = new Scene (root);
 			primaryStage.setScene(scene);
