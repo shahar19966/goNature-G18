@@ -3,6 +3,7 @@ package gui;
 import java.util.regex.Pattern;
 
 import client.GoNatureClient;
+import entity.Employee;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -114,6 +115,7 @@ public class GUIControl {
 			return false;
 		return pat.matcher(email).matches();
 	}
+	
 
 
 }

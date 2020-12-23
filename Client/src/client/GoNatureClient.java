@@ -1,6 +1,7 @@
 package client;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import entity.Employee;
 import entity.Order;
@@ -90,6 +91,10 @@ public class GoNatureClient extends AbstractClient {
 			case WATING_LIST:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case PARK_INCOME_REPORT:
+				guiControl.setServerMsg(serverMsg);
+				break;
+				
 			}
 		}
 		awaitResponse = false;

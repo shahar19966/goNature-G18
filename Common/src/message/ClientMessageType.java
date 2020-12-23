@@ -17,7 +17,7 @@ public enum ClientMessageType {
 	APPROVE_DURATION,
 	VISITOR_REPORT,
 	ORDER,
-	WATING_LIST
-
+	WATING_LIST,
+	INCOME_REPORT
 
 }
