@@ -203,6 +203,7 @@ public class MySQLConnection {
 	private static double calculateOrder(Order orderToRequest) throws SQLException
 	{
 		double priceForTicket=EntityConstants.TICKET_PRICE;
+		
 		double priceForOrder;
 		if(orderToRequest.getType().equals(EntityConstants.OrderType.GUIDE))
 		{
