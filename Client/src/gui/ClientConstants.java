@@ -19,7 +19,8 @@ public class ClientConstants {
 		CAPACITY_UPDATE("/gui/CapacityUpdate.fxml"),
 		DIFFERENCE_PARAMETER_UPDATE("/gui/DifferenceParameterUpdate.fxml"),
 		PARK_MANAGER_DISCOUNT_REQUESTS("/gui/ParkManagerDiscountRequests.fxml"),
-		REGISTRATION_PAGE("/gui/RegisterSubscriberAndGuide.fxml");
+		REGISTRATION_PAGE("/gui/RegisterSubscriberAndGuide.fxml"),
+		PARK_INCOME_REPORT("/gui/ParkManagerIncomeReport.fxml");
 
 		
 		public final String path;

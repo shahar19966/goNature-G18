@@ -151,6 +151,26 @@ public class MySQLConnection {
 		return reportVisitorMap;
 
 	}
+	public static String getIncomeReport(String namePark) throws SQLException
+	{
+		PreparedStatement GetIncomeReport;
+		GetIncomeReport = con
+				.prepareStatement("SELECT sum(finishedOrders.actualPrice ) "
+						+ "FROM finishedOrders "
+						+ "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
+						+ "AND orders.parkName_fk=?"
+						+ "GROUP by orders.parkName_fk");
+		GetIncomeReport.setString(1, namePark);
+		ResultSet rs = GetIncomeReport.executeQuery();
+		if (rs.next()) {
+			String amount=rs.getString(1);
+			return amount;
+		}
+		return "0";
+		
+		
+	}
 
 	public static boolean validateDate(Order orderToValidate)
 			throws NumberFormatException, SQLException, ParseException {

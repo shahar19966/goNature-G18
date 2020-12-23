@@ -116,6 +116,10 @@ public class GoNatureServer extends AbstractServer {
 					else
 						type=ServerMessageType.ORDER_SUCCESS;
 					break;
+				case INCOME_REPORT:
+					returnVal = MySQLConnection.getIncomeReport((String) (clientMsg.getMessage()));
+					type = ServerMessageType.PARK_INCOME_REPORT;
+					break;
 				}
 			}
 		} catch (Exception e) {
