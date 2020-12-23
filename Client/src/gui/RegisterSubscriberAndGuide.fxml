@@ -8,7 +8,6 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="-Infinity" prefHeight="435.0" prefWidth="725.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegisterSubscriberController">
+<AnchorPane minHeight="-Infinity" prefHeight="435.0" prefWidth="725.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegisterSubscriberAndGuideController">
    <children>
       <GridPane layoutX="9.0" prefHeight="437.0" prefWidth="697.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -113,20 +112,12 @@
             </Pane>
             <Label styleClass="labelSmall" text="CSV Code" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
                <graphic>
-                  <ImageView fitHeight="19.0" fitWidth="51.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/question.png" />
-                     </image>
-                  </ImageView>
+                  <ImageView fitHeight="19.0" fitWidth="51.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
                <tooltip>
                   <Tooltip wrapText="true">
                      <graphic>
-                        <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" smooth="false">
-                           <image>
-                              <Image url="@../images/csv.jpg" />
-                           </image>
-                        </ImageView>
+                        <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
                      </graphic>
                   </Tooltip>
                </tooltip>
@@ -146,6 +137,7 @@
             </GridPane>
             <Label styleClass="labelSmall" text="Is Guide" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
             <CheckBox fx:id="isCard1" mnemonicParsing="false" onAction="#clearCreditCardDes" prefHeight="17.0" prefWidth="23.0" selected="true" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <Label text="TODO: ADD PICTURE CSV " GridPane.columnIndex="2" GridPane.rowIndex="7" />
          </children>
       </GridPane>
    </children>

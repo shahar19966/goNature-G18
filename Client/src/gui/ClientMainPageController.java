@@ -349,7 +349,7 @@ public class ClientMainPageController implements Initializable {
 	private void loadRegistrationAndGuideScreen() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.REGISTRATION_PAGE.toString()));
-		VBox root = null;
+		AnchorPane root = null;
 		try {
 			root = fxmlLoader1.load();
 		} catch (IOException e) {
