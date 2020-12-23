@@ -17,7 +17,8 @@ public class ClientConstants {
 		SUB_AND_VISITOR_ORDER_PAGE("/gui/OrderPane.fxml"),
 		VISITATION_TIME_UPDATE("/gui/VisitationTimeUpdate.fxml"),
 		CAPACITY_UPDATE("/gui/CapacityUpdate.fxml"),
-		DIFFERENCE_PARAMETER_UPDATE("/gui/DifferenceParameterUpdate.fxml");
+		DIFFERENCE_PARAMETER_UPDATE("/gui/DifferenceParameterUpdate.fxml"),
+		PARK_MANAGER_DISCOUNT_REQUESTS("/gui/ParkManagerDiscountRequests.fxml");
 
 		
 		public final String path;
