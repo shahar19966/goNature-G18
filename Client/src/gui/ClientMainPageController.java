@@ -84,7 +84,8 @@ public class ClientMainPageController implements Initializable  {
 
     @FXML
     void discountBtnClick(ActionEvent event) {
-
+    	loadParkManagerDiscountRequests();
+    	setSwitchPane(panesMap.get("discount"));
     }
 
     @FXML
@@ -95,6 +96,7 @@ public class ClientMainPageController implements Initializable  {
     @FXML
     void homeBtnClick(ActionEvent event) {
     	setSwitchPane(panesMap.get("home"));
+    	
     }
 
     @FXML
@@ -268,6 +270,19 @@ public class ClientMainPageController implements Initializable  {
 		panesMap.put("parameters",root );
 	}
 	
+	private void loadParkManagerDiscountRequests()//hila
+	{
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.PARK_MANAGER_DISCOUNT_REQUESTS.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ 
+		panesMap.put("discount",root );
+	}
 	private void loadDepartmentManagerReports() {
 		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.DEPARTMENT_MANAGER_REPOTRS.toString()));
 		VBox root=null;

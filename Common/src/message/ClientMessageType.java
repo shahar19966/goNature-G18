@@ -16,6 +16,7 @@ public enum ClientMessageType {
 	APPROVE_DIFFERENCE,
 	APPROVE_DURATION,
 	VISITOR_REPORT,
+	ORDER
 
 
 }

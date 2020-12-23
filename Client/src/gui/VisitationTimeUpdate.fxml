@@ -8,9 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.VisitationTimeUpdateController">
    <children>
       <Label text="Update Visitation Time">
          <font>
@@ -37,12 +35,12 @@
             <Insets right="100.0" top="50.0" />
          </VBox.margin>
       </HBox>
-      <Button mnemonicParsing="false" styleClass="logInBtn" stylesheets="@../git/goNature-G18/Client/src/gui/application.css" text="Update">
+      <Button fx:id="update" mnemonicParsing="false" onAction="#updateClick" styleClass="logInBtn" stylesheets="@application.css" text="Update">
          <VBox.margin>
             <Insets left="100.0" top="50.0" />
          </VBox.margin> 
       </Button>
-      <Button mnemonicParsing="false" text="exit" textFill="#111111">
+      <Button fx:id="exit" mnemonicParsing="false" onAction="#exitClick" styleClass="logInBtn" stylesheets="@application.css" text="exit" textFill="#111111">
          <VBox.margin>
             <Insets left="300.0" top="50.0" />
          </VBox.margin>
