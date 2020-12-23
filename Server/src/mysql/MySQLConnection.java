@@ -22,6 +22,7 @@ import entity.Park;
 import entity.Subscriber;
 import entity.Visitor;
 import entity.VisitorReport;
+import entity.EntityConstants.OrderStatus;
 import entity.EntityConstants.OrderType;
 
 /*
@@ -194,13 +195,106 @@ public class MySQLConnection {
 				if (timeOfOrderForHour.containsKey(i - j))
 					sum += timeOfOrderForHour.get(i - j);
 			}
-			System.out.println(i+" "+sum);
 			if (orderToValidate.getNumOfVisitors() + sum > park.getParkMaxVisitorsDefault() - park.getParkDiffFromMax())
 				return false;
 		}
 		return true;
 	}
-
+	private static double calculateOrder(Order orderToRequest) throws SQLException
+	{
+		double priceForTicket=EntityConstants.TICKET_PRICE;
+		
+		double priceForOrder;
+		if(orderToRequest.getType().equals(EntityConstants.OrderType.GUIDE))
+		{
+			priceForTicket*=0.75;
+			priceForTicket*=0.88;
+			priceForOrder=(orderToRequest.getNumOfVisitors()-1)*priceForTicket;
+			
+		}
+		else
+		{
+			priceForTicket*=0.85;
+			if(orderToRequest.getType().equals(EntityConstants.OrderType.REGULAR))
+				priceForOrder=(orderToRequest.getNumOfVisitors())*priceForTicket;
+			else
+			{
+				String query="SELECT familyMembers FROM subscriber WHERE id_fk=?";
+				PreparedStatement familyMembersStatement = con.prepareStatement(query);
+				familyMembersStatement.setString(1, orderToRequest.getId());
+				ResultSet rs = familyMembersStatement.executeQuery();
+				if(rs.next())
+				{
+					int familyMembers = Integer.parseInt(rs.getString(1));
+					if(familyMembers>=orderToRequest.getNumOfVisitors())
+					{
+						priceForOrder=(orderToRequest.getNumOfVisitors())*priceForTicket*0.8;
+						
+					}
+					else
+					{
+						priceForOrder=(familyMembers)*priceForTicket*0.8+(orderToRequest.getNumOfVisitors()-familyMembers)*priceForTicket;
+					}
+				}
+				else
+					priceForOrder=(orderToRequest.getNumOfVisitors())*priceForTicket;
+			}
+			
+		}
+		String query="SELECT discountAmount FROM discounts WHERE startDate<=? AND finishDate>=? AND parkName_fk=? AND status='APPROVED'";
+		PreparedStatement discountStatement = con.prepareStatement(query);
+		discountStatement.setString(1, orderToRequest.getDateOfOrder());
+		discountStatement.setString(2, orderToRequest.getDateOfOrder());
+		discountStatement.setString(3, orderToRequest.getParkName());
+		ResultSet rs = discountStatement.executeQuery();
+		while(rs.next())
+			priceForOrder=priceForOrder*((100-Integer.parseInt(rs.getString(1)))/100);
+		return priceForOrder;
+		
+	}
+	private static Order insertNewOrder(Order orderToRequest) throws SQLException
+	{
+		PreparedStatement insertOrderStatement = con.prepareStatement("INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateNow = formatter.format(date);
+		insertOrderStatement.setString(1, orderToRequest.getId());
+		insertOrderStatement.setString(2, orderToRequest.getParkName());
+		insertOrderStatement.setString(3, dateNow);
+		insertOrderStatement.setString(4, String.valueOf(orderToRequest.getNumOfVisitors()));
+		insertOrderStatement.setString(5, EntityConstants.OrderStatus.ACTIVE.name());
+		insertOrderStatement.setString(6, orderToRequest.getType().name());
+		insertOrderStatement.setString(7, orderToRequest.getDateOfOrder());
+		insertOrderStatement.setString(8, orderToRequest.getTimeOfOrder());
+		double price =calculateOrder(orderToRequest);
+		insertOrderStatement.setString(9, String.valueOf((int) price));
+		insertOrderStatement.setString(10, orderToRequest.getEmail());
+		insertOrderStatement.executeUpdate();
+		String query="SELECT orderNum FROM orders where id_fk=? AND parkName_fk=? AND orderCreationDate=?;";
+		PreparedStatement getOrderNumStatement=con.prepareStatement(query);
+		getOrderNumStatement.setString(1, orderToRequest.getId());
+		getOrderNumStatement.setString(2, orderToRequest.getParkName());
+		getOrderNumStatement.setString(3, dateNow);
+		ResultSet rs = getOrderNumStatement.executeQuery();
+		if(rs.next())
+		{
+			orderToRequest.setOrderNum(rs.getString(1));
+			orderToRequest.setOrderCreationDate(dateNow);
+			orderToRequest.setPrice((int) price);
+			orderToRequest.setStatus(OrderStatus.ACTIVE);
+			return orderToRequest;
+		}
+		throw new SQLException();
+	}
+	public static Order createOrder(Order orderRequest) throws SQLException, NumberFormatException, ParseException
+	{
+		if(validateDate(orderRequest))
+		{
+			return insertNewOrder(orderRequest);
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		connectToDB();
 		/*
@@ -208,8 +302,8 @@ public class MySQLConnection {
 		 * type,String dateOfOrder,String timeOfOrder,int price) {
 		 */
 		try {
-			System.out.println(validateDate(
-					new Order("123123123", "1", 161, EntityConstants.OrderType.REGULAR, "2020-12-23", "14:00:00", 2)));
+			System.out.println(createOrder(
+					new Order("123123123", "1", 50, EntityConstants.OrderType.REGULAR, "2020-12-23", "14:00:00", 2,"jojododo@gmail.com")));
 		} catch (NumberFormatException | SQLException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
