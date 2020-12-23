@@ -5,15 +5,16 @@ import java.io.Serializable;
 public class VisitorReport implements Serializable {
 
 	private String namePark;
-	private int countSubscriber=0,countGuid=0,countRegular=0;
+	private int countSubscriber,countGuid,countRegular;
 
 	
-	public VisitorReport(String namePark,int countSubscriber, int countGuid,int countRegular)
+	public VisitorReport(String namePark)
 	{
 		this.namePark=namePark;
-		this.countGuid=countGuid;
-		this.countRegular=countRegular;
-		this.countSubscriber=countSubscriber;
+		this.countSubscriber=0;
+		this.countGuid=0;
+		this.countRegular=0;
+	
 	}
 
 	public String getNamePark()
@@ -24,13 +25,25 @@ public class VisitorReport implements Serializable {
 	{
 		return countGuid;
 	}
+	public void setCountGuid(int countGuid)
+	{
+		this.countGuid=countGuid;
+	}
 	public int getCountRegular()
 	{
 		return countRegular;
 	}
+	public void setCountRegular(int CountRegular)
+	{
+		this.countRegular=CountRegular;
+	}
 	public int getCountSubscriber()
 	{
 		return countSubscriber;
+	}
+	public void setCountSubscriber(int countSubscriber)
+	{
+		this.countSubscriber=countSubscriber;
 	}
 	@Override
 	public String toString() {
