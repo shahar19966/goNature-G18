@@ -84,7 +84,8 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void discountBtnClick(ActionEvent event) {
-
+		loadParkManagerDiscountRequests();
+    	setSwitchPane(panesMap.get("discount"));
 	}
 
 	@FXML
@@ -146,89 +147,82 @@ public class ClientMainPageController implements Initializable {
 	}
 
 	private Map<String, Pane> panesMap;
-
 	/*
-	 * method called to set the user currently connected to the client and show his
-	 * main screen and buttons
+	 * method called to set the user currently connected to the client and show his main screen and buttons
 	 */
-	public void setUser(Object user) {
-		this.user = user;
-		if (user instanceof Visitor) {
-			setVisitorAndSubscriberButtons(btnList);
-			loadVisitorScreens();
-		} else if (user instanceof Subscriber) {
-			setVisitorAndSubscriberButtons(btnList);
-			loadSubscriberScreens();
-		} else { // employee
-			setEmployeeButtons(btnList);
-			loadEmployeeScreens();
-		}
-		setSwitchPane(panesMap.get("home"));
-	}
-
-	/*
-	 * method that adds every button loaded into a button list
-	 */
-	private void setBtnList(List<Button> list) {
-		list.add(orderBtn);
-		list.add(entryControlBtn);
-		list.add(exitControlBtn);
-		list.add(orderTrakingBtn);
-		list.add(parametersBtn);
-		list.add(registrationBtn);
-		list.add(requestsBtn);
-		list.add(reportsBtn);
-		list.add(discountBtn);
-	}
-
-	/*
-	 * method that removes every button that doesn't concern a visitor and a
-	 * subscriber from display
-	 */
-	private void setVisitorAndSubscriberButtons(List<Button> list) {
-		list.remove(orderBtn);
-		list.remove(orderTrakingBtn);
-		for (Button b : list) {
-			b.setVisible(false);
-			b.setManaged(false);
-		}
-	}
-
-	/*
-	 * method that removes every button that doesn't concern a certain employee type
-	 * (decided by the type of employee that connected)
-	 */
-	private void setEmployeeButtons(List<Button> list) {
-		Employee emp = (Employee) user;
-		switch (emp.getRoleEnum()) {
-		case PARK_MANAGER:
-			list.remove(parametersBtn);
-			list.remove(discountBtn);
-			list.remove(reportsBtn);
+    public void setUser(Object user) {
+    	this.user=user;
+    	if(user instanceof Visitor) {
+    		setVisitorAndSubscriberButtons(btnList);
+    		loadVisitorScreens();
+    	}
+    	else if(user instanceof Subscriber) {
+    		setVisitorAndSubscriberButtons(btnList);
+    		loadSubscriberScreens();
+    	}
+    	else { //employee
+    		setEmployeeButtons(btnList);
+    		loadEmployeeScreens();
+    	}
+    	setSwitchPane(panesMap.get("home"));
+    }
+    /*
+     * method that adds every button loaded into a button list
+     */
+    private void setBtnList(List<Button> list) {
+    	list.add(orderBtn);
+    	list.add(entryControlBtn);
+    	list.add(exitControlBtn);
+    	list.add(orderTrakingBtn);
+    	list.add(parametersBtn);
+    	list.add(registrationBtn);
+    	list.add(requestsBtn);
+    	list.add(reportsBtn);
+    	list.add(discountBtn);
+    }
+    /*
+     * method that removes every button that doesn't concern a visitor and a subscriber from display
+     */
+    private void setVisitorAndSubscriberButtons(List<Button> list) {
+    	list.remove(orderBtn);
+    	list.remove(orderTrakingBtn);
+    	for(Button b:list) {
+    		b.setVisible(false);
+    		b.setManaged(false);
+    	}
+    }
+    /*
+     * method that removes every button that doesn't concern a certain employee type (decided by the type of employee that connected)
+     */
+    private void setEmployeeButtons(List<Button> list) {
+    	Employee emp=(Employee)user;
+    	switch(emp.getRoleEnum()) {
+    	case PARK_MANAGER:
+    		list.remove(parametersBtn);
+    		list.remove(discountBtn);
+    		list.remove(reportsBtn);
+    		break;
+    	case DEP_MANAGER:
+    		list.remove(reportsBtn);
+    		list.remove(requestsBtn);
+    		break;
+    	case SERVICE:
+    		list.remove(registrationBtn);
 			break;
-		case DEP_MANAGER:
-			list.remove(reportsBtn);
-			list.remove(requestsBtn);
+    	case REGULAR:
+    		list.remove(orderBtn);
+    		list.remove(entryControlBtn);
+    		list.remove(exitControlBtn);
 			break;
-		case SERVICE:
-			list.remove(registrationBtn);
-			break;
-		case REGULAR:
-			list.remove(orderBtn);
-			list.remove(entryControlBtn);
-			list.remove(exitControlBtn);
-			break;
-		}
-		for (Button b : list) {
-			b.setVisible(false);
-			b.setManaged(false);
-		}
-	}
-
-	/*
-	 * method that takes a pane and displays it and it's content in the small window
-	 * set for it in the client display
-	 */
+    	}
+    	for(Button b:list) {
+    		b.setVisible(false);
+    		b.setManaged(false);
+    	}
+    }
+    /*
+     * method that takes a pane and displays it and it's content in the small window set for it in the client display
+     */
 	public void setSwitchPane(Pane toSwitch) {
 		switchPane.getChildren().clear();
 		switchPane.getChildren().add(toSwitch);
@@ -237,108 +231,118 @@ public class ClientMainPageController implements Initializable {
 		AnchorPane.setBottomAnchor(toSwitch, 10.0);
 		AnchorPane.setTopAnchor(toSwitch, 0.0);
 	}
-
 	private void loadVisitorScreens() {
-		FXMLLoader fxmlLoader1 = new FXMLLoader(
-				getClass().getResource(ClientConstants.Screens.VISITOR_MAIN_PAGE.toString()));
-		VBox root = null;
+		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(ClientConstants.Screens.VISITOR_MAIN_PAGE.toString()));
+		VBox root=null;
 		try {
 			root = fxmlLoader1.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		VisitorHomePageController vmpc = fxmlLoader1.getController();
-		vmpc.setId(((Visitor) user).getId());
-		panesMap.put("home", root);
+		VisitorHomePageController vmpc=fxmlLoader1.getController();
+		vmpc.setId(((Visitor)user).getId());
+		panesMap.put("home",root );
 	}
-
+	
 	private void loadParkManagerReports() {
-		FXMLLoader fxmlLoader1 = new FXMLLoader(
-				getClass().getResource(ClientConstants.Screens.PARK_MANAGER_REPOTRS.toString()));
-		VBox root = null;
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.PARK_MANAGER_REPOTRS.toString()));
+		VBox root=null;
 		try {
 			root = fxmlLoader1.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// ParkManagerReportsController pmrc=fxmlLoader1.getController();
-		panesMap.put("reports", root);
+		//ParkManagerReportsController pmrc=fxmlLoader1.getController();
+		panesMap.put("reports",root );
 	}
-
-	private void loadParkManagerParametersUpdate()// liron
+	private void loadParkManagerParametersUpdate()//liron
 	{
-		FXMLLoader fxmlLoader1 = new FXMLLoader(
-				getClass().getResource(ClientConstants.Screens.PARK_MANAGER_PATAMETERS_UPDATE.toString()));
-		VBox root = null;
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.PARK_MANAGER_PATAMETERS_UPDATE.toString()));
+		VBox root=null;
 		try {
 			root = fxmlLoader1.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		panesMap.put("parameters", root);
+ 
+		panesMap.put("parameters",root );
 	}
-
+	
+	private void loadParkManagerDiscountRequests()//hila
+	{
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.PARK_MANAGER_DISCOUNT_REQUESTS.toString()));
+		VBox root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ 
+		panesMap.put("discount",root );
+	}
 	private void loadDepartmentManagerReports() {
-		FXMLLoader fxmlLoader1 = new FXMLLoader(
-				getClass().getResource(ClientConstants.Screens.DEPARTMENT_MANAGER_REPOTRS.toString()));
-		VBox root = null;
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.DEPARTMENT_MANAGER_REPOTRS.toString()));
+		VBox root=null;
 		try {
 			root = fxmlLoader1.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
-		panesMap.put("reports", root);
+	//	DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
+		panesMap.put("reports",root );
 	}
-
 	private void loadSubscriberScreens() {
-		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass()
-				.getResource(user instanceof Subscriber ? ClientConstants.Screens.SUBSCRIBER_MAIN_PAGE.toString()
-						: ClientConstants.Screens.GUIDE_MAIN_PAGE.toString()));
-		VBox root = null;
+		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(
+				user instanceof Subscriber?ClientConstants.Screens.SUBSCRIBER_MAIN_PAGE.toString():
+					ClientConstants.Screens.GUIDE_MAIN_PAGE.toString()));
+		VBox root=null;
 		try {
 			root = fxmlLoader1.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		SubscriberHomePageController shpc = fxmlLoader1.getController();
-		shpc.setLabels((Subscriber) user);
-		panesMap.put("home", root);
+		SubscriberHomePageController shpc=fxmlLoader1.getController();
+		shpc.setLabels((Subscriber)user);
+		panesMap.put("home",root );
 	}
-
 	private void loadEmployeeScreens() {
-		FXMLLoader fxmlLoader1 = new FXMLLoader(
-				getClass().getResource(ClientConstants.Screens.EMPLOYEE_MAIN_PAGE.toString()));
-		VBox root = null;
+		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(ClientConstants.Screens.EMPLOYEE_MAIN_PAGE.toString()));
+		VBox root=null;
 		try {
 			root = fxmlLoader1.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		EmployeeHomePageController ehpc = fxmlLoader1.getController();
-		ehpc.setLabels((Employee) user);
-		panesMap.put("home", root);
+		EmployeeHomePageController ehpc=fxmlLoader1.getController();
+		ehpc.setLabels((Employee)user);
+		panesMap.put("home",root );
+	}
+	private void loadSubAndVisitorOrder() {
+		FXMLLoader fxmlLoader1 =new FXMLLoader(getClass().getResource(ClientConstants.Screens.SUB_AND_VISITOR_ORDER_PAGE.toString()));
+		GridPane root=null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	//	DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
+		panesMap.put("order",root );
 	}
 
-	private void loadSubAndVisitorOrder() {
-		FXMLLoader fxmlLoader1 = new FXMLLoader(
-				getClass().getResource(ClientConstants.Screens.SUB_AND_VISITOR_ORDER_PAGE.toString()));
-		GridPane root = null;
-		try {
-			root = fxmlLoader1.load();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
-		panesMap.put("order", root);
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		// TODO Auto-generated method stub
+		btnList=new ArrayList<>();
+		setBtnList(btnList);
+		panesMap = new HashMap<String, Pane>();
 	}
 
 	// Load subscriber and guide registration screen- OR
@@ -353,14 +357,5 @@ public class ClientMainPageController implements Initializable {
 			e.printStackTrace();
 		}
 		panesMap.put("registration", root);
-	}
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
-		btnList = new ArrayList<>();
-		setBtnList(btnList);
-		panesMap = new HashMap<String, Pane>();
-	}
-
+	}	
 }

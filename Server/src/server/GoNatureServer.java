@@ -103,6 +103,10 @@ public class GoNatureServer extends AbstractServer {
 					type=ServerMessageType.PARK_LIST;
 				case CONNECTION:
 					break;
+				case VISITOR_REPORT:
+					returnVal=MySQLConnection.getVisitorReport();
+					type=ServerMessageType.PARK_VISITATION_REPORT;
+					break;
 				}		
 			}
 		}catch(Exception e) {try {

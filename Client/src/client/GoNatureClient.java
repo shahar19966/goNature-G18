@@ -74,6 +74,10 @@ public class GoNatureClient extends AbstractClient {
 			  case LOGOUT_SUCCESS:
 				  GUIControl.popUpMessage("Logged out");
 				  break;
+			  case PARK_VISITATION_REPORT:
+				  guiControl.setServerMsg(serverMsg);
+				  break;
+				  
 			  }
 		  }
 		  awaitResponse=false;

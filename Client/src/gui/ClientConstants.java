@@ -18,6 +18,7 @@ public class ClientConstants {
 		VISITATION_TIME_UPDATE("/gui/VisitationTimeUpdate.fxml"),
 		CAPACITY_UPDATE("/gui/CapacityUpdate.fxml"),
 		DIFFERENCE_PARAMETER_UPDATE("/gui/DifferenceParameterUpdate.fxml"),
+		PARK_MANAGER_DISCOUNT_REQUESTS("/gui/ParkManagerDiscountRequests.fxml"),
 		REGISTRATION_PAGE("/gui/RegisterSubscriberAndGuide.fxml");
 
 		
