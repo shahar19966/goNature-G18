@@ -88,7 +88,7 @@ public class GoNatureClient extends AbstractClient {
 			case ORDER_FAILURE:
 				guiControl.setServerMsg(null);
 				break;
-			case WATING_LIST:
+			case WAITING_LIST:
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case PARK_INCOME_REPORT:

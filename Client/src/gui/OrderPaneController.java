@@ -101,7 +101,7 @@ public class OrderPaneController implements Initializable {
 			});
 			GuiButton watingListButton = new GuiButton("Enter Wating List", AlertType.Info, Sizes.Medium);
 			watingListButton.setOnAction(e -> {
-				guiControl.sendToServer(new ClientMessage(ClientMessageType.WATING_LIST, createOrderFromForm()));
+				guiControl.sendToServer(new ClientMessage(ClientMessageType.WAITING_LIST, createOrderFromForm()));
 				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Enter Wating List Succeeded",
 						((Order) guiControl.getServerMsg().getMessage()).toString(), null);
 				clearFunc(null);

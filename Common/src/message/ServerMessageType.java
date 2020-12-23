@@ -13,6 +13,6 @@ public enum ServerMessageType {
 	SERVER_ERROR,
 	ORDER_SUCCESS,
 	ORDER_FAILURE,
-	WATING_LIST
+	WAITING_LIST
 
 }
