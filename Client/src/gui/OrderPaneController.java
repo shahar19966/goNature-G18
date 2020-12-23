@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import entity.EntityConstants;
+import entity.Order;
 import entity.Park;
 import entity.Subscriber;
+import entity.Visitor;
+import entity.EntityConstants.OrderType;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -78,7 +81,23 @@ public class OrderPaneController implements Initializable {
 
     @FXML
     void orderFunc(ActionEvent event) {
-
+    	Order order = new Order(null, parkNameComboBox.getValue(),peopleAmount.getValue(), null, date.getValue().toString(), timeComboBox.getValue(), -1,emailText.getText());
+    	if(guiControl.getUser() instanceof Visitor)
+    	{
+    		Visitor visitor = (Visitor)guiControl.getUser();
+    		order.setId(visitor.getId());
+    		order.setType(OrderType.REGULAR);
+    	}
+    	else {
+			Subscriber subscriber = (Subscriber)guiControl.getUser();
+			order.setId(subscriber.getID());
+			if(guideGroupCheckBox.isSelected())
+				order.setType(OrderType.GUIDE);
+			else
+				order.setType(OrderType.SUBSCRIBER);
+		}
+    	guiControl.sendToServer(new ClientMessage(ClientMessageType.ORDER, order));
+    	
     }
 
 	@Override

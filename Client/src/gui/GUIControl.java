@@ -85,9 +85,13 @@ public class GUIControl {
 		});
 	}
 	public static void popUpMessage(String msg) {
+		popUpMessage("Message",msg);
+	}
+	public static void popUpMessage(String title,String msg)
+	{
 		Platform.runLater(() -> {
 			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Message");
+			alert.setTitle(title);
 			alert.setHeaderText("");
 			alert.setContentText(msg);
 			alert.showAndWait();

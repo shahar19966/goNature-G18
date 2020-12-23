@@ -3,6 +3,7 @@ package entity;
 public class EntityConstants{
 	public static final int PARK_OPEN=8;
 	public static final int PARK_CLOSED=16;
+	public static final int TICKET_PRICE=50;
 	public enum ParkParameter {
 		CAPACITY,
 		DIFFERENCE,
