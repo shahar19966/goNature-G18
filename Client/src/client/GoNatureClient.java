@@ -5,6 +5,8 @@ import java.io.IOException;
 import entity.Employee;
 import entity.Order;
 import gui.GUIControl;
+import gui.GuiButton;
+import gui.ClientConstants.AlertType;
 import message.ClientMessage;
 import message.ClientMessageType;
 import message.ServerMessage;
@@ -79,7 +81,14 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case ORDER_SUCCESS:
-				GUIControl.popUpMessage("Order Succeeded", ((Order) serverMsg.getMessage()).toString());
+				guiControl.setServerMsg(serverMsg);
+
+				break;
+			case ORDER_FAILURE:
+				guiControl.setServerMsg(null);
+				break;
+			case WATING_LIST:
+				guiControl.setServerMsg(serverMsg);
 				break;
 			}
 		}

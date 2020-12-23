@@ -23,9 +23,18 @@ public class GUIControl {
 	private  Object currentUser;
 	private  Stage primaryStage;
 	private  ServerMessage serverMsg;
+	private ClientMainPageController cmpc;
 	private GUIControl() {}
 	public static GUIControl getInstance() {
 		return instance;
+	}
+	public void setClientMainPageController(ClientMainPageController cmpc)
+	{
+		this.cmpc=cmpc;
+	}
+	public ClientMainPageController getClientMainPageController()
+	{
+		return cmpc;
 	}
 	public  void setClient(GoNatureClient client) {
 		this.client=client;

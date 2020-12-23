@@ -116,6 +116,9 @@ public class GoNatureServer extends AbstractServer {
 					else
 						type=ServerMessageType.ORDER_SUCCESS;
 					break;
+				case WATING_LIST:
+					returnVal = MySQLConnection.enterWatingist((Order)clientMsg.getMessage());
+					type=ServerMessageType.WATING_LIST;
 				}
 			}
 		} catch (Exception e) {

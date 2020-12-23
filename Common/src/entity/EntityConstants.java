@@ -28,5 +28,7 @@ public class EntityConstants{
 		SUBSCRIBER,
 		GUIDE
 	}
+	
+	
 }
 
