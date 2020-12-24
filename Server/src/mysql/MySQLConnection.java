@@ -317,6 +317,10 @@ public class MySQLConnection {
 		parameterPreparedStatement.executeUpdate();
 		return parameterUpdate;
 	}
+	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException
+	{
+		return insertNewOrder(orderRequest,OrderStatus.WAITING);
+	}
 
 	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
 		return insertNewOrder(orderRequest, OrderStatus.WAITING);
