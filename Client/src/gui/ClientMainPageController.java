@@ -421,6 +421,8 @@ public class ClientMainPageController implements Initializable {
 				alertTitle.getStyleClass().add(alertType.getAlertTypeStyleClass());
 				alertTitle.setText(alertTitleString);
 				alertButtons.getChildren().clear();
+				AnchorPane.setLeftAnchor(nodeBody, 20.0);
+				AnchorPane.setRightAnchor(nodeBody, 20.0);
 				if (alertButtonsList == null || alertButtonsList.size() == 0) {
 					alertButtons.setVisible(false);
 				} else {

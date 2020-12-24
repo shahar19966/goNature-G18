@@ -6,12 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -263,37 +266,37 @@ public class MySQLConnection {
 		return priceForOrder;
 		
 	}
-	private static Order insertNewOrder(Order orderToRequest,OrderStatus orderStatus) throws SQLException
+	private static Order insertNewOrder(Order orderToInsert,OrderStatus orderStatus) throws SQLException
 	{
 		PreparedStatement insertOrderStatement = con.prepareStatement("INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateNow = formatter.format(date);
-		insertOrderStatement.setString(1, orderToRequest.getId());
-		insertOrderStatement.setString(2, orderToRequest.getParkName());
+		insertOrderStatement.setString(1, orderToInsert.getId());
+		insertOrderStatement.setString(2, orderToInsert.getParkName());
 		insertOrderStatement.setString(3, dateNow);
-		insertOrderStatement.setString(4, String.valueOf(orderToRequest.getNumOfVisitors()));
+		insertOrderStatement.setString(4, String.valueOf(orderToInsert.getNumOfVisitors()));
 		insertOrderStatement.setString(5, orderStatus.name());
-		insertOrderStatement.setString(6, orderToRequest.getType().name());
-		insertOrderStatement.setString(7, orderToRequest.getDateOfOrder());
-		insertOrderStatement.setString(8, orderToRequest.getTimeOfOrder());
-		double price =calculateOrder(orderToRequest);
+		insertOrderStatement.setString(6, orderToInsert.getType().name());
+		insertOrderStatement.setString(7, orderToInsert.getDateOfOrder());
+		insertOrderStatement.setString(8, orderToInsert.getTimeOfOrder());
+		double price =calculateOrder(orderToInsert);
 		insertOrderStatement.setString(9, String.valueOf((int) price));
-		insertOrderStatement.setString(10, orderToRequest.getEmail());
+		insertOrderStatement.setString(10, orderToInsert.getEmail());
 		insertOrderStatement.executeUpdate();
 		String query="SELECT orderNum FROM orders where id_fk=? AND parkName_fk=? AND orderCreationDate=?;";
 		PreparedStatement getOrderNumStatement=con.prepareStatement(query);
-		getOrderNumStatement.setString(1, orderToRequest.getId());
-		getOrderNumStatement.setString(2, orderToRequest.getParkName());
+		getOrderNumStatement.setString(1, orderToInsert.getId());
+		getOrderNumStatement.setString(2, orderToInsert.getParkName());
 		getOrderNumStatement.setString(3, dateNow);
 		ResultSet rs = getOrderNumStatement.executeQuery();
 		if(rs.next())
 		{
-			orderToRequest.setOrderNum(rs.getString(1));
-			orderToRequest.setOrderCreationDate(dateNow);
-			orderToRequest.setPrice((int) price);
-			orderToRequest.setStatus(orderStatus);
-			return orderToRequest;
+			orderToInsert.setOrderNum(rs.getString(1));
+			orderToInsert.setOrderCreationDate(dateNow);
+			orderToInsert.setPrice((int) price);
+			orderToInsert.setStatus(orderStatus);
+			return orderToInsert;
 		}
 		throw new SQLException();
 	}
@@ -309,20 +312,36 @@ public class MySQLConnection {
 	{
 		return insertNewOrder(orderRequest,OrderStatus.WAITING);
 	}
+	public static Map<String,List<String>> getAvailableDates(Order order) throws ParseException, NumberFormatException, SQLException{
+		Map<String,List<String>> dateMap=new LinkedHashMap<>();
+		DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+		Date date=format.parse(order.getDateOfOrder());
+		for(int i=0;i<7;i++) {
+			  Calendar cal = Calendar.getInstance();
+		      cal.setTime(date);
+		      cal.add(Calendar.DATE, i); //minus number would decrement the days
+		      Date nextDate= cal.getTime();
+		      order.setDateOfOrder(format.format(nextDate));
+			for(int j=EntityConstants.PARK_OPEN;j<=EntityConstants.PARK_CLOSED;j++) {
+				order.setTimeOfOrder(j);
+				if(validateDate(order)) {
+					if(!dateMap.containsKey(format.format(nextDate)))
+						dateMap.put(format.format(nextDate), new ArrayList<String>());
+					dateMap.get(format.format(nextDate)).add(order.getTimeOfOrder());
+				}
+			}
+		}
+		return dateMap;
+	}
 	
 	public static void main(String[] args) {
-		connectToDB();
-		/*
-		 * public Order(String id,String parkName,int numOfVisitors, OrderType
-		 * type,String dateOfOrder,String timeOfOrder,int price) {
-		 */
-		try {
-			System.out.println(createOrder(
-					new Order("123123123", "1", 50, EntityConstants.OrderType.REGULAR, "2020-12-23", "14:00:00", 2,"jojododo@gmail.com")));
-		} catch (NumberFormatException | SQLException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		  Calendar cal = Calendar.getInstance();
+		  DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+		  Date date=new Date();
+	      cal.setTime(date);
+	      cal.add(Calendar.DATE, 1); //minus number would decrement the days
+	      Date nextDate= cal.getTime();
+	      System.out.println(format.format(nextDate));
 	}
 
 }
