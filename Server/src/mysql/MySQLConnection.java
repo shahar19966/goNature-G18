@@ -152,6 +152,26 @@ public class MySQLConnection {
 		return reportVisitorMap;
 
 	}
+	public static String getIncomeReport(String namePark) throws SQLException
+	{
+		PreparedStatement GetIncomeReport;
+		GetIncomeReport = con
+				.prepareStatement("SELECT sum(finishedOrders.actualPrice ) "
+						+ "FROM finishedOrders "
+						+ "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
+						+ "AND orders.parkName_fk=?"
+						+ "GROUP by orders.parkName_fk");
+		GetIncomeReport.setString(1, namePark);
+		ResultSet rs = GetIncomeReport.executeQuery();
+		if (rs.next()) {
+			String amount=rs.getString(1);
+			return amount;
+		}
+		return "0";
+		
+		
+	}
 
 	public static boolean validateDate(Order orderToValidate)
 			throws NumberFormatException, SQLException, ParseException {
@@ -244,7 +264,7 @@ public class MySQLConnection {
 		return priceForOrder;
 		
 	}
-	private static Order insertNewOrder(Order orderToRequest) throws SQLException
+	private static Order insertNewOrder(Order orderToRequest,OrderStatus orderStatus) throws SQLException
 	{
 		PreparedStatement insertOrderStatement = con.prepareStatement("INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
@@ -254,7 +274,7 @@ public class MySQLConnection {
 		insertOrderStatement.setString(2, orderToRequest.getParkName());
 		insertOrderStatement.setString(3, dateNow);
 		insertOrderStatement.setString(4, String.valueOf(orderToRequest.getNumOfVisitors()));
-		insertOrderStatement.setString(5, EntityConstants.OrderStatus.ACTIVE.name());
+		insertOrderStatement.setString(5, orderStatus.name());
 		insertOrderStatement.setString(6, orderToRequest.getType().name());
 		insertOrderStatement.setString(7, orderToRequest.getDateOfOrder());
 		insertOrderStatement.setString(8, orderToRequest.getTimeOfOrder());
@@ -273,7 +293,7 @@ public class MySQLConnection {
 			orderToRequest.setOrderNum(rs.getString(1));
 			orderToRequest.setOrderCreationDate(dateNow);
 			orderToRequest.setPrice((int) price);
-			orderToRequest.setStatus(OrderStatus.ACTIVE);
+			orderToRequest.setStatus(orderStatus);
 			return orderToRequest;
 		}
 		throw new SQLException();
@@ -282,7 +302,7 @@ public class MySQLConnection {
 	{
 		if(validateDate(orderRequest))
 		{
-			return insertNewOrder(orderRequest);
+			return insertNewOrder(orderRequest,OrderStatus.ACTIVE);
 		}
 		return null;
 	}
@@ -294,8 +314,10 @@ public class MySQLConnection {
 		parameterPreparedStatement.setInt(2, parameterUpdate.getNewValue());
 		parameterPreparedStatement.setString(3, parameterUpdate.getParkName());
 		parameterPreparedStatement.executeUpdate();
-		//con.close();
 		return parameterUpdate;
+	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException
+	{
+		return insertNewOrder(orderRequest,OrderStatus.WAITING);
 	}
 	
 	public static void main(String[] args) {

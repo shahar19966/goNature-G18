@@ -1,11 +1,14 @@
 package client;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import entity.Employee;
 import entity.Order;
 import entity.ParameterUpdate;
 import gui.GUIControl;
+import gui.GuiButton;
+import gui.ClientConstants.AlertType;
 import message.ClientMessage;
 import message.ClientMessageType;
 import message.ServerMessage;
@@ -80,12 +83,24 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case ORDER_SUCCESS:
-				GUIControl.popUpMessage("Order Succeeded", ((Order) serverMsg.getMessage()).toString());
+				guiControl.setServerMsg(serverMsg);
+
+				break;
+			case ORDER_FAILURE:
+				guiControl.setServerMsg(null);
+				break;
+			case WAITING_LIST:
+				guiControl.setServerMsg(serverMsg);
+				break;
+			case PARK_INCOME_REPORT:
+				guiControl.setServerMsg(serverMsg);
 				break;
 			case PARAMETER_UPDATE://liron
 				GUIControl.popUpMessage("Parameter Update Succeeded", ((ParameterUpdate) serverMsg.getMessage()).toString());
 				break;
 
+
+				
 			}
 		}
 		awaitResponse = false;

@@ -27,6 +27,16 @@ public class ParkManagerReportsController {
 
 	@FXML
 	void incomeReport(ActionEvent event) {
+		Parent root ;
+        try {
+        	 root = FXMLLoader.load(getClass().getResource(ClientConstants.Screens.PARK_INCOME_REPORT.toString()));
+            Stage stage = new Stage();
+            stage.setTitle("park manager icome report");
+            stage.setScene(new Scene(root,451, 445));
+            stage.show();
+	} catch(Exception e) {
+		e.printStackTrace();
+	}
 
 	}
 
