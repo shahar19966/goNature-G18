@@ -322,10 +322,6 @@ public class MySQLConnection {
 		return insertNewOrder(orderRequest,OrderStatus.WAITING);
 	}
 
-	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
-		return insertNewOrder(orderRequest, OrderStatus.WAITING);
-	}
-
 	public static Map<String, List<String>> getAvailableDates(Order order)
 			throws ParseException, NumberFormatException, SQLException {
 		Park park = getCertainPark(order.getParkName());
