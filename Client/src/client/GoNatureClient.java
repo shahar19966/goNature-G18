@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import entity.Employee;
 import entity.Order;
+import entity.ParameterUpdate;
 import gui.GUIControl;
 import gui.GuiButton;
 import gui.ClientConstants.AlertType;
@@ -97,6 +98,10 @@ public class GoNatureClient extends AbstractClient {
 			case AVAILABLE_DATES:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case PARAMETER_UPDATE://liron
+				GUIControl.popUpMessage("Parameter Update Succeeded", ((ParameterUpdate) serverMsg.getMessage()).toString());
+				break;
+
 				
 			}
 		}
