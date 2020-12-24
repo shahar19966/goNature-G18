@@ -28,7 +28,7 @@
                   <Insets right="20.0" />
                </HBox.margin>
             </Label>
-            <TextField promptText="Enter new capacity">
+            <TextField fx:id="newvalue" onAction="#newValue" promptText="Enter new capacity">
                <font>
                   <Font size="16.0" />
                </font>

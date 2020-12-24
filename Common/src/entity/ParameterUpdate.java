@@ -1,6 +1,8 @@
 package entity;
 
-public class ParameterUpdate {
+import java.io.Serializable;
+
+public class ParameterUpdate implements Serializable {
 	private EntityConstants.ParkParameter parameter;
 	private int newValue;
 	private String parkName;
@@ -9,6 +11,7 @@ public class ParameterUpdate {
 		this.newValue = newValue;
 		this.parkName=parkName;
 	}
+	
 	public String getParameter() {
 		return parameter.toString();
 	}
@@ -30,5 +33,9 @@ public class ParameterUpdate {
 	}
 	public String getParkName() {
 		return parkName;
+	}
+	@Override
+	public String toString() {//liron
+		return parameter + " " + newValue + " " + parkName;
 	}
 }

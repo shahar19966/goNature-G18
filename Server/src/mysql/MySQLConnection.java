@@ -18,6 +18,7 @@ import java.util.Map;
 import entity.Employee;
 import entity.EntityConstants;
 import entity.Order;
+import entity.ParameterUpdate;
 import entity.Park;
 import entity.Subscriber;
 import entity.Visitor;
@@ -305,6 +306,15 @@ public class MySQLConnection {
 		}
 		return null;
 	}
+	//liron
+	public static ParameterUpdate createParameterUpdate(ParameterUpdate parameterUpdate) throws SQLException
+	{
+		PreparedStatement parameterPreparedStatement=con.prepareStatement("INSERT INTO parameterUpdate (parameter,newValue,parkName_fk) VALUES (?,?,?);");
+		parameterPreparedStatement.setString(1, parameterUpdate.getParameter());
+		parameterPreparedStatement.setInt(2, parameterUpdate.getNewValue());
+		parameterPreparedStatement.setString(3, parameterUpdate.getParkName());
+		parameterPreparedStatement.executeUpdate();
+		return parameterUpdate;
 	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException
 	{
 		return insertNewOrder(orderRequest,OrderStatus.WAITING);
