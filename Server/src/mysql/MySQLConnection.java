@@ -155,27 +155,22 @@ public class MySQLConnection {
 		return reportVisitorMap;
 
 	}
-	public static String getIncomeReport(String namePark) throws SQLException
-	{
+
+	public static String getIncomeReport(String namePark) throws SQLException {
 		PreparedStatement GetIncomeReport;
-		GetIncomeReport = con
-				.prepareStatement("SELECT sum(finishedOrders.actualPrice ) "
-						+ "FROM finishedOrders "
-						+ "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
-						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
-						+ "AND orders.parkName_fk=?"
-						+ "GROUP by orders.parkName_fk");
+		GetIncomeReport = con.prepareStatement("SELECT sum(finishedOrders.actualPrice ) " + "FROM finishedOrders "
+				+ "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
+				+ "AND orders.parkName_fk=?" + "GROUP by orders.parkName_fk");
 		GetIncomeReport.setString(1, namePark);
 		ResultSet rs = GetIncomeReport.executeQuery();
 		if (rs.next()) {
-			String amount=rs.getString(1);
+			String amount = rs.getString(1);
 			return amount;
 		}
 		return "0";
-		
-		
-	}
 
+	}
 	public static boolean validateDate(Order orderToValidate)
 			throws NumberFormatException, SQLException, ParseException {
 		Park park = getCertainPark(orderToValidate.getParkName());
@@ -188,88 +183,92 @@ public class MySQLConnection {
 		else
 			minimalHour = String.valueOf(Integer.parseInt(splitTime[0]) - park.getParkVisitDuration()) + ":00:00";
 		maximalHour = String.valueOf(Integer.parseInt(splitTime[0]) + park.getParkVisitDuration()) + ":00:00";
-		LocalTime lcl = LocalTime.of(Integer.parseInt(splitTime[0]), Integer.parseInt(splitTime[1]),
-				Integer.parseInt(splitTime[2]));
+		Map<Integer, Integer> parkCapacity = parkCapacityForDuration(park,orderToValidate.getDateOfOrder(),minimalHour,maximalHour);
+		for(int hour:parkCapacity.keySet())
+		{
+			if (orderToValidate.getNumOfVisitors() + parkCapacity.get(hour) > park.getParkMaxVisitorsDefault() - park.getParkDiffFromMax())
+				return false;
+		}
+		return true;
+	}
+
+	private static Map<Integer, Integer> parkCapacityForDuration(Park park, String date, String startTime,
+			String finishTime) throws NumberFormatException, SQLException {
+		System.out.println(date);
+		Map<Integer, Integer> parkCapacity = new LinkedHashMap<Integer, Integer>();
 		String query = "SELECT timeOfOrder,SUM(numOfVisitors) FROM orders WHERE (status='ACTIVE' OR status='PENDING_APPROVAL_FROM_WAITING_LIST'"
 				+ " OR status='PENDING_FINAL_APPROVAL') AND orders.dateOfOrder=?"
 				+ " AND timeOfOrder>=? AND timeOfOrder <=? GROUP BY timeOfOrder;";
 		PreparedStatement validateDatePrepStmt = con.prepareStatement(query);
-		validateDatePrepStmt.setString(1, orderToValidate.getDateOfOrder());
-		validateDatePrepStmt.setString(2, minimalHour);
-		validateDatePrepStmt.setString(3, maximalHour);
+		validateDatePrepStmt.setString(1, date);
+		validateDatePrepStmt.setString(2, startTime);
+		validateDatePrepStmt.setString(3, finishTime);
 		ResultSet rs = validateDatePrepStmt.executeQuery();
 		Map<Integer, Integer> timeOfOrderForHour = new HashMap<Integer, Integer>();
 		while (rs.next()) {
 			timeOfOrderForHour.put(Integer.parseInt(rs.getString(1).split(":")[0]), Integer.parseInt(rs.getString(2)));
 		}
-		for (int i = Integer.parseInt(minimalHour.split(":")[0]); i <= Integer
-				.parseInt(maximalHour.split(":")[0]); i++) {
+		for (int i = Integer.parseInt(startTime.split(":")[0]); i <= Integer
+				.parseInt(finishTime.split(":")[0]); i++) {
 			int sum = 0;
 			for (int j = park.getParkVisitDuration(); j >= 0; j--) {
 				if (timeOfOrderForHour.containsKey(i - j))
 					sum += timeOfOrderForHour.get(i - j);
 			}
-
-			if (orderToValidate.getNumOfVisitors() + sum > park.getParkMaxVisitorsDefault() - park.getParkDiffFromMax())
-				return false;
+			System.out.println(i+" "+sum);
+			parkCapacity.put(i, sum);	
 		}
-		return true;
-	}
-	private static double calculateOrder(Order orderToRequest) throws SQLException
-	{
-		double priceForTicket=EntityConstants.TICKET_PRICE;
 		
+		return parkCapacity;
+	}
+
+	private static double calculateOrder(Order orderToRequest) throws SQLException {
+		double priceForTicket = EntityConstants.TICKET_PRICE;
+
 		double priceForOrder;
-		if(orderToRequest.getType().equals(EntityConstants.OrderType.GUIDE))
-		{
-			priceForTicket*=0.75;
-			priceForTicket*=0.88;
-			priceForOrder=(orderToRequest.getNumOfVisitors()-1)*priceForTicket;
-			
-		}
-		else
-		{
-			priceForTicket*=0.85;
-			if(orderToRequest.getType().equals(EntityConstants.OrderType.REGULAR))
-				priceForOrder=(orderToRequest.getNumOfVisitors())*priceForTicket;
-			else
-			{
-				String query="SELECT familyMembers FROM subscriber WHERE id_fk=?";
+		if (orderToRequest.getType().equals(EntityConstants.OrderType.GUIDE)) {
+			priceForTicket *= 0.75;
+			priceForTicket *= 0.88;
+			priceForOrder = (orderToRequest.getNumOfVisitors() - 1) * priceForTicket;
+
+		} else {
+			priceForTicket *= 0.85;
+			if (orderToRequest.getType().equals(EntityConstants.OrderType.REGULAR))
+				priceForOrder = (orderToRequest.getNumOfVisitors()) * priceForTicket;
+			else {
+				String query = "SELECT familyMembers FROM subscriber WHERE id_fk=?";
 				PreparedStatement familyMembersStatement = con.prepareStatement(query);
 				familyMembersStatement.setString(1, orderToRequest.getId());
 				ResultSet rs = familyMembersStatement.executeQuery();
-				if(rs.next())
-				{
+				if (rs.next()) {
 					int familyMembers = Integer.parseInt(rs.getString(1));
-					if(familyMembers>=orderToRequest.getNumOfVisitors())
-					{
-						priceForOrder=(orderToRequest.getNumOfVisitors())*priceForTicket*0.8;
-						
+					if (familyMembers >= orderToRequest.getNumOfVisitors()) {
+						priceForOrder = (orderToRequest.getNumOfVisitors()) * priceForTicket * 0.8;
+
+					} else {
+						priceForOrder = (familyMembers) * priceForTicket * 0.8
+								+ (orderToRequest.getNumOfVisitors() - familyMembers) * priceForTicket;
 					}
-					else
-					{
-						priceForOrder=(familyMembers)*priceForTicket*0.8+(orderToRequest.getNumOfVisitors()-familyMembers)*priceForTicket;
-					}
-				}
-				else
-					priceForOrder=(orderToRequest.getNumOfVisitors())*priceForTicket;
+				} else
+					priceForOrder = (orderToRequest.getNumOfVisitors()) * priceForTicket;
 			}
-			
+
 		}
-		String query="SELECT discountAmount FROM discounts WHERE startDate<=? AND finishDate>=? AND parkName_fk=? AND status='APPROVED'";
+		String query = "SELECT discountAmount FROM discounts WHERE startDate<=? AND finishDate>=? AND parkName_fk=? AND status='APPROVED'";
 		PreparedStatement discountStatement = con.prepareStatement(query);
 		discountStatement.setString(1, orderToRequest.getDateOfOrder());
 		discountStatement.setString(2, orderToRequest.getDateOfOrder());
 		discountStatement.setString(3, orderToRequest.getParkName());
 		ResultSet rs = discountStatement.executeQuery();
-		while(rs.next())
-			priceForOrder=priceForOrder*((100-Integer.parseInt(rs.getString(1)))/100);
+		while (rs.next())
+			priceForOrder = priceForOrder * ((100 - Integer.parseInt(rs.getString(1))) / 100);
 		return priceForOrder;
-		
+
 	}
-	private static Order insertNewOrder(Order orderToInsert,OrderStatus orderStatus) throws SQLException
-	{
-		PreparedStatement insertOrderStatement = con.prepareStatement("INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
+
+	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus) throws SQLException {
+		PreparedStatement insertOrderStatement = con.prepareStatement(
+				"INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateNow = formatter.format(date);
@@ -281,18 +280,17 @@ public class MySQLConnection {
 		insertOrderStatement.setString(6, orderToInsert.getType().name());
 		insertOrderStatement.setString(7, orderToInsert.getDateOfOrder());
 		insertOrderStatement.setString(8, orderToInsert.getTimeOfOrder());
-		double price =calculateOrder(orderToInsert);
+		double price = calculateOrder(orderToInsert);
 		insertOrderStatement.setString(9, String.valueOf((int) price));
 		insertOrderStatement.setString(10, orderToInsert.getEmail());
 		insertOrderStatement.executeUpdate();
-		String query="SELECT orderNum FROM orders where id_fk=? AND parkName_fk=? AND orderCreationDate=?;";
-		PreparedStatement getOrderNumStatement=con.prepareStatement(query);
+		String query = "SELECT orderNum FROM orders where id_fk=? AND parkName_fk=? AND orderCreationDate=?;";
+		PreparedStatement getOrderNumStatement = con.prepareStatement(query);
 		getOrderNumStatement.setString(1, orderToInsert.getId());
 		getOrderNumStatement.setString(2, orderToInsert.getParkName());
 		getOrderNumStatement.setString(3, dateNow);
 		ResultSet rs = getOrderNumStatement.executeQuery();
-		if(rs.next())
-		{
+		if (rs.next()) {
 			orderToInsert.setOrderNum(rs.getString(1));
 			orderToInsert.setOrderCreationDate(dateNow);
 			orderToInsert.setPrice((int) price);
@@ -301,18 +299,18 @@ public class MySQLConnection {
 		}
 		throw new SQLException();
 	}
-	public static Order createOrder(Order orderRequest) throws SQLException, NumberFormatException, ParseException
-	{
-		if(validateDate(orderRequest))
-		{
-			return insertNewOrder(orderRequest,OrderStatus.ACTIVE);
+
+	public static Order createOrder(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
+		if (validateDate(orderRequest)) {
+			return insertNewOrder(orderRequest, OrderStatus.ACTIVE);
 		}
 		return null;
 	}
-	//liron
-	public static ParameterUpdate createParameterUpdate(ParameterUpdate parameterUpdate) throws SQLException
-	{
-		PreparedStatement parameterPreparedStatement=con.prepareStatement("INSERT INTO parameterUpdate (parameter,newValue,parkName_fk) VALUES (?,?,?);");
+
+	// liron
+	public static ParameterUpdate createParameterUpdate(ParameterUpdate parameterUpdate) throws SQLException {
+		PreparedStatement parameterPreparedStatement = con
+				.prepareStatement("INSERT INTO parameterUpdate (parameter,newValue,parkName_fk) VALUES (?,?,?);");
 		parameterPreparedStatement.setString(1, parameterUpdate.getParameter());
 		parameterPreparedStatement.setInt(2, parameterUpdate.getNewValue());
 		parameterPreparedStatement.setString(3, parameterUpdate.getParkName());
@@ -323,36 +321,52 @@ public class MySQLConnection {
 	{
 		return insertNewOrder(orderRequest,OrderStatus.WAITING);
 	}
-	public static Map<String,List<String>> getAvailableDates(Order order) throws ParseException, NumberFormatException, SQLException{
-		Map<String,List<String>> dateMap=new LinkedHashMap<>();
-		DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-		Date date=format.parse(order.getDateOfOrder());
-		for(int i=0;i<7;i++) {
-			  Calendar cal = Calendar.getInstance();
-		      cal.setTime(date);
-		      cal.add(Calendar.DATE, i); //minus number would decrement the days
-		      Date nextDate= cal.getTime();
-		      order.setDateOfOrder(format.format(nextDate));
-			for(int j=EntityConstants.PARK_OPEN;j<=EntityConstants.PARK_CLOSED;j++) {
-				order.setTimeOfOrder(j);
-				if(validateDate(order)) {
-					if(!dateMap.containsKey(format.format(nextDate)))
-						dateMap.put(format.format(nextDate), new ArrayList<String>());
-					dateMap.get(format.format(nextDate)).add(order.getTimeOfOrder());
+
+	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
+		return insertNewOrder(orderRequest, OrderStatus.WAITING);
+	}
+
+	public static Map<String, List<String>> getAvailableDates(Order order)
+			throws ParseException, NumberFormatException, SQLException {
+		Park park = getCertainPark(order.getParkName());
+		Map<String, List<String>> dateMap = new LinkedHashMap<>();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = format.parse(order.getDateOfOrder());
+		String startHour=EntityConstants.PARK_OPEN+":00:00";
+		if(EntityConstants.PARK_OPEN<10)
+			startHour="0"+startHour;
+		String finishHour=EntityConstants.PARK_CLOSED+":00:00";
+		if(EntityConstants.PARK_CLOSED<10)
+			finishHour="0"+finishHour;
+		for (int i = 0; i < 7; i++) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.DATE, i); // minus number would decrement the days
+			Date nextDate = cal.getTime();
+			dateMap.put(format.format(nextDate), new ArrayList<String>());
+			Map<Integer, Integer> parkCapacity = parkCapacityForDuration(park,format.format(nextDate),startHour,finishHour);
+			for(int hour:parkCapacity.keySet())
+			{
+				if (order.getNumOfVisitors() + parkCapacity.get(hour) <= park.getParkMaxVisitorsDefault() - park.getParkDiffFromMax())
+				{
+					String hourFree = hour+":00:00";
+					if(hour<10)
+						hourFree="0"+hourFree;
+					dateMap.get(format.format(nextDate)).add(hourFree);
 				}
 			}
 		}
 		return dateMap;
 	}
-	
+
 	public static void main(String[] args) {
-		  Calendar cal = Calendar.getInstance();
-		  DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-		  Date date=new Date();
-	      cal.setTime(date);
-	      cal.add(Calendar.DATE, 1); //minus number would decrement the days
-	      Date nextDate= cal.getTime();
-	      System.out.println(format.format(nextDate));
+		Calendar cal = Calendar.getInstance();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 1); // minus number would decrement the days
+		Date nextDate = cal.getTime();
+		System.out.println(format.format(nextDate));
 	}
 
 }

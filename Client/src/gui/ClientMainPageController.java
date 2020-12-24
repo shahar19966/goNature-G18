@@ -15,6 +15,7 @@ import entity.Visitor;
 import gui.ClientConstants.AlertType;
 import gui.ClientConstants.Sizes;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -421,8 +422,8 @@ public class ClientMainPageController implements Initializable {
 				alertTitle.getStyleClass().add(alertType.getAlertTypeStyleClass());
 				alertTitle.setText(alertTitleString);
 				alertButtons.getChildren().clear();
-				AnchorPane.setLeftAnchor(nodeBody, 20.0);
-				AnchorPane.setRightAnchor(nodeBody, 20.0);
+				AnchorPane.setRightAnchor(nodeBody,  20.0);
+				AnchorPane.setLeftAnchor(nodeBody,  20.0);
 				if (alertButtonsList == null || alertButtonsList.size() == 0) {
 					alertButtons.setVisible(false);
 				} else {
