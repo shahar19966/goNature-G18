@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane fx:id="gridPane" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AvailableDatesPageController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints percentHeight="15.0" vgrow="ALWAYS" />
+    <RowConstraints percentHeight="85.0" vgrow="ALWAYS" />
+  </rowConstraints>
+   <children>
+      <Label fx:id="titleLabel" text="Available Dates" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <HBox fx:id="mainHBox" prefHeight="100.0" prefWidth="200.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Label" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Label" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Label" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Label" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Label" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Label" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Label" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</GridPane>

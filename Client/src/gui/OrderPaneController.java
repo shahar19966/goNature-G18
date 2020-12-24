@@ -1,11 +1,14 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import entity.EntityConstants;
@@ -22,6 +25,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -33,6 +37,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import message.ClientMessage;
 import message.ClientMessageType;
@@ -91,8 +96,8 @@ public class OrderPaneController implements Initializable {
 
 	@FXML
 	void orderFunc(ActionEvent event) {
-
-		guiControl.sendToServer(new ClientMessage(ClientMessageType.ORDER, createOrderFromForm()));
+		Order order=createOrderFromForm();
+		guiControl.sendToServer(new ClientMessage(ClientMessageType.ORDER, order));
 		if (guiControl.getServerMsg() == null) {
 			GuiButton cancelButton = new GuiButton("Cancel Order", AlertType.Warning, Sizes.Medium);
 			cancelButton.setOnAction(e -> {
@@ -101,15 +106,14 @@ public class OrderPaneController implements Initializable {
 			});
 			GuiButton watingListButton = new GuiButton("Enter Wating List", AlertType.Info, Sizes.Medium);
 			watingListButton.setOnAction(e -> {
-				guiControl.sendToServer(new ClientMessage(ClientMessageType.WAITING_LIST, createOrderFromForm()));
+				guiControl.sendToServer(new ClientMessage(ClientMessageType.WAITING_LIST, order));
 				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Enter Wating List Succeeded",
 						((Order) guiControl.getServerMsg().getMessage()).toString(), null);
-				clearFunc(null);
 			});
 			GuiButton datePickerListButton = new GuiButton("Pick Another Date", AlertType.Info, Sizes.Medium);
 			datePickerListButton.setOnAction(e -> {
-				guiControl.getClientMainPageController().hideAlert();
-				clearFunc(null);
+				guiControl.sendToServer(new ClientMessage(ClientMessageType.PICK_AVAILABLE_DATES,order));
+				displayAvailableDates((Map<String,List<String>>)guiControl.getServerMsg().getMessage(),order);
 			});
 			List<Button> buttonList = new ArrayList<Button>();
 			buttonList.add(cancelButton);
@@ -119,10 +123,30 @@ public class OrderPaneController implements Initializable {
 		} else {
 			guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Order Succeeded",
 					((Order) guiControl.getServerMsg().getMessage()).toString(), null);
-			clearFunc(null);
 		}
-		
+		clearFunc(null);
 
+	}
+
+	private void displayAvailableDates(Map<String, List<String>> map, Order order) {
+		FXMLLoader fxmlLoader = new FXMLLoader(
+				getClass().getResource(ClientConstants.Screens.AVAILABLE_DATES_PAGE.toString()));
+		GridPane root = null;
+		try {
+			root = fxmlLoader.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		AvailableDatesPageController adpc = fxmlLoader.getController();
+		adpc.setTable(map, order);
+		GuiButton cancelButton=new GuiButton("Cancel",AlertType.Danger,Sizes.Medium);
+		cancelButton.setOnAction(e->{
+			guiControl.getClientMainPageController().hideAlert();
+		});
+		List<Button> buttonList=new ArrayList<>();
+		buttonList.add(cancelButton);
+		guiControl.getClientMainPageController().showAlert(AlertType.Info, "Smart Date Picker", root, buttonList);
 	}
 
 	@Override

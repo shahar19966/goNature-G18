@@ -48,7 +48,12 @@ public class Order implements Serializable {
 		this.price = price;
 		this.email=email;
 	}
-
+	public void setTimeOfOrder(int hour) {
+		if(hour<10)
+			timeOfOrder="0"+hour+":00:00";
+		else
+			timeOfOrder=hour+":00:00";
+	}
 	public void setOrderCreationDate(String orderCreationDate) {
 		this.orderCreationDate = orderCreationDate;
 	}
