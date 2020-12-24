@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import entity.Employee;
 import entity.Order;
+import entity.ParameterUpdate;
 import gui.GUIControl;
 import message.ClientMessage;
 import message.ClientMessageType;
@@ -81,6 +82,10 @@ public class GoNatureClient extends AbstractClient {
 			case ORDER_SUCCESS:
 				GUIControl.popUpMessage("Order Succeeded", ((Order) serverMsg.getMessage()).toString());
 				break;
+			case PARAMETER_UPDATE://liron
+				GUIControl.popUpMessage("Parameter Update Succeeded", ((ParameterUpdate) serverMsg.getMessage()).toString());
+				break;
+
 			}
 		}
 		awaitResponse = false;

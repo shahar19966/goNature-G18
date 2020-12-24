@@ -10,6 +10,7 @@ import java.util.List;
 import application.ServerMain;
 import entity.Employee;
 import entity.Order;
+import entity.ParameterUpdate;
 import message.ClientMessage;
 import message.ServerMessage;
 import message.ServerMessageType;
@@ -115,6 +116,10 @@ public class GoNatureServer extends AbstractServer {
 						type=ServerMessageType.ORDER_FAILURE;
 					else
 						type=ServerMessageType.ORDER_SUCCESS;
+					break;
+				case PARAMETER_UPDATE://liron
+					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate)clientMsg.getMessage());
+					type=ServerMessageType.PARAMETER_UPDATE;
 					break;
 				}
 			}
