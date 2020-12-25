@@ -125,8 +125,13 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void orderBtnClick(ActionEvent event) {
-		loadSubAndVisitorOrder();
-		setSwitchPane(panesMap.get("order"));
+		if (guiControl.getUser() instanceof Employee) {
+			loadRegularEmployeeOrder();
+			setSwitchPane(panesMap.get("orderRegularEmployee"));
+		} else {
+			loadSubAndVisitorOrder();
+			setSwitchPane(panesMap.get("orderSubAndVisitor"));
+		}
 	}
 
 	@FXML
@@ -373,9 +378,22 @@ public class ClientMainPageController implements Initializable {
 			e.printStackTrace();
 		}
 		// DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
-		panesMap.put("order", root);
+		panesMap.put("orderSubAndVisitor", root);
 	}
-
+	private void loadRegularEmployeeOrder()
+	{
+		FXMLLoader fxmlLoader1 = new FXMLLoader(
+				getClass().getResource(ClientConstants.Screens.REGULAR_ORDER_PAGE.toString()));
+		GridPane root = null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
+		panesMap.put("orderRegularEmployee", root);
+	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
@@ -422,8 +440,8 @@ public class ClientMainPageController implements Initializable {
 				alertTitle.getStyleClass().add(alertType.getAlertTypeStyleClass());
 				alertTitle.setText(alertTitleString);
 				alertButtons.getChildren().clear();
-				AnchorPane.setRightAnchor(nodeBody,  20.0);
-				AnchorPane.setLeftAnchor(nodeBody,  20.0);
+				AnchorPane.setRightAnchor(nodeBody, 20.0);
+				AnchorPane.setLeftAnchor(nodeBody, 20.0);
 				if (alertButtonsList == null || alertButtonsList.size() == 0) {
 					alertButtons.setVisible(false);
 				} else {

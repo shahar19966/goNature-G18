@@ -21,7 +21,8 @@ public class EntityConstants{
 		ACTIVE,
 		PENDING_FINAL_APPROVAL,
 		CANCELLED,
-		DONE
+		DONE,
+		APPROVED
 	}
 	public enum OrderType{
 		REGULAR,
