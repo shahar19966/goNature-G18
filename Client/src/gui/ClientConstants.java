@@ -17,7 +17,7 @@ public class ClientConstants {
 		DEPARTMENT_MANAGER_REPOTRS("/gui/DepartmentManagerProduceReportsPage.fxml"),
 		PARK_MNG_VISIT_REPORT("/gui/ParkManagerVisitaoinReport.fxml"),
 		PARK_MANAGER_PATAMETERS_UPDATE("/gui/ParameterUpdatePage.fxml"),
-		SUB_AND_VISITOR_ORDER_PAGE("/gui/OrderPane.fxml"), VISITATION_TIME_UPDATE("/gui/VisitationTimeUpdate.fxml"),
+		SUB_AND_VISITOR_ORDER_PAGE("/gui/OrderPane.fxml"), REGULAR_ORDER_PAGE("/gui/OrderRegularEmployeePane.fxml"),VISITATION_TIME_UPDATE("/gui/VisitationTimeUpdate.fxml"),
 		CAPACITY_UPDATE("/gui/CapacityUpdate.fxml"), DIFFERENCE_PARAMETER_UPDATE("/gui/DifferenceParameterUpdate.fxml"),
 		PARK_MANAGER_DISCOUNT_REQUESTS("/gui/ParkManagerDiscountRequests.fxml"),
 		REGISTRATION_PAGE("/gui/RegisterSubscriberAndGuide.fxml"),
