@@ -106,6 +106,10 @@ public class GoNatureClient extends AbstractClient {
 				GUIControl.popUpMessage("Request sent to department manager","Request successfully sent to department manager");
 				break;
 				
+			case OCCASIONAL_ORDER:
+				guiControl.setServerMsg(serverMsg);
+          break;
+
 			}
 		}
 		awaitResponse = false;

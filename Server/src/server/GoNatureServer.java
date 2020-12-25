@@ -127,12 +127,16 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.PARK_INCOME_REPORT;
 					break;
 				case PICK_AVAILABLE_DATES:
-					returnVal=MySQLConnection.getAvailableDates((Order)clientMsg.getMessage());
-					type=ServerMessageType.AVAILABLE_DATES;
+					returnVal = MySQLConnection.getAvailableDates((Order) clientMsg.getMessage());
+					type = ServerMessageType.AVAILABLE_DATES;
 					break;
-				case PARAMETER_UPDATE://liron
-					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate)clientMsg.getMessage());
-					type=ServerMessageType.PARAMETER_UPDATE;
+				case PARAMETER_UPDATE:// liron
+					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate) clientMsg.getMessage());
+					type = ServerMessageType.PARAMETER_UPDATE;
+					break;
+				case OCCASIONAL_ORDER:
+					returnVal = MySQLConnection.OccasionalcreateOrder((Order) clientMsg.getMessage());
+					type = ServerMessageType.OCCASIONAL_ORDER;
 					break;
 				case DISCOUNT_REQUEST:
 					returnVal=MySQLConnection.insertNewDiscountRequest((ParkDiscount)clientMsg.getMessage());

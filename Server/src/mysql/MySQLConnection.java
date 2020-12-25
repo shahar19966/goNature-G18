@@ -202,9 +202,9 @@ public class MySQLConnection {
 		if (Integer.parseInt(splitTimeStart[0]) - park.getParkVisitDuration() < EntityConstants.PARK_OPEN)
 			startTime = "08:00:00";
 		else {
-			startTime=String.valueOf(Integer.parseInt(splitTimeStart[0]) - park.getParkVisitDuration()) + ":00:00";
+			startTime = String.valueOf(Integer.parseInt(splitTimeStart[0]) - park.getParkVisitDuration()) + ":00:00";
 		}
-		finishTime=String.valueOf(Integer.parseInt(splitTimeFinish[0]) + park.getParkVisitDuration()-1) + ":00:00";
+		finishTime = String.valueOf(Integer.parseInt(splitTimeFinish[0]) + park.getParkVisitDuration() - 1) + ":00:00";
 		Map<Integer, Integer> parkCapacity = new LinkedHashMap<Integer, Integer>();
 		String query = "SELECT timeOfOrder,SUM(numOfVisitors) FROM orders WHERE (status='ACTIVE' OR status='PENDING_APPROVAL_FROM_WAITING_LIST'"
 				+ " OR status='PENDING_FINAL_APPROVAL') AND orders.dateOfOrder=?"
@@ -230,17 +230,25 @@ public class MySQLConnection {
 		return parkCapacity;
 	}
 
-	private static double calculateOrder(Order orderToRequest) throws SQLException {
+	private static double calculateOrder(Order orderToRequest, boolean isOccasional) throws SQLException {
 		double priceForTicket = EntityConstants.TICKET_PRICE;
 
 		double priceForOrder;
 		if (orderToRequest.getType().equals(EntityConstants.OrderType.GUIDE)) {
-			priceForTicket *= 0.75;
-			priceForTicket *= 0.88;
-			priceForOrder = (orderToRequest.getNumOfVisitors() - 1) * priceForTicket;
+			if (!isOccasional) {
+				priceForTicket *= 0.75;
+				priceForTicket *= 0.88;
+				priceForOrder = (orderToRequest.getNumOfVisitors() - 1) * priceForTicket;
+			}
+			else
+			{
+				priceForTicket *= 0.9;
+				priceForOrder = (orderToRequest.getNumOfVisitors()) * priceForTicket;
+			}
 
 		} else {
-			priceForTicket *= 0.85;
+			if (!isOccasional)
+				priceForTicket *= 0.85;
 			if (orderToRequest.getType().equals(EntityConstants.OrderType.REGULAR))
 				priceForOrder = (orderToRequest.getNumOfVisitors()) * priceForTicket;
 			else {
@@ -274,7 +282,7 @@ public class MySQLConnection {
 
 	}
 
-	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus) throws SQLException {
+	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus,boolean isOccasional) throws SQLException {
 		PreparedStatement insertOrderStatement = con.prepareStatement(
 				"INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
@@ -288,7 +296,7 @@ public class MySQLConnection {
 		insertOrderStatement.setString(6, orderToInsert.getType().name());
 		insertOrderStatement.setString(7, orderToInsert.getDateOfOrder());
 		insertOrderStatement.setString(8, orderToInsert.getTimeOfOrder());
-		double price = calculateOrder(orderToInsert);
+		double price = calculateOrder(orderToInsert,isOccasional);
 		insertOrderStatement.setString(9, String.valueOf((int) price));
 		insertOrderStatement.setString(10, orderToInsert.getEmail());
 		insertOrderStatement.executeUpdate();
@@ -310,7 +318,7 @@ public class MySQLConnection {
 
 	public static Order createOrder(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
 		if (validateDate(orderRequest)) {
-			return insertNewOrder(orderRequest, OrderStatus.ACTIVE);
+			return insertNewOrder(orderRequest, OrderStatus.ACTIVE,false);
 		}
 		return null;
 	}
@@ -328,7 +336,7 @@ public class MySQLConnection {
 
 
 	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
-		return insertNewOrder(orderRequest, OrderStatus.WAITING);
+		return insertNewOrder(orderRequest, OrderStatus.WAITING,false);
 	}
 	
 	public static  ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest) throws SQLException, ParseException
@@ -372,11 +380,11 @@ public class MySQLConnection {
 			Map<Integer, Integer> parkCapacity;
 			Date today = new Date();
 			LocalTime localTime = today.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-			boolean isToday=false;
+			boolean isToday = false;
 			if (!format.format(nextDate).equals(format.format(today)))
 				parkCapacity = parkCapacityForDuration(park, format.format(nextDate), startHour, finishHour);
 			else {
-				isToday=true;
+				isToday = true;
 				String startHourForToday = (localTime.getHour() + 1) + ":00+:00";
 				if (localTime.getHour() + 1 < 10)
 					startHourForToday = "0" + startHourForToday;
@@ -384,10 +392,10 @@ public class MySQLConnection {
 			}
 			for (int hour : parkCapacity.keySet()) {
 				if (isToday) {
-					if(hour<localTime.getHour() + 1)
+					if (hour < localTime.getHour() + 1)
 						continue;
 				}
-				if(hour>EntityConstants.PARK_CLOSED)
+				if (hour > EntityConstants.PARK_CLOSED)
 					continue;
 				int maxCapacity = parkCapacity.get(hour);
 				for (int j = 1; j < park.getParkVisitDuration(); j++) {
@@ -416,6 +424,31 @@ public class MySQLConnection {
 		cal.add(Calendar.DATE, 1); // minus number would decrement the days
 		Date nextDate = cal.getTime();
 		System.out.println(format.format(nextDate));
+	}
+
+	public static Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
+
+		if (order.getType().equals(OrderType.REGULAR)) {
+			Visitor visitor = validateVisitor(order.getId());
+		}
+		if (order.getType().equals(OrderType.SUBSCRIBER)) {
+			Subscriber subscriber = validateSubscriber(order.getId());
+			if (subscriber == null)
+				return "Subscriber Number" + order.getId() + " " + "is not in the system";
+			order.setId(subscriber.getID());
+		}
+		if (order.getType().equals(OrderType.GUIDE)) {
+			Subscriber subscriber = validateSubscriber(order.getId());
+			if (subscriber == null)
+				return "Subscriber Number" + order.getId() + " " + "is not in the system";
+			if (!subscriber.getIsGuide())
+				return "Subscriber Number" + order.getId() + " " + "is not a guide";
+			order.setId(subscriber.getID());
+		}
+		if (validateDate(order)) {
+			return insertNewOrder(order, OrderStatus.APPROVED,true);
+		}
+		return null;
 	}
 
 }
