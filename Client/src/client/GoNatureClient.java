@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import entity.Employee;
 import entity.Order;
 import entity.ParameterUpdate;
+import entity.ParkDiscount;
 import gui.GUIControl;
 import gui.GuiButton;
 import gui.ClientConstants.AlertType;
@@ -101,8 +102,14 @@ public class GoNatureClient extends AbstractClient {
 			case PARAMETER_UPDATE://liron
 				GUIControl.popUpMessage("Parameter Update Succeeded", ((ParameterUpdate) serverMsg.getMessage()).toString());
 				break;
+			case DISCOUNT_REQUEST:
+				GUIControl.popUpMessage("Request sent to department manager","Request successfully sent to department manager");
+				break;
+				
 			case OCCASIONAL_ORDER:
 				guiControl.setServerMsg(serverMsg);
+          break;
+
 			}
 		}
 		awaitResponse = false;

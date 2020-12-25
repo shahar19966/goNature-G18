@@ -11,6 +11,7 @@ import application.ServerMain;
 import entity.Employee;
 import entity.Order;
 import entity.ParameterUpdate;
+import entity.ParkDiscount;
 import message.ClientMessage;
 import message.ServerMessage;
 import message.ServerMessageType;
@@ -136,6 +137,10 @@ public class GoNatureServer extends AbstractServer {
 				case OCCASIONAL_ORDER:
 					returnVal = MySQLConnection.OccasionalcreateOrder((Order) clientMsg.getMessage());
 					type = ServerMessageType.OCCASIONAL_ORDER;
+					break;
+				case DISCOUNT_REQUEST:
+					returnVal=MySQLConnection.insertNewDiscountRequest((ParkDiscount)clientMsg.getMessage());
+					type=ServerMessageType.DISCOUNT_REQUEST;
 					break;
 				}
 			}

@@ -29,7 +29,10 @@ public class EntityConstants{
 		SUBSCRIBER,
 		GUIDE
 	}
-	
+	public enum RequestStatus{
+		WAITING,
+		APPROVED
+	}
 	
 }
 
