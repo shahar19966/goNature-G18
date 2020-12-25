@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -190,8 +191,14 @@ public class OrderPaneController implements Initializable {
 		timeComboBox.getSelectionModel().selectFirst();
 		parkNameComboBox.getSelectionModel().selectFirst();
 		orderButton.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+			Date now = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date chosenDate = format.parse(date.getValue().toString()+" "+timeComboBox.getValue()+":00");
+			if(chosenDate.before(now))
+				return true;
 			return !GUIControl.isEmailValid(emailText.getText());
-		}, emailText.textProperty()));
+		}, emailText.textProperty(),date.valueProperty(),timeComboBox.valueProperty()));
+
 	}
 	private Order createOrderFromForm()
 	{

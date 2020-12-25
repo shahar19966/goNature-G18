@@ -9,7 +9,9 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -171,6 +173,7 @@ public class MySQLConnection {
 		return "0";
 
 	}
+
 	public static boolean validateDate(Order orderToValidate)
 			throws NumberFormatException, SQLException, ParseException {
 		Park park = getCertainPark(orderToValidate.getParkName());
@@ -183,10 +186,11 @@ public class MySQLConnection {
 		else
 			minimalHour = String.valueOf(Integer.parseInt(splitTime[0]) - park.getParkVisitDuration()) + ":00:00";
 		maximalHour = String.valueOf(Integer.parseInt(splitTime[0]) + park.getParkVisitDuration()) + ":00:00";
-		Map<Integer, Integer> parkCapacity = parkCapacityForDuration(park,orderToValidate.getDateOfOrder(),minimalHour,maximalHour);
-		for(int hour:parkCapacity.keySet())
-		{
-			if (orderToValidate.getNumOfVisitors() + parkCapacity.get(hour) > park.getParkMaxVisitorsDefault() - park.getParkDiffFromMax())
+		Map<Integer, Integer> parkCapacity = parkCapacityForDuration(park, orderToValidate.getDateOfOrder(),
+				minimalHour, maximalHour);
+		for (int hour : parkCapacity.keySet()) {
+			if (orderToValidate.getNumOfVisitors() + parkCapacity.get(hour) > park.getParkMaxVisitorsDefault()
+					- park.getParkDiffFromMax())
 				return false;
 		}
 		return true;
@@ -194,7 +198,6 @@ public class MySQLConnection {
 
 	private static Map<Integer, Integer> parkCapacityForDuration(Park park, String date, String startTime,
 			String finishTime) throws NumberFormatException, SQLException {
-		System.out.println(date);
 		Map<Integer, Integer> parkCapacity = new LinkedHashMap<Integer, Integer>();
 		String query = "SELECT timeOfOrder,SUM(numOfVisitors) FROM orders WHERE (status='ACTIVE' OR status='PENDING_APPROVAL_FROM_WAITING_LIST'"
 				+ " OR status='PENDING_FINAL_APPROVAL') AND orders.dateOfOrder=?"
@@ -208,17 +211,15 @@ public class MySQLConnection {
 		while (rs.next()) {
 			timeOfOrderForHour.put(Integer.parseInt(rs.getString(1).split(":")[0]), Integer.parseInt(rs.getString(2)));
 		}
-		for (int i = Integer.parseInt(startTime.split(":")[0]); i <= Integer
-				.parseInt(finishTime.split(":")[0]); i++) {
+		for (int i = Integer.parseInt(startTime.split(":")[0]); i <= Integer.parseInt(finishTime.split(":")[0]); i++) {
 			int sum = 0;
 			for (int j = park.getParkVisitDuration(); j >= 0; j--) {
 				if (timeOfOrderForHour.containsKey(i - j))
 					sum += timeOfOrderForHour.get(i - j);
 			}
-			System.out.println(i+" "+sum);
-			parkCapacity.put(i, sum);	
+			parkCapacity.put(i, sum);
 		}
-		
+
 		return parkCapacity;
 	}
 
@@ -317,9 +318,9 @@ public class MySQLConnection {
 		parameterPreparedStatement.executeUpdate();
 		return parameterUpdate;
 	}
-	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException
-	{
-		return insertNewOrder(orderRequest,OrderStatus.WAITING);
+
+	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
+		return insertNewOrder(orderRequest, OrderStatus.WAITING);
 	}
 
 	public static Map<String, List<String>> getAvailableDates(Order order)
@@ -328,26 +329,42 @@ public class MySQLConnection {
 		Map<String, List<String>> dateMap = new LinkedHashMap<>();
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = format.parse(order.getDateOfOrder());
-		String startHour=EntityConstants.PARK_OPEN+":00:00";
-		if(EntityConstants.PARK_OPEN<10)
-			startHour="0"+startHour;
-		String finishHour=EntityConstants.PARK_CLOSED+":00:00";
-		if(EntityConstants.PARK_CLOSED<10)
-			finishHour="0"+finishHour;
+		String startHour = EntityConstants.PARK_OPEN + ":00:00";
+		if (EntityConstants.PARK_OPEN < 10)
+			startHour = "0" + startHour;
+		String finishHour = EntityConstants.PARK_CLOSED + ":00:00";
+		if (EntityConstants.PARK_CLOSED < 10)
+			finishHour = "0" + finishHour;
 		for (int i = 0; i < 7; i++) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 			cal.add(Calendar.DATE, i); // minus number would decrement the days
 			Date nextDate = cal.getTime();
 			dateMap.put(format.format(nextDate), new ArrayList<String>());
-			Map<Integer, Integer> parkCapacity = parkCapacityForDuration(park,format.format(nextDate),startHour,finishHour);
-			for(int hour:parkCapacity.keySet())
-			{
-				if (order.getNumOfVisitors() + parkCapacity.get(hour) <= park.getParkMaxVisitorsDefault() - park.getParkDiffFromMax())
-				{
-					String hourFree = hour+":00:00";
-					if(hour<10)
-						hourFree="0"+hourFree;
+			Map<Integer, Integer> parkCapacity;
+			if (i != 0)
+				parkCapacity = parkCapacityForDuration(park, format.format(nextDate), startHour, finishHour);
+			else {
+				Date today = new Date();
+				LocalTime localTime = today.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+				String startHourForToday = (localTime.getHour() + 1) + ":00+:00";
+				if (localTime.getHour() + 1 < 10)
+					startHourForToday = "0" + startHourForToday;
+				parkCapacity = parkCapacityForDuration(park, format.format(nextDate), startHourForToday, finishHour);
+			}
+			for (int hour : parkCapacity.keySet()) {
+				int maxCapacity = parkCapacity.get(hour);
+				for (int j = 1; j <= park.getParkVisitDuration(); j++) {
+					if (parkCapacity.get(hour + j) != null) {
+						if (maxCapacity < parkCapacity.get(hour + j))
+							maxCapacity = parkCapacity.get(hour + j);
+					}
+				}
+				if (order.getNumOfVisitors() + maxCapacity <= park.getParkMaxVisitorsDefault()
+						- park.getParkDiffFromMax()) {
+					String hourFree = hour + ":00:00";
+					if (hour < 10)
+						hourFree = "0" + hourFree;
 					dateMap.get(format.format(nextDate)).add(hourFree);
 				}
 			}
