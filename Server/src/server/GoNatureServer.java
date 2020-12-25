@@ -11,6 +11,7 @@ import application.ServerMain;
 import entity.Employee;
 import entity.Order;
 import entity.ParameterUpdate;
+import entity.ParkDiscount;
 import message.ClientMessage;
 import message.ServerMessage;
 import message.ServerMessageType;
@@ -132,6 +133,10 @@ public class GoNatureServer extends AbstractServer {
 				case PARAMETER_UPDATE://liron
 					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate)clientMsg.getMessage());
 					type=ServerMessageType.PARAMETER_UPDATE;
+					break;
+				case DISCOUNT_REQUEST:
+					returnVal=MySQLConnection.insertNewDiscountRequest((ParkDiscount)clientMsg.getMessage());
+					type=ServerMessageType.DISCOUNT_REQUEST;
 					break;
 				}
 			}

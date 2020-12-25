@@ -20,15 +20,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
+//import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
-import com.sun.media.jfxmedia.events.NewFrameEvent;
+//import com.sun.media.jfxmedia.events.NewFrameEvent;
 
 import entity.Employee;
 import entity.EntityConstants;
 import entity.Order;
 import entity.ParameterUpdate;
 import entity.Park;
+import entity.ParkDiscount;
 import entity.Subscriber;
 import entity.Visitor;
 import entity.VisitorReport;
@@ -325,8 +326,29 @@ public class MySQLConnection {
 		return parameterUpdate;
 	}
 
+
 	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
 		return insertNewOrder(orderRequest, OrderStatus.WAITING);
+	}
+	
+	public static  ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest) throws SQLException, ParseException
+	{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		 Date startDate = formatter.parse(newDiscountRequest.getStartDate());
+		 Date finishDate = formatter.parse(newDiscountRequest.getFinishDate());
+		PreparedStatement insertDiscountRequestStatement= con.prepareStatement
+				("INSERT INTO discounts (parkName_fk,startDate,finishDate,discountAmount,status,employeeId) VALUES (?,?,?,?,?,?);");
+		insertDiscountRequestStatement.setString(1, newDiscountRequest.getParkName());
+		insertDiscountRequestStatement.setString(2, newDiscountRequest.getStartDate());
+		insertDiscountRequestStatement.setString(3, newDiscountRequest.getFinishDate());
+		insertDiscountRequestStatement.setInt(4, newDiscountRequest.getDiscountAmount());
+		insertDiscountRequestStatement.setString(5, newDiscountRequest.getDiscountStatus().name());
+		insertDiscountRequestStatement.setString(6, newDiscountRequest.getEmployeeNumber());
+		insertDiscountRequestStatement.executeUpdate();
+
+
+
+		return newDiscountRequest;
 	}
 
 	public static Map<String, List<String>> getAvailableDates(Order order)
