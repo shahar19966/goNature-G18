@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.TexturePaint;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -37,6 +38,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
@@ -77,7 +79,8 @@ public class OrderPaneController implements Initializable {
 
 	@FXML
 	private Button clearButton;
-
+	private Tooltip tooltip = new Tooltip();
+	private boolean orderButtonAble = false;
 	private ObservableList<String> parkNameObservableList = FXCollections.observableArrayList();
 
 	@FXML
@@ -97,6 +100,8 @@ public class OrderPaneController implements Initializable {
 
 	@FXML
 	void orderFunc(ActionEvent event) {
+		if(!orderButtonAble)
+			return;
 		Order order=createOrderFromForm();
 		guiControl.sendToServer(new ClientMessage(ClientMessageType.ORDER, order));
 		if (guiControl.getServerMsg() == null) {
@@ -191,12 +196,47 @@ public class OrderPaneController implements Initializable {
 		timeComboBox.getSelectionModel().selectFirst();
 		parkNameComboBox.getSelectionModel().selectFirst();
 		orderButton.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+			
+			StringBuilder toolTipText= new StringBuilder();
+			orderButtonAble = true;
 			Date now = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date chosenDate = format.parse(date.getValue().toString()+" "+timeComboBox.getValue()+":00");
 			if(chosenDate.before(now))
-				return true;
-			return !GUIControl.isEmailValid(emailText.getText());
+			{
+				orderButtonAble = false;
+				toolTipText.append("You can't order a trip before "+format.format(now));
+			}
+			if(GUIControl.isEmailValid(emailText.getText())==false)
+			{
+				if(!orderButtonAble)
+					toolTipText.append("\n");
+				if(emailText.getText().length()>0)
+					toolTipText.append(emailText.getText()+" is not a valid Email");
+				else
+					toolTipText.append("You have to enter Email");
+				orderButtonAble = false;
+			}
+			orderButton.setTooltip(null);
+			orderButton.setOpacity(1);
+			if(!orderButton.getStyleClass().contains("logInBtn"))
+			{
+				orderButton.getStyleClass().add("logInBtn");
+				orderButton.getStyleClass().remove("logInDisabledBtn");
+			}
+			if(!orderButton.getStyleClass().contains("button"))
+			{
+				orderButton.getStyleClass().add("button");
+			}
+			if(!orderButtonAble)
+			{
+				tooltip.setText(toolTipText.toString());
+				orderButton.setTooltip(tooltip);
+				orderButton.getStyleClass().clear();
+				orderButton.getStyleClass().add("logInDisabledBtn");
+				orderButton.setOpacity(0.6);
+			}
+			return false;
 		}, emailText.textProperty(),date.valueProperty(),timeComboBox.valueProperty()));
 
 	}

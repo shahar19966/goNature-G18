@@ -43,6 +43,16 @@
 {
 	-fx-background-color:linear-gradient(#80E19C, #16672D),radial-gradient(center 50% -40%, radius 200%, #95E6AC 40%, #6BDC8B 50%);
 }
+.logInDisabledBtn
+{
+	-fx-font-weight:Bold;
+	-fx-background-color:linear-gradient(#80E19C, #16672D),radial-gradient(center 50% -40%, radius 200%, #95E6AC 40%, #6BDC8B 50%);
+	-fx-effect: null;
+	-fx-font-size:20px;
+	-fx-cursor: default;
+	-fx-padding: 7 12 7 12;
+	-fx-background-radius: 12;
+}
 .logOutBtn
 {
 -fx-background-color:linear-gradient(#AAEBBD, #1E903F),radial-gradient(center 50% -40%, radius 200%, #95E6AC 45%, #56D77B 50%);
