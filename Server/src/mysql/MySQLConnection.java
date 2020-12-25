@@ -20,6 +20,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
+
+import com.sun.media.jfxmedia.events.NewFrameEvent;
+
 import entity.Employee;
 import entity.EntityConstants;
 import entity.Order;
@@ -180,14 +184,8 @@ public class MySQLConnection {
 		if (park == null)
 			throw new SQLException();
 		String[] splitTime = orderToValidate.getTimeOfOrder().split(":");
-		String minimalHour, maximalHour;
-		if (Integer.parseInt(splitTime[0]) - park.getParkVisitDuration() < EntityConstants.PARK_OPEN)
-			minimalHour = "08:00:00";
-		else
-			minimalHour = String.valueOf(Integer.parseInt(splitTime[0]) - park.getParkVisitDuration()) + ":00:00";
-		maximalHour = String.valueOf(Integer.parseInt(splitTime[0]) + park.getParkVisitDuration()) + ":00:00";
 		Map<Integer, Integer> parkCapacity = parkCapacityForDuration(park, orderToValidate.getDateOfOrder(),
-				minimalHour, maximalHour);
+				orderToValidate.getTimeOfOrder(), orderToValidate.getTimeOfOrder());
 		for (int hour : parkCapacity.keySet()) {
 			if (orderToValidate.getNumOfVisitors() + parkCapacity.get(hour) > park.getParkMaxVisitorsDefault()
 					- park.getParkDiffFromMax())
@@ -198,6 +196,14 @@ public class MySQLConnection {
 
 	private static Map<Integer, Integer> parkCapacityForDuration(Park park, String date, String startTime,
 			String finishTime) throws NumberFormatException, SQLException {
+		String[] splitTimeStart = startTime.split(":");
+		String[] splitTimeFinish = finishTime.split(":");
+		if (Integer.parseInt(splitTimeStart[0]) - park.getParkVisitDuration() < EntityConstants.PARK_OPEN)
+			startTime = "08:00:00";
+		else {
+			startTime=String.valueOf(Integer.parseInt(splitTimeStart[0]) - park.getParkVisitDuration()) + ":00:00";
+		}
+		finishTime=String.valueOf(Integer.parseInt(splitTimeFinish[0]) + park.getParkVisitDuration()-1) + ":00:00";
 		Map<Integer, Integer> parkCapacity = new LinkedHashMap<Integer, Integer>();
 		String query = "SELECT timeOfOrder,SUM(numOfVisitors) FROM orders WHERE (status='ACTIVE' OR status='PENDING_APPROVAL_FROM_WAITING_LIST'"
 				+ " OR status='PENDING_FINAL_APPROVAL') AND orders.dateOfOrder=?"
@@ -342,19 +348,27 @@ public class MySQLConnection {
 			Date nextDate = cal.getTime();
 			dateMap.put(format.format(nextDate), new ArrayList<String>());
 			Map<Integer, Integer> parkCapacity;
-			if (i != 0)
+			Date today = new Date();
+			LocalTime localTime = today.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+			boolean isToday=false;
+			if (!format.format(nextDate).equals(format.format(today)))
 				parkCapacity = parkCapacityForDuration(park, format.format(nextDate), startHour, finishHour);
 			else {
-				Date today = new Date();
-				LocalTime localTime = today.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+				isToday=true;
 				String startHourForToday = (localTime.getHour() + 1) + ":00+:00";
 				if (localTime.getHour() + 1 < 10)
 					startHourForToday = "0" + startHourForToday;
 				parkCapacity = parkCapacityForDuration(park, format.format(nextDate), startHourForToday, finishHour);
 			}
 			for (int hour : parkCapacity.keySet()) {
+				if (isToday) {
+					if(hour<localTime.getHour() + 1)
+						continue;
+				}
+				if(hour>EntityConstants.PARK_CLOSED)
+					continue;
 				int maxCapacity = parkCapacity.get(hour);
-				for (int j = 1; j <= park.getParkVisitDuration(); j++) {
+				for (int j = 1; j < park.getParkVisitDuration(); j++) {
 					if (parkCapacity.get(hour + j) != null) {
 						if (maxCapacity < parkCapacity.get(hour + j))
 							maxCapacity = parkCapacity.get(hour + j);
