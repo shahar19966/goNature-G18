@@ -214,7 +214,6 @@ public class MySQLConnection {
 		validateDatePrepStmt.setString(3, finishTime);
 		ResultSet rs = validateDatePrepStmt.executeQuery();
 		Map<Integer, Integer> timeOfOrderForHour = new HashMap<Integer, Integer>();
-		System.out.println(date);
 		while (rs.next()) {
 			timeOfOrderForHour.put(Integer.parseInt(rs.getString(1).split(":")[0]), Integer.parseInt(rs.getString(2)));
 		}
@@ -224,7 +223,6 @@ public class MySQLConnection {
 				if (timeOfOrderForHour.containsKey(i - j))
 					sum += timeOfOrderForHour.get(i - j);
 			}
-			System.out.println(i+" "+sum);
 			parkCapacity.put(i, sum);
 		}
 
