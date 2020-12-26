@@ -42,6 +42,10 @@ public class Subscriber extends Person {
 	public boolean getIsGuide() {
 		return isGuide;
 	}
+	
+	public void setSuibscriberNum(String subNum) {
+		subscriberNumber=subNum;
+	}
 
 	@Override
 	public int hashCode() {

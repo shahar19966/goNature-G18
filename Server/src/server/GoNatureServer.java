@@ -11,6 +11,7 @@ import application.ServerMain;
 import entity.Employee;
 import entity.Order;
 import entity.ParameterUpdate;
+import entity.Subscriber;
 import message.ClientMessage;
 import message.ServerMessage;
 import message.ServerMessageType;
@@ -126,12 +127,17 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.PARK_INCOME_REPORT;
 					break;
 				case PICK_AVAILABLE_DATES:
-					returnVal=MySQLConnection.getAvailableDates((Order)clientMsg.getMessage());
-					type=ServerMessageType.AVAILABLE_DATES;
+					returnVal = MySQLConnection.getAvailableDates((Order) clientMsg.getMessage());
+					type = ServerMessageType.AVAILABLE_DATES;
 					break;
-				case PARAMETER_UPDATE://liron
-					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate)clientMsg.getMessage());
-					type=ServerMessageType.PARAMETER_UPDATE;
+				case PARAMETER_UPDATE:// liron
+					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate) clientMsg.getMessage());
+					type = ServerMessageType.PARAMETER_UPDATE;
+					break;
+				case REGISTRATION:
+					ServerMessage message = MySQLConnection.registerSubscriber((Subscriber) clientMsg.getMessage());
+					returnVal = message.getMessage();
+					type = message.getType();
 					break;
 				}
 			}

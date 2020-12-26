@@ -101,8 +101,9 @@ public class GoNatureClient extends AbstractClient {
 			case PARAMETER_UPDATE://liron
 				GUIControl.popUpMessage("Parameter Update Succeeded", ((ParameterUpdate) serverMsg.getMessage()).toString());
 				break;
-
-				
+default:
+	guiControl.setServerMsg(serverMsg);
+				break;
 			}
 		}
 		awaitResponse = false;

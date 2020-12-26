@@ -3,6 +3,8 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import entity.Subscriber;
+import gui.ClientConstants.AlertType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,6 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import message.ClientMessage;
+import message.ClientMessageType;
+import message.ServerMessage;
+import message.ServerMessageType;
 
 public class RegisterSubscriberAndGuideController implements Initializable {
 
@@ -26,9 +32,9 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 
 	@FXML
 	private Label separetorLabel;
-	
-    @FXML
-    private Label csvCodeLabel;
+
+	@FXML
+	private Label csvCodeLabel;
 
 	@FXML
 	private TextField idTextFiled;
@@ -111,10 +117,34 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 	@FXML
 	void registerBtnClick(ActionEvent event) {
 		if (!IsValidInputForRegistration()) {
-			// show error
 			return;
 		}
-		// SendInfoToServer();
+		Subscriber newSubscriber = new Subscriber("", idTextFiled.getText(), fNameTextFiled.getText(),
+				lNameTextFiled.getText(), prefixPhoneComboBox.getValue() + finishPhone.getText(),
+				emailTextField.getText(), familiyCount.getValue(), cardNumber.getText() + "%" + monthComboBox.getValue()
+						+ yearComboBox.getValue() + "%" + csvTextField.getText(),
+				isGuide.isSelected());
+		ClientMessage clientMsg = new ClientMessage(ClientMessageType.REGISTRATION, newSubscriber);
+		GUIControl guiControl = GUIControl.getInstance();
+		guiControl.sendToServer(clientMsg);
+		ServerMessage serverMsg = guiControl.getServerMsg();
+		// TODO!!
+		// display relevant message and move to another screen
+
+		if (serverMsg.getMessage() instanceof Subscriber) {
+			Subscriber registerd = (Subscriber) serverMsg.getMessage();
+			if (serverMsg.getType() == ServerMessageType.REGISTRATION_FAILED) {
+				GUIControl.popUpError("This ID is already registered as: " + registerd.getFirstName() + " "
+						+ registerd.getLastName() + ", subscriber number: " + registerd.getSubscriberNumber());
+			} else if (serverMsg.getType() == ServerMessageType.REGISTRATION_SUCCESSED) {
+				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
+						"Registration successful",
+						registerd.getFirstName() + registerd.getLastName()
+								+ " Registered successfully to goNature!\n Subscriber number is "
+								+ registerd.getSubscriberNumber(),
+						null);
+			}
+		}
 	}
 
 	/*
@@ -158,31 +188,33 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 			GUIControl.popUpError("phone number need to contain 10 digits in total");
 			return false;
 		}
+		// if check box selected, input check for credit card
+		if (isCard.isSelected()) {
 
-		// input checks for credit card number
-		// check if credit card number contains only digits
-		if (!cardNumber.getText().matches("[0-9]+")) {
-			GUIControl.popUpError("credit card number can only contain digits");
-			return false;
-		}
-		// check if ID contains 9 digits
-		if (cardNumber.getText().length() != 16) {
-			GUIControl.popUpError("credit card number need to contain 16 digits");
-			return false;
-		}
+			// input checks for credit card number
+			// check if credit card number contains only digits
+			if (!cardNumber.getText().matches("[0-9]+")) {
+				GUIControl.popUpError("credit card number can only contain digits");
+				return false;
+			}
+			// check if ID contains 9 digits
+			if (cardNumber.getText().length() != 16) {
+				GUIControl.popUpError("credit card number need to contain 16 digits");
+				return false;
+			}
 
-		// input checks for CSV code
-		// check if CSV code contains only digits
-		if (!csvTextField.getText().matches("[0-9]+")) {
-			GUIControl.popUpError("CSV code can only contain digits");
-			return false;
+			// input checks for CSV code
+			// check if CSV code contains only digits
+			if (!csvTextField.getText().matches("[0-9]+")) {
+				GUIControl.popUpError("CSV code can only contain digits");
+				return false;
+			}
+			// check if CSV code contains 9 digits
+			if (csvTextField.getText().length() != 3) {
+				GUIControl.popUpError("CSV code need to contain 3 digits");
+				return false;
+			}
 		}
-		// check if CSV code contains 9 digits
-		if (csvTextField.getText().length() != 3) {
-			GUIControl.popUpError("CSV code need to contain 3 digits");
-			return false;
-		}
-
 		return true;
 	}
 

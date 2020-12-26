@@ -32,6 +32,8 @@ import entity.Park;
 import entity.Subscriber;
 import entity.Visitor;
 import entity.VisitorReport;
+import message.ServerMessage;
+import message.ServerMessageType;
 import entity.EntityConstants.OrderStatus;
 import entity.EntityConstants.OrderType;
 
@@ -201,9 +203,9 @@ public class MySQLConnection {
 		if (Integer.parseInt(splitTimeStart[0]) - park.getParkVisitDuration() < EntityConstants.PARK_OPEN)
 			startTime = "08:00:00";
 		else {
-			startTime=String.valueOf(Integer.parseInt(splitTimeStart[0]) - park.getParkVisitDuration()) + ":00:00";
+			startTime = String.valueOf(Integer.parseInt(splitTimeStart[0]) - park.getParkVisitDuration()) + ":00:00";
 		}
-		finishTime=String.valueOf(Integer.parseInt(splitTimeFinish[0]) + park.getParkVisitDuration()-1) + ":00:00";
+		finishTime = String.valueOf(Integer.parseInt(splitTimeFinish[0]) + park.getParkVisitDuration() - 1) + ":00:00";
 		Map<Integer, Integer> parkCapacity = new LinkedHashMap<Integer, Integer>();
 		String query = "SELECT timeOfOrder,SUM(numOfVisitors) FROM orders WHERE (status='ACTIVE' OR status='PENDING_APPROVAL_FROM_WAITING_LIST'"
 				+ " OR status='PENDING_FINAL_APPROVAL') AND orders.dateOfOrder=?"
@@ -350,11 +352,11 @@ public class MySQLConnection {
 			Map<Integer, Integer> parkCapacity;
 			Date today = new Date();
 			LocalTime localTime = today.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-			boolean isToday=false;
+			boolean isToday = false;
 			if (!format.format(nextDate).equals(format.format(today)))
 				parkCapacity = parkCapacityForDuration(park, format.format(nextDate), startHour, finishHour);
 			else {
-				isToday=true;
+				isToday = true;
 				String startHourForToday = (localTime.getHour() + 1) + ":00+:00";
 				if (localTime.getHour() + 1 < 10)
 					startHourForToday = "0" + startHourForToday;
@@ -362,10 +364,10 @@ public class MySQLConnection {
 			}
 			for (int hour : parkCapacity.keySet()) {
 				if (isToday) {
-					if(hour<localTime.getHour() + 1)
+					if (hour < localTime.getHour() + 1)
 						continue;
 				}
-				if(hour>EntityConstants.PARK_CLOSED)
+				if (hour > EntityConstants.PARK_CLOSED)
 					continue;
 				int maxCapacity = parkCapacity.get(hour);
 				for (int j = 1; j < park.getParkVisitDuration(); j++) {
@@ -384,6 +386,45 @@ public class MySQLConnection {
 			}
 		}
 		return dateMap;
+	}
+
+	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
+		// TODO!!!!!!!!! maybe checks in the visitor table for existing id
+		String subNum = "999";
+		PreparedStatement registerPreparedStatement;
+		registerPreparedStatement = con.prepareStatement("SELECT * FROM subscriber");
+		ResultSet rs = registerPreparedStatement.executeQuery();
+		while (rs.next()) {
+			if (rs.getString(2).equals(subscriber.getID())) {
+				Subscriber registerd = new Subscriber(rs.getString(1), rs.getString(2), rs.getString(3),
+						rs.getString(4), rs.getString(5), rs.getString(6), Integer.parseInt(rs.getString(7)),
+						rs.getString(8), rs.getString(9).contentEquals("0") ? false : true);
+				return new ServerMessage(ServerMessageType.REGISTRATION_FAILED, registerd);
+			}
+			subNum = rs.getString(1);
+		}
+		subNum = Integer.toString(Integer.parseInt(subNum) + 1);
+		subscriber.setSuibscriberNum(subNum);
+		registerPreparedStatement = con.prepareStatement("INSERT INTO visitor " + "(id) VALUES " + "(?);");
+		registerPreparedStatement.setString(1, subscriber.getID());
+		registerPreparedStatement.executeUpdate();
+
+		registerPreparedStatement = con.prepareStatement("INSERT INTO subscriber "
+				+ "(subNum,id_fk,firstName,lastName, phone, email, familyMembers, cardDetails,isGuide) VALUES "
+				+ "(?,?,?,?,?,?,?,?,?);");
+		registerPreparedStatement.setString(1, subscriber.getSubscriberNumber());
+		registerPreparedStatement.setString(2, subscriber.getID());
+		registerPreparedStatement.setString(3, subscriber.getFirstName());
+		registerPreparedStatement.setString(4, subscriber.getLastName());
+		registerPreparedStatement.setString(5, subscriber.getPhone());
+		registerPreparedStatement.setString(6, subscriber.getEmail());
+		registerPreparedStatement.setInt(7, subscriber.getSubscriberFamilyMembers());
+		registerPreparedStatement.setString(8, subscriber.getSubscriberCardDetails());
+		registerPreparedStatement.setBoolean(9, subscriber.getIsGuide());
+		registerPreparedStatement.executeUpdate();
+
+		return new ServerMessage(ServerMessageType.REGISTRATION_SUCCESSED, subscriber);
+
 	}
 
 	public static void main(String[] args) {
