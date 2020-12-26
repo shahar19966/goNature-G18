@@ -226,7 +226,7 @@ public class MySQLConnection {
 		finishTime = String.valueOf(Integer.parseInt(splitTimeFinish[0]) + park.getParkVisitDuration() - 1) + ":00:00";
 		Map<Integer, Integer> parkCapacity = new LinkedHashMap<Integer, Integer>();
 		String query = "SELECT timeOfOrder,SUM(numOfVisitors) FROM orders WHERE (status='ACTIVE' OR status='PENDING_APPROVAL_FROM_WAITING_LIST'"
-				+ " OR status='PENDING_FINAL_APPROVAL') AND orders.dateOfOrder=?"
+				+ " OR status='PENDING_FINAL_APPROVAL' OR status='APPROVED') AND orders.dateOfOrder=?"
 				+ " AND timeOfOrder>=? AND timeOfOrder <=? GROUP BY timeOfOrder;";
 		PreparedStatement validateDatePrepStmt = con.prepareStatement(query);
 		validateDatePrepStmt.setString(1, date);
@@ -431,16 +431,6 @@ public class MySQLConnection {
 		return dateMap;
 	}
 
-	public static void main(String[] args) {
-		Calendar cal = Calendar.getInstance();
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, 1); // minus number would decrement the days
-		Date nextDate = cal.getTime();
-		System.out.println(format.format(nextDate));
-	}
-
 	public static Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
 
 		if (order.getType().equals(OrderType.REGULAR)) {
@@ -463,6 +453,43 @@ public class MySQLConnection {
 		if (validateDate(order)) {
 			return insertNewOrder(order, OrderStatus.APPROVED, true);
 		}
+		return null;
+	}
+
+	public static List<Order> getOrdersById(String id) throws SQLException {
+		List<Order> orders = new ArrayList<Order>();
+		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL');";
+		PreparedStatement getOrdersForId = con.prepareStatement(query);
+		getOrdersForId.setString(1, id);
+		ResultSet rs = getOrdersForId.executeQuery();
+		while (rs.next()) {
+			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8), rs.getString(9), rs.getInt(10), rs.getString(11));
+			orders.add(tmpOrder);
+		}
+		return orders;
+	}
+
+	public static Boolean cancelOrder(String orderNum) throws SQLException  {
+		//TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+		String query = "Update orders SET status='CANCELLED' WHERE orderNum=?";
+		PreparedStatement cancelOrder = con.prepareStatement(query);
+		cancelOrder.setString(1, orderNum);
+		cancelOrder.executeUpdate();
+		return true;
+	}
+
+	public static Boolean approveOrder(String orderNum) throws SQLException {
+		//TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+		String query = "Update orders SET status='APPROVED' WHERE orderNum=?";
+		PreparedStatement approveOrder = con.prepareStatement(query);
+		approveOrder.setString(1, orderNum);
+		approveOrder.executeUpdate();
+		return true;
+	}
+
+	public static Order activateOrderFromWatingList(Order order) {
+		//TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+		//TODO: IF Order Time and date is less than 2 hours then change it to WATING FOR APPROVAL. Else change it to Active
 		return null;
 	}
 
