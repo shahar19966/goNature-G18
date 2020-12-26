@@ -136,7 +136,8 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void orderTrakingBtnClick(ActionEvent event) {
-
+		loadOrderTracking();
+		setSwitchPane(panesMap.get("orderTracking"));
 	}
 
 	@FXML
@@ -476,5 +477,18 @@ public class ClientMainPageController implements Initializable {
 		});
 		alertButtons.add(0, okButton);
 		showAlert(alertType, alertTitle, alertBody, alertButtons);
+	}
+	
+	private void loadOrderTracking() {
+		FXMLLoader fxmlLoader1 = new FXMLLoader(
+				getClass().getResource(ClientConstants.Screens.ORDER_TRACKING.toString()));
+		GridPane root = null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		panesMap.put("orderTracking", root);
 	}
 }

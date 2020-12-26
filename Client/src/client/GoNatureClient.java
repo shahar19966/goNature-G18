@@ -99,20 +99,28 @@ public class GoNatureClient extends AbstractClient {
 			case AVAILABLE_DATES:
 				guiControl.setServerMsg(serverMsg);
 				break;
-			case PARAMETER_UPDATE://liron
-				GUIControl.popUpMessage("Parameter Update Succeeded", ((ParameterUpdate) serverMsg.getMessage()).toString());
+			case PARAMETER_UPDATE:// liron
+				GUIControl.popUpMessage("Parameter Update Succeeded",
+						((ParameterUpdate) serverMsg.getMessage()).toString());
 				break;
 			case DISCOUNT_REQUEST:
-				GUIControl.popUpMessage("Request sent to department manager","Request successfully sent to department manager");
+				GUIControl.popUpMessage("Request sent to department manager",
+						"Request successfully sent to department manager");
 				break;
-				
+
 			case OCCASIONAL_ORDER:
 				guiControl.setServerMsg(serverMsg);
-                 break;
+				break;
 			case PARK_CAPACITY_REPORT:
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case DEPARTMENT_CANCELLATION_REPORT:
+          guiControl.setServerMsg(serverMsg);
+				break;
+			case GET_ORDERS_BY_ID:
+				guiControl.setServerMsg(serverMsg);
+				break;
+			case CANCEL_ORDER:
 				guiControl.setServerMsg(serverMsg);
 				break;
 

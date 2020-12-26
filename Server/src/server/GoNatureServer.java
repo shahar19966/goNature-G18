@@ -139,12 +139,28 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.OCCASIONAL_ORDER;
 					break;
 				case DISCOUNT_REQUEST:
-					returnVal=MySQLConnection.insertNewDiscountRequest((ParkDiscount)clientMsg.getMessage());
-					type=ServerMessageType.DISCOUNT_REQUEST;
+					returnVal = MySQLConnection.insertNewDiscountRequest((ParkDiscount) clientMsg.getMessage());
+					type = ServerMessageType.DISCOUNT_REQUEST;
 					break;
 				case PARK_MNG_CAPACITY_REPORT:
 					returnVal = MySQLConnection.getParkCapacityReport((String) (clientMsg.getMessage()));
-					type=ServerMessageType.PARK_CAPACITY_REPORT;
+					type = ServerMessageType.PARK_CAPACITY_REPORT;
+					break;
+				case GET_ORDERS_BY_ID:
+					returnVal = MySQLConnection.getOrdersById((String) (clientMsg.getMessage()));
+					type = ServerMessageType.GET_ORDERS_BY_ID;
+					break;
+				case CANCEL_ORDER:
+					returnVal = MySQLConnection.cancelOrder((String) (clientMsg.getMessage()));
+					type = ServerMessageType.CANCEL_ORDER;
+					break;
+				case APPROVE_ORDER:
+					returnVal = MySQLConnection.approveOrder((String) (clientMsg.getMessage()));
+					type = ServerMessageType.APPROVE_ORDER;
+					break;
+				case ACTIVATE_ORDER_FROM_WATING_LIST:
+					returnVal = MySQLConnection.activateOrderFromWatingList((Order) (clientMsg.getMessage()));
+					type = ServerMessageType.APPROVE_ORDER;
 					break;
 				case DEP_MNG_CANCELLATION_REPORT:
 					returnVal = MySQLConnection.getCancellationReport();

@@ -61,7 +61,10 @@ public class Order implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-
+	public String getOrderNum()
+	{
+		return orderNum;
+	}
 	public String getId() {
 		return id;
 	}
