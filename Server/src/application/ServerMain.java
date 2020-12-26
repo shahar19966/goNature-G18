@@ -57,7 +57,7 @@ public class ServerMain extends Application {
 	 * static method that upon being called sends a crash message to all clients and exits the application
 	 */
 	public static void stopServer() {
-		server.sendToAllClients(new ServerMessage(ServerMessageType.SERVER_ERROR,"Server crashed!\nYour client will shut down in a few seconds"));
+		server.sendToAllClients(new ServerMessage(ServerMessageType.SERVER_ERROR,"Server crashed!\nSorry for the inconvenience\nClick 'OK' to exit..."));
 		System.exit(0);
 		
 	}
