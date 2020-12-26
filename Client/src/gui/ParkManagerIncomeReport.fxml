@@ -46,7 +46,7 @@
             <Image url="@../resources/logo.png" />
          </image>
       </ImageView>
-      <Label fx:id="month" alignment="CENTER" contentDisplay="CENTER" layoutX="132.0" layoutY="110.0" prefHeight="30.0" prefWidth="90.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+      <Label fx:id="month" alignment="CENTER" layoutX="132.0" layoutY="110.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -54,7 +54,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label fx:id="parkName" alignment="CENTER" contentDisplay="CENTER" layoutX="173.0" layoutY="151.0" prefHeight="30.0" prefWidth="82.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+      <Label fx:id="parkName" alignment="CENTER" layoutX="173.0" layoutY="151.0" prefHeight="30.0" prefWidth="82.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -62,7 +62,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label fx:id="total" alignment="CENTER" contentDisplay="CENTER" layoutX="114.0" layoutY="193.0" prefHeight="30.0" prefWidth="90.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+      <Label fx:id="total" alignment="CENTER" layoutX="114.0" layoutY="193.0" prefHeight="30.0" prefWidth="90.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
