@@ -166,6 +166,40 @@ public class MySQLConnection {
 
 	}
 
+	public static Map<String, VisitorReport> getCancellationReport() throws SQLException {
+		Map<String, VisitorReport> reportVisitorMap = new HashMap<String, VisitorReport>();
+		Statement getCancellationReport;
+		getCancellationReport = con.createStatement();
+		ResultSet rs = getCancellationReport
+				.executeQuery("SELECT  orders.parkName_fk,COUNT(*) FROM orders "
+						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND "
+						+ "(orders.status='APPROVED' AND CURDATE()>=orders.dateOfOrder ) GROUP by orders.parkName_fk");
+		List<Park> parkList = getParks();
+		for (Park p : parkList)
+			reportVisitorMap.put(p.getParkName(), new VisitorReport(p.getParkName()));
+		if (rs.next()) {
+		String namePark = rs.getString(1);
+		do {
+			reportVisitorMap.get(namePark).setCountNotRealized((Integer.parseInt(rs.getString(2))));
+			
+		} while (rs.next());
+		
+		}
+		 rs = getCancellationReport
+				.executeQuery("SELECT orders.parkName_fk,COUNT(*) FROM orders "
+						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
+						+ "AND orders.status='CANCELLED' GROUP by orders.parkName_fk");
+		if (rs.next()) {
+			String namePark = rs.getString(1);
+			do {
+				reportVisitorMap.get(namePark).setCountCancellations((Integer.parseInt(rs.getString(2))));
+				
+			} while (rs.next());
+			
+			}
+		return reportVisitorMap;
+	}
+
 	public static List<ParkCapacityReport> getParkCapacityReport(String parkName) throws SQLException {
 		List<ParkCapacityReport> dateList = new ArrayList<>();
 		PreparedStatement getParkCapacityReport;

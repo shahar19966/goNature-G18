@@ -112,6 +112,9 @@ public class GoNatureClient extends AbstractClient {
 			case PARK_CAPACITY_REPORT:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case DEPARTMENT_CANCELLATION_REPORT:
+				guiControl.setServerMsg(serverMsg);
+				break;
 
 			}
 		}

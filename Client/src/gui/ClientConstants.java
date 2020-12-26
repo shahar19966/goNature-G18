@@ -23,6 +23,7 @@ public class ClientConstants {
 		REGISTRATION_PAGE("/gui/RegisterSubscriberAndGuide.fxml"),
 		PARK_INCOME_REPORT("/gui/ParkManagerIncomeReport.fxml"),
 		PARK_CAPACITY_REPORT("/gui/ParkManagerCapacityReport.fxml"),
+		DEPARTMENT_CANCELLATION_REPORT("/gui/DepartmentManagerCancellationReport.fxml"),
 		AVAILABLE_DATES_PAGE("/gui/AvailableDatesPage.fxml");
 
 		public final String path;
