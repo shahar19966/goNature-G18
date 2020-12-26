@@ -108,7 +108,10 @@ public class GoNatureClient extends AbstractClient {
 				
 			case OCCASIONAL_ORDER:
 				guiControl.setServerMsg(serverMsg);
-          break;
+                 break;
+			case PARK_CAPACITY_REPORT:
+				guiControl.setServerMsg(serverMsg);
+				break;
 
 			}
 		}

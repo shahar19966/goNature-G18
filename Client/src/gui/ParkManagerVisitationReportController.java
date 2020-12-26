@@ -38,7 +38,6 @@ public class ParkManagerVisitationReportController implements Initializable {
 		VisitorReport temp;
 		guiControl.sendToServer(new ClientMessage(ClientMessageType.VISITOR_REPORT, null));
 		Map<String, VisitorReport> parkReportMap = (Map<String, VisitorReport>) guiControl.getServerMsg().getMessage();
-		if (emp.getRole().equals("PARK_MANAGER")) {
 			temp=parkReportMap.get(emp.getParkName());
 			XYChart.Series<String, Number> park1 = new XYChart.Series<>();
 			park1.setName(temp.getNamePark());
@@ -48,18 +47,8 @@ public class ParkManagerVisitationReportController implements Initializable {
 			visitationReport.getData().add(park1);
 			return;
 		}
-		for(VisitorReport vr:parkReportMap.values())
-		{
-			XYChart.Series<String, Number> park1 = new XYChart.Series<>();
-			park1.setName(vr.getNamePark());
-			park1.getData().add(new XYChart.Data<>("Subscribers", vr.getCountSubscriber()));
-			park1.getData().add(new XYChart.Data<>("Groups", vr.getCountGuid()));
-			park1.getData().add(new XYChart.Data<>("Individuals",vr.getCountRegular()));
-			visitationReport.getData().add(park1);
-		}
-
-		
-	}
-
+	
+	
+	
 
 }

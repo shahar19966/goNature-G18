@@ -22,7 +22,16 @@ public class ParkManagerReportsController {
 
 	@FXML
 	void capacityReport(ActionEvent event) {
-
+		Parent root ;
+        try {
+        	 root = FXMLLoader.load(getClass().getResource(ClientConstants.Screens.PARK_CAPACITY_REPORT.toString()));
+            Stage stage = new Stage();
+            stage.setTitle("park manager capacit report");
+           stage.setScene(new Scene(root,615, 626));
+            stage.show();
+	} catch(Exception e) {
+		e.printStackTrace();
+	}
 	}
 
 	@FXML

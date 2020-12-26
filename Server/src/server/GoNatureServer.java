@@ -142,6 +142,10 @@ public class GoNatureServer extends AbstractServer {
 					returnVal=MySQLConnection.insertNewDiscountRequest((ParkDiscount)clientMsg.getMessage());
 					type=ServerMessageType.DISCOUNT_REQUEST;
 					break;
+				case PARK_MNG_CAPACITY_REPORT:
+					returnVal = MySQLConnection.getParkCapacityReport((String) (clientMsg.getMessage()));
+					type=ServerMessageType.PARK_CAPACITY_REPORT;
+					break;
 				}
 			}
 		} catch (Exception e) {
