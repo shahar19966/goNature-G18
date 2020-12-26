@@ -434,7 +434,7 @@ public class MySQLConnection {
 	}
 
 	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
-		// TODO!!!!!!!!! maybe checks in the visitor table for existing id
+		// TODO!!!!!!!!! ASK- maybe to check in the visitor table for existing id!!!!!
 		String subNum = "999";
 		PreparedStatement registerPreparedStatement;
 		registerPreparedStatement = con.prepareStatement("SELECT * FROM subscriber");

@@ -107,10 +107,10 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		prefixPhoneComboBox.getSelectionModel().selectFirst();
 		yearComboBox.prefWidthProperty().bind(lNameTextFiled.widthProperty());
 		yearComboBox.setItems(yearObsList);
-		yearComboBox.getSelectionModel().selectFirst();
+		// yearComboBox.getSelectionModel().selectFirst();
 		monthComboBox.prefWidthProperty().bind(lNameTextFiled.widthProperty());
 		monthComboBox.setItems(monthObsList);
-		monthComboBox.getSelectionModel().selectFirst();
+		// monthComboBox.getSelectionModel().selectFirst();
 		familiyCount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 15));
 	}
 
@@ -128,23 +128,21 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		GUIControl guiControl = GUIControl.getInstance();
 		guiControl.sendToServer(clientMsg);
 		ServerMessage serverMsg = guiControl.getServerMsg();
-		// TODO!!
-		// display relevant message and move to another screen
-
 		if (serverMsg.getMessage() instanceof Subscriber) {
 			Subscriber registerd = (Subscriber) serverMsg.getMessage();
 			if (serverMsg.getType() == ServerMessageType.REGISTRATION_FAILED) {
 				GUIControl.popUpError("This ID is already registered as: " + registerd.getFirstName() + " "
-						+ registerd.getLastName() + ", subscriber number: " + registerd.getSubscriberNumber());
+						+ registerd.getLastName() + ", \nsubscriber number: " + registerd.getSubscriberNumber());
 			} else if (serverMsg.getType() == ServerMessageType.REGISTRATION_SUCCESSED) {
 				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
 						"Registration successful",
-						registerd.getFirstName() + registerd.getLastName()
+						registerd.getFirstName() + " " + registerd.getLastName()
 								+ " Registered successfully to goNature!\n Subscriber number is "
 								+ registerd.getSubscriberNumber(),
 						null);
 			}
 		}
+		clearAllFields();
 	}
 
 	/*
@@ -191,6 +189,9 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		// if check box selected, input check for credit card
 		if (isCard.isSelected()) {
 
+			yearComboBox.getSelectionModel().selectFirst();
+			monthComboBox.getSelectionModel().selectFirst();
+
 			// input checks for credit card number
 			// check if credit card number contains only digits
 			if (!cardNumber.getText().matches("[0-9]+")) {
@@ -220,6 +221,10 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 
 	@FXML
 	void clearBtnClick(ActionEvent event) {
+		clearAllFields();
+	}
+
+	public void clearAllFields() {
 		idTextFiled.setText("");
 		familiyCount.getValueFactory().setValue(0);
 		fNameTextFiled.setText("");
