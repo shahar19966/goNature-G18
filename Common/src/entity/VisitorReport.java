@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class VisitorReport implements Serializable {
 
 	private String namePark;
-	private int countSubscriber,countGuid,countRegular;
+	private int countSubscriber,countGuid,countRegular,countCancellations,countNotRealized;
 
 	
 	public VisitorReport(String namePark)
@@ -14,6 +14,9 @@ public class VisitorReport implements Serializable {
 		this.countSubscriber=0;
 		this.countGuid=0;
 		this.countRegular=0;
+		this.countCancellations=0;
+		this.countNotRealized=0;
+		
 	
 	}
 
@@ -28,6 +31,22 @@ public class VisitorReport implements Serializable {
 	public void setCountGuid(int countGuid)
 	{
 		this.countGuid=countGuid;
+	}
+	public void setCountCancellations(int countCancellations)
+	{
+		this.countCancellations=countCancellations;
+	}
+	public void setCountNotRealized(int countNotRealized)
+	{
+		this.countNotRealized=countNotRealized;
+	}
+	public int getCountNotRealized()
+	{
+		return countNotRealized;
+	}
+	public int getCountCancellations()
+	{
+		return countCancellations;
 	}
 	public int getCountRegular()
 	{
@@ -45,10 +64,7 @@ public class VisitorReport implements Serializable {
 	{
 		this.countSubscriber=countSubscriber;
 	}
-	@Override
-	public String toString() {
-		return namePark;
-	}
+
 	
 
 }

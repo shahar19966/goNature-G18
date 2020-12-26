@@ -162,6 +162,11 @@ public class GoNatureServer extends AbstractServer {
 					returnVal = MySQLConnection.activateOrderFromWatingList((Order) (clientMsg.getMessage()));
 					type = ServerMessageType.APPROVE_ORDER;
 					break;
+				case DEP_MNG_CANCELLATION_REPORT:
+					returnVal = MySQLConnection.getCancellationReport();
+					type=ServerMessageType.DEPARTMENT_CANCELLATION_REPORT;
+					break;
+				
 				}
 			}
 		} catch (Exception e) {

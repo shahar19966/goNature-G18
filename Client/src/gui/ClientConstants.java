@@ -17,14 +17,18 @@ public class ClientConstants {
 		DEPARTMENT_MANAGER_REPOTRS("/gui/DepartmentManagerProduceReportsPage.fxml"),
 		PARK_MNG_VISIT_REPORT("/gui/ParkManagerVisitaoinReport.fxml"),
 		PARK_MANAGER_PATAMETERS_UPDATE("/gui/ParameterUpdatePage.fxml"),
-		SUB_AND_VISITOR_ORDER_PAGE("/gui/OrderPane.fxml"), REGULAR_ORDER_PAGE("/gui/OrderRegularEmployeePane.fxml"),VISITATION_TIME_UPDATE("/gui/VisitationTimeUpdate.fxml"),
+		SUB_AND_VISITOR_ORDER_PAGE("/gui/OrderPane.fxml"), REGULAR_ORDER_PAGE("/gui/OrderRegularEmployeePane.fxml"),
+    VISITATION_TIME_UPDATE("/gui/VisitationTimeUpdate.fxml"),
 		CAPACITY_UPDATE("/gui/CapacityUpdate.fxml"), DIFFERENCE_PARAMETER_UPDATE("/gui/DifferenceParameterUpdate.fxml"),
 		PARK_MANAGER_DISCOUNT_REQUESTS("/gui/ParkManagerDiscountRequests.fxml"),
 		REGISTRATION_PAGE("/gui/RegisterSubscriberAndGuide.fxml"),
 		PARK_INCOME_REPORT("/gui/ParkManagerIncomeReport.fxml"),
 		PARK_CAPACITY_REPORT("/gui/ParkManagerCapacityReport.fxml"),
+		DEPARTMENT_CANCELLATION_REPORT("/gui/DepartmentManagerCancellationReport.fxml"),
+		AVAILABLE_DATES_PAGE("/gui/AvailableDatesPage.fxml"),
 		AVAILABLE_DATES_PAGE("/gui/AvailableDatesPage.fxml"),
 		ORDER_TRACKING("/gui/MyOrdersPane.fxml");
+
 		public final String path;
 
 		private Screens(String path) {

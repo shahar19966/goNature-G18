@@ -55,9 +55,7 @@ public class ParkManagerCapacityReportController  implements Initializable {
       	guiControl.sendToServer(new ClientMessage(ClientMessageType.PARK_MNG_CAPACITY_REPORT, park));
       	list=(List<ParkCapacityReport> ) guiControl.getServerMsg().getMessage();
       	date.setCellValueFactory(new PropertyValueFactory<ParkCapacityReport,String>("date"));  
-    	time.setCellValueFactory(new PropertyValueFactory<ParkCapacityReport,String>("time")); 
-
-      	
+    	time.setCellValueFactory(new PropertyValueFactory<ParkCapacityReport,String>("time"));
     	
         tabel.getItems().addAll(list);
 	
