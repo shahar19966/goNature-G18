@@ -1,6 +1,7 @@
 package client;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.sql.SQLException;
 
 import entity.Employee;
@@ -26,7 +27,7 @@ public class GoNatureClient extends AbstractClient {
 	 * method in the client.
 	 */
 	public static boolean awaitResponse = false;
-	private GUIControl guiControl = GUIControl.getInstance();
+	private GUIControl guiControl;
 
 	// Constructors ****************************************************
 
@@ -40,7 +41,7 @@ public class GoNatureClient extends AbstractClient {
 
 	public GoNatureClient(String host, int port) throws IOException {
 		super(host, port); // Call the superclass constructor
-		openConnection();
+		guiControl = GUIControl.getInstance();
 	}
 
 	// Instance methods ************************************************
@@ -64,14 +65,7 @@ public class GoNatureClient extends AbstractClient {
 					GUIControl.popUpError("Server encountered an error!");
 					guiControl.setServerMsg(serverMsg);
 				} else {
-					GUIControl.popUpError((String) serverMsg.getMessage());
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					System.exit(0);
+					GUIControl.popUpErrorExitOnClick((String) serverMsg.getMessage());
 				}
 				break;
 			case PARK_LIST:

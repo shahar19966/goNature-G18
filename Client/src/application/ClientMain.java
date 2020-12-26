@@ -1,6 +1,7 @@
 package application;
 	
 import java.io.IOException;
+import java.net.ConnectException;
 
 import client.GoNatureClient;
 import gui.GUIControl;
@@ -31,6 +32,11 @@ public class ClientMain extends Application {
 		guiControl.setClient(client);
 		guiControl.setStage(primaryStage);
 		guiControl.openLogInPage();
+		try {
+			client.openConnection();
+		}catch(IOException ex) {
+			GUIControl.popUpErrorExitOnClick("Caution!\nServer is not running.\nYour client will now close,please try reopening it later.");
+		}
 	}
 	
 	public static void main(String[] args) {

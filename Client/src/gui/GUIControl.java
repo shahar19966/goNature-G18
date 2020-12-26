@@ -94,6 +94,18 @@ public class GUIControl {
 			alert.showAndWait();
 		});
 	}
+	public static void popUpErrorExitOnClick(String msg) {
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("");
+			alert.setContentText(msg);
+			alert.setOnCloseRequest(e->{
+				System.exit(0);
+			});
+			alert.showAndWait();
+		});
+	}
 	public static void popUpMessage(String msg) {
 		popUpMessage("Message",msg);
 	}
