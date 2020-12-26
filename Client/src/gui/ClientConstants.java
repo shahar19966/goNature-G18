@@ -23,8 +23,8 @@ public class ClientConstants {
 		REGISTRATION_PAGE("/gui/RegisterSubscriberAndGuide.fxml"),
 		PARK_INCOME_REPORT("/gui/ParkManagerIncomeReport.fxml"),
 		PARK_CAPACITY_REPORT("/gui/ParkManagerCapacityReport.fxml"),
-		AVAILABLE_DATES_PAGE("/gui/AvailableDatesPage.fxml");
-
+		AVAILABLE_DATES_PAGE("/gui/AvailableDatesPage.fxml"),
+		ORDER_TRACKING("/gui/MyOrdersPane.fxml");
 		public final String path;
 
 		private Screens(String path) {
