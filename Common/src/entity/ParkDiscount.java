@@ -1,19 +1,23 @@
 package entity;
 
-public class ParkDiscount {
+import java.io.Serializable;
+
+public class ParkDiscount implements Serializable {
 	private String parkName;
 	private String startDate;
 	private String finishDate;
 	private int discountAmount;
-	private String discountStatus;
+	private EntityConstants.RequestStatus discountStatus;
+	private String employeeNumber;
 
 	public ParkDiscount(String parkName, String startDate, String finishDate,
-			int discountAmount, String discountStatus, String employeeNumber) {
+			int discountAmount, EntityConstants.RequestStatus discountStatus, String employeeNumber) {
 		this.parkName = parkName;
 		this.startDate = startDate;
 		this.finishDate = finishDate;
 		this.discountAmount = discountAmount;
 		this.discountStatus = discountStatus;
+		this.employeeNumber= employeeNumber;
 	}
 
 	public String getParkName() {
@@ -50,13 +54,28 @@ public class ParkDiscount {
 		this.discountAmount=discountAmount;
 	}
 
-	public String getDiscountStatus() {
+	public EntityConstants.RequestStatus getDiscountStatus() {
 		return discountStatus;
 	}
 
 
-	public void setDiscountStatus(String discountStatus) {
+	public void setDiscountStatus(EntityConstants.RequestStatus discountStatus) {
 		this.discountStatus=discountStatus;
+	}
+
+	public String getEmployeeNumber() {
+		return employeeNumber;
+	}
+
+	public void setEmployeeNumber(String employeeNumber) {
+		this.employeeNumber = employeeNumber;
+	}
+	@Override
+	public String toString() {
+		return "discount for park "+parkName+" from "+startDate+""
+				+ " until "+finishDate+" amount "+ discountAmount + "% status "
+				+discountStatus +" by employee: " +employeeNumber;
+	
 	}
 
 }

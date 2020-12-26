@@ -20,20 +20,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
+//import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
-import com.sun.media.jfxmedia.events.NewFrameEvent;
+//import com.sun.media.jfxmedia.events.NewFrameEvent;
 
 import entity.Employee;
 import entity.EntityConstants;
 import entity.Order;
 import entity.ParameterUpdate;
 import entity.Park;
+import entity.ParkDiscount;
+import entity.ParkCapacityReport;
 import entity.Subscriber;
 import entity.Visitor;
 import entity.VisitorReport;
 import message.ServerMessage;
 import message.ServerMessageType;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import entity.EntityConstants.OrderStatus;
 import entity.EntityConstants.OrderType;
 
@@ -164,6 +168,21 @@ public class MySQLConnection {
 
 	}
 
+	public static List<ParkCapacityReport> getParkCapacityReport(String parkName) throws SQLException {
+		List<ParkCapacityReport> dateList = new ArrayList<>();
+		PreparedStatement getParkCapacityReport;
+		getParkCapacityReport = con.prepareStatement(
+				"SELECT parkFull.dateFull,parkFull.timeFull FROM parkFull WHERE (MONTH(NOW()) = MONTH(parkFull.dateFull)) "
+						+ "AND (YEAR(NOW()) = YEAR(parkFull.dateFull)) AND parkFull.parkName_fk=?");
+		getParkCapacityReport.setString(1, parkName);
+		ResultSet rs = getParkCapacityReport.executeQuery();
+		while (rs.next()) {
+			dateList.add(new ParkCapacityReport(rs.getString(1), rs.getString(2)));
+		}
+		return dateList;
+
+	}
+
 	public static String getIncomeReport(String namePark) throws SQLException {
 		PreparedStatement GetIncomeReport;
 		GetIncomeReport = con.prepareStatement("SELECT sum(finishedOrders.actualPrice ) " + "FROM finishedOrders "
@@ -172,6 +191,7 @@ public class MySQLConnection {
 				+ "AND orders.parkName_fk=?" + "GROUP by orders.parkName_fk");
 		GetIncomeReport.setString(1, namePark);
 		ResultSet rs = GetIncomeReport.executeQuery();
+
 		if (rs.next()) {
 			String amount = rs.getString(1);
 			return amount;
@@ -231,17 +251,23 @@ public class MySQLConnection {
 		return parkCapacity;
 	}
 
-	private static double calculateOrder(Order orderToRequest) throws SQLException {
+	private static double calculateOrder(Order orderToRequest, boolean isOccasional) throws SQLException {
 		double priceForTicket = EntityConstants.TICKET_PRICE;
 
 		double priceForOrder;
 		if (orderToRequest.getType().equals(EntityConstants.OrderType.GUIDE)) {
-			priceForTicket *= 0.75;
-			priceForTicket *= 0.88;
-			priceForOrder = (orderToRequest.getNumOfVisitors() - 1) * priceForTicket;
+			if (!isOccasional) {
+				priceForTicket *= 0.75;
+				priceForTicket *= 0.88;
+				priceForOrder = (orderToRequest.getNumOfVisitors() - 1) * priceForTicket;
+			} else {
+				priceForTicket *= 0.9;
+				priceForOrder = (orderToRequest.getNumOfVisitors()) * priceForTicket;
+			}
 
 		} else {
-			priceForTicket *= 0.85;
+			if (!isOccasional)
+				priceForTicket *= 0.85;
 			if (orderToRequest.getType().equals(EntityConstants.OrderType.REGULAR))
 				priceForOrder = (orderToRequest.getNumOfVisitors()) * priceForTicket;
 			else {
@@ -275,7 +301,8 @@ public class MySQLConnection {
 
 	}
 
-	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus) throws SQLException {
+	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus, boolean isOccasional)
+			throws SQLException {
 		PreparedStatement insertOrderStatement = con.prepareStatement(
 				"INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
@@ -289,7 +316,7 @@ public class MySQLConnection {
 		insertOrderStatement.setString(6, orderToInsert.getType().name());
 		insertOrderStatement.setString(7, orderToInsert.getDateOfOrder());
 		insertOrderStatement.setString(8, orderToInsert.getTimeOfOrder());
-		double price = calculateOrder(orderToInsert);
+		double price = calculateOrder(orderToInsert, isOccasional);
 		insertOrderStatement.setString(9, String.valueOf((int) price));
 		insertOrderStatement.setString(10, orderToInsert.getEmail());
 		insertOrderStatement.executeUpdate();
@@ -311,7 +338,7 @@ public class MySQLConnection {
 
 	public static Order createOrder(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
 		if (validateDate(orderRequest)) {
-			return insertNewOrder(orderRequest, OrderStatus.ACTIVE);
+			return insertNewOrder(orderRequest, OrderStatus.ACTIVE, false);
 		}
 		return null;
 	}
@@ -328,7 +355,25 @@ public class MySQLConnection {
 	}
 
 	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
-		return insertNewOrder(orderRequest, OrderStatus.WAITING);
+		return insertNewOrder(orderRequest, OrderStatus.WAITING, false);
+	}
+
+	public static ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest)
+			throws SQLException, ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = formatter.parse(newDiscountRequest.getStartDate());
+		Date finishDate = formatter.parse(newDiscountRequest.getFinishDate());
+		PreparedStatement insertDiscountRequestStatement = con.prepareStatement(
+				"INSERT INTO discounts (parkName_fk,startDate,finishDate,discountAmount,status,employeeId) VALUES (?,?,?,?,?,?);");
+		insertDiscountRequestStatement.setString(1, newDiscountRequest.getParkName());
+		insertDiscountRequestStatement.setString(2, newDiscountRequest.getStartDate());
+		insertDiscountRequestStatement.setString(3, newDiscountRequest.getFinishDate());
+		insertDiscountRequestStatement.setInt(4, newDiscountRequest.getDiscountAmount());
+		insertDiscountRequestStatement.setString(5, newDiscountRequest.getDiscountStatus().name());
+		insertDiscountRequestStatement.setString(6, newDiscountRequest.getEmployeeNumber());
+		insertDiscountRequestStatement.executeUpdate();
+
+		return newDiscountRequest;
 	}
 
 	public static Map<String, List<String>> getAvailableDates(Order order)
@@ -435,6 +480,31 @@ public class MySQLConnection {
 		cal.add(Calendar.DATE, 1); // minus number would decrement the days
 		Date nextDate = cal.getTime();
 		System.out.println(format.format(nextDate));
+	}
+
+	public static Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
+
+		if (order.getType().equals(OrderType.REGULAR)) {
+			Visitor visitor = validateVisitor(order.getId());
+		}
+		if (order.getType().equals(OrderType.SUBSCRIBER)) {
+			Subscriber subscriber = validateSubscriber(order.getId());
+			if (subscriber == null)
+				return "Subscriber Number" + order.getId() + " " + "is not in the system";
+			order.setId(subscriber.getID());
+		}
+		if (order.getType().equals(OrderType.GUIDE)) {
+			Subscriber subscriber = validateSubscriber(order.getId());
+			if (subscriber == null)
+				return "Subscriber Number" + order.getId() + " " + "is not in the system";
+			if (!subscriber.getIsGuide())
+				return "Subscriber Number" + order.getId() + " " + "is not a guide";
+			order.setId(subscriber.getID());
+		}
+		if (validateDate(order)) {
+			return insertNewOrder(order, OrderStatus.APPROVED, true);
+		}
+		return null;
 	}
 
 }

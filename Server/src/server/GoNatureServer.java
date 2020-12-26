@@ -12,6 +12,7 @@ import entity.Employee;
 import entity.Order;
 import entity.ParameterUpdate;
 import entity.Subscriber;
+import entity.ParkDiscount;
 import message.ClientMessage;
 import message.ServerMessage;
 import message.ServerMessageType;
@@ -133,6 +134,18 @@ public class GoNatureServer extends AbstractServer {
 				case PARAMETER_UPDATE:// liron
 					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate) clientMsg.getMessage());
 					type = ServerMessageType.PARAMETER_UPDATE;
+					break;
+				case OCCASIONAL_ORDER:
+					returnVal = MySQLConnection.OccasionalcreateOrder((Order) clientMsg.getMessage());
+					type = ServerMessageType.OCCASIONAL_ORDER;
+					break;
+				case DISCOUNT_REQUEST:
+					returnVal=MySQLConnection.insertNewDiscountRequest((ParkDiscount)clientMsg.getMessage());
+					type=ServerMessageType.DISCOUNT_REQUEST;
+					break;
+				case PARK_MNG_CAPACITY_REPORT:
+					returnVal = MySQLConnection.getParkCapacityReport((String) (clientMsg.getMessage()));
+					type=ServerMessageType.PARK_CAPACITY_REPORT;
 					break;
 				case REGISTRATION:
 					ServerMessage message = MySQLConnection.registerSubscriber((Subscriber) clientMsg.getMessage());
