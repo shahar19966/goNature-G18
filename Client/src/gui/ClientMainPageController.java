@@ -146,6 +146,7 @@ public class ClientMainPageController implements Initializable {
 		setSwitchPane(panesMap.get("parameters"));
 
 	}
+	
 
 	// Switch to registration screen when the registration button is clicked- OR
 	@FXML
@@ -155,8 +156,9 @@ public class ClientMainPageController implements Initializable {
 	}
 
 	@FXML
-	void requestsBtnClick(ActionEvent event) {
-
+	void requestsBtnClick(ActionEvent event) {//liron
+		loadRequestsDepManager();
+		setSwitchPane(panesMap.get("requests"));
 	}
 
 	@FXML
@@ -291,6 +293,20 @@ public class ClientMainPageController implements Initializable {
 		}
 		// ParkManagerReportsController pmrc=fxmlLoader1.getController();
 		panesMap.put("reports", root);
+	}
+	private void loadRequestsDepManager()//liron
+	{
+		FXMLLoader fxmlLoader1 = new FXMLLoader(
+				getClass().getResource(ClientConstants.Screens.REQUESTS.toString()));
+		VBox root = null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		panesMap.put("requests", root);
 	}
 
 	private void loadParkManagerParametersUpdate()// liron
