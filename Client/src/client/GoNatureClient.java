@@ -117,6 +117,9 @@ public class GoNatureClient extends AbstractClient {
 			case CANCEL_ORDER:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case GET_DISCOUNT_REQUESTS_FRON_DB:
+				guiControl.setServerMsg(serverMsg);
+				break;
 
 			}
 		}

@@ -16,42 +16,48 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 	import javafx.scene.control.ComboBox;
-	import javafx.scene.control.DatePicker;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 	import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 	import javafx.scene.control.TableView;
-	import javafx.scene.layout.GridPane;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 import message.ClientMessage;
 import message.ClientMessageType;
 
 	public class MyDiscountRequestsController implements Initializable {
 		private ObservableList<String> parkNameObservableList = FXCollections.observableArrayList();
+		private ObservableList<ParkDiscount> discountRequestsObservableList = FXCollections.observableArrayList();
+		private Integer discountNumberCol=0;
 		GUIControl guiControl = GUIControl.getInstance();
 
 	    @FXML
 	    private GridPane mainPane;
 
 	    @FXML
-	    private TableView<?> discountTableView;
+	    private TableView<ParkDiscount> discountTableView;
 
 	    @FXML
-	    private TableColumn<?, ?> discountParkNumberCol;
+	    private TableColumn<ParkDiscount, Integer> discountParkNumberCol;
 
 	    @FXML
-	    private TableColumn<?, ?> parkNameCol;
+	    private TableColumn<ParkDiscount, String> parkNameCol;
 
 	    @FXML
-	    private TableColumn<?, ?> startDateCol;
+	    private TableColumn<ParkDiscount, String> startDateCol;
 
 	    @FXML
-	    private TableColumn<?, ?> finishDateCol;
+	    private TableColumn<ParkDiscount, String> finishDateCol;
 
 	    @FXML
-	    private TableColumn<?, ?> discountAmountCol;
+	    private TableColumn<ParkDiscount, Integer> discountAmountCol;
 
 	    @FXML
-	    private TableColumn<?, ?> discountStatusCol;
+	    private TableColumn<ParkDiscount, EntityConstants.RequestStatus> discountStatusCol;
 
 	    @FXML
 	    private ComboBox<String> parkNameComboBox;
@@ -85,6 +91,10 @@ import message.ClientMessageType;
 
 	    }
 
+	    
+	    //Initialize the page to show park manager's parks ,the date of today,disable past dates
+	    //and default amount of discount
+	    //also shows a list of his discount requests
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {
 			guiControl.sendToServer(new ClientMessage(ClientMessageType.GET_PARKS, null));
@@ -95,9 +105,43 @@ import message.ClientMessageType;
 			parkNameComboBox.setItems(parkNameObservableList);
 			parkNameComboBox.getSelectionModel().select(parkNameObservableList.get(0));
 			discountAmountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 20));
+			discountStartDatePicker.setDayCellFactory(picker -> new DateCell() {//disable past dates
+			        public void updateItem(LocalDate date, boolean empty) {
+			            super.updateItem(date, empty);
+			            LocalDate today = LocalDate.now();
+			            if(date.isBefore(today)) {
+			            setDisable(empty || date.compareTo(today) < 0 );
+			            setStyle("-fx-background-color: #ffc0cb;");
+			            }
+
+			        }
+			    });
 			discountStartDatePicker.setValue(LocalDate.now());
+			discountFinishDatePicker.setDayCellFactory(picker -> new DateCell() {//disable past dates
+		        public void updateItem(LocalDate date, boolean empty) {
+		            super.updateItem(date, empty);
+		            LocalDate today = LocalDate.now();
+		            if(date.isBefore(today)) {
+		            setDisable(empty || date.compareTo(today) < 0 );
+		            setStyle("-fx-background-color: #ffc0cb;");
+		            }
+		        }
+		    });
 			discountFinishDatePicker.setValue(LocalDate.now());
-			
+			guiControl.sendToServer(new ClientMessage(ClientMessageType.GET_DISCOUNT_REQUESTS_FRON_DB,((Employee) guiControl.getUser()).getEmployeeNumber() ));
+			List<ParkDiscount> discountRequestsarr = (List<ParkDiscount>) guiControl.getServerMsg().getMessage();
+			for( ParkDiscount pd:discountRequestsarr)	
+			{
+				discountRequestsObservableList.add(pd);
+			}
+		//	discountParkNumberCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, Integer>("discountParkNumber"));
+			parkNameCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("parkName"));
+			startDateCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("startDate"));
+			finishDateCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("finishDate"));
+			discountAmountCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, Integer>("discountAmount"));
+			discountStatusCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, EntityConstants.RequestStatus>("discountStatus"));
+			discountTableView.setItems(discountRequestsObservableList);
+
 		}
 
 	}

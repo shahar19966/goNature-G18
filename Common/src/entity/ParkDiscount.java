@@ -1,6 +1,9 @@
 package entity;
 
 import java.io.Serializable;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import entity.EntityConstants.RequestStatus;
 
 public class ParkDiscount implements Serializable {
 	private String parkName;

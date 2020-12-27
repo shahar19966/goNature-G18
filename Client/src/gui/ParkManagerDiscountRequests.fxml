@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MyDiscountRequestsController">
    <children>
       <GridPane fx:id="mainPane" alignment="CENTER" stylesheets="@application.css">
@@ -33,7 +32,7 @@
                 <TableColumn fx:id="parkNameCol" prefWidth="75.0" text="Park Name" />
                   <TableColumn fx:id="startDateCol" prefWidth="75.0" text="Start Date" />
                   <TableColumn fx:id="finishDateCol" prefWidth="75.0" text="Finish Date" />
-                  <TableColumn fx:id="discountAmountCol" prefWidth="75.0" text="Amount" />
+                  <TableColumn fx:id="discountAmountCol" prefWidth="75.0" text="Amount(%)" />
                   <TableColumn fx:id="discountStatusCol" prefWidth="75.0" text="Status" />
               </columns>
                <columnResizePolicy>
