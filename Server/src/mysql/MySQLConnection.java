@@ -336,7 +336,7 @@ public class MySQLConnection {
 	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus, boolean isOccasional)
 			throws SQLException {
 		PreparedStatement insertOrderStatement = con.prepareStatement(
-				"INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
+				"INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email,phone) VALUES (?,?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateNow = formatter.format(date);
@@ -351,6 +351,7 @@ public class MySQLConnection {
 		double price = calculateOrder(orderToInsert, isOccasional);
 		insertOrderStatement.setString(9, String.valueOf((int) price));
 		insertOrderStatement.setString(10, orderToInsert.getEmail());
+		insertOrderStatement.setString(11, orderToInsert.getPhone());
 		insertOrderStatement.executeUpdate();
 		String query = "SELECT orderNum FROM orders where id_fk=? AND parkName_fk=? AND orderCreationDate=?;";
 		PreparedStatement getOrderNumStatement = con.prepareStatement(query);
@@ -497,7 +498,7 @@ public class MySQLConnection {
 		getOrdersForId.setString(1, id);
 		ResultSet rs = getOrdersForId.executeQuery();
 		while (rs.next()) {
-			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8), rs.getString(9), rs.getInt(10), rs.getString(11));
+			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8), rs.getString(9), rs.getInt(10), rs.getString(11), rs.getString(12));
 			orders.add(tmpOrder);
 		}
 		return orders;

@@ -19,8 +19,9 @@ public class Order implements Serializable {
 	private String timeOfOrder;
 	private int price;
 	private String email;
+	private String phone;
 	public Order(String id, String parkName, String orderNum, String orderCreationDate, int numOfVisitors,
-			OrderStatus status, OrderType type, String dateOfOrder, String timeOfOrder, int price,String email) {
+			OrderStatus status, OrderType type, String dateOfOrder, String timeOfOrder, int price,String email,String phone) {
 		this.id = id;
 		this.parkName = parkName;
 		this.orderNum = orderNum;
@@ -32,13 +33,14 @@ public class Order implements Serializable {
 		this.timeOfOrder = timeOfOrder+":00";
 		this.price = price;
 		this.email=email;
+		this.phone=phone;
 	}
 
 	/*
 	 * for validation
 	 */
 	public Order(String id, String parkName, int numOfVisitors, OrderType type, String dateOfOrder, String timeOfOrder,
-			int price,String email) {
+			int price,String email,String phone) {
 		this.id = id;
 		this.parkName = parkName;
 		this.numOfVisitors = numOfVisitors;
@@ -47,6 +49,7 @@ public class Order implements Serializable {
 		this.timeOfOrder =  timeOfOrder+":00";
 		this.price = price;
 		this.email=email;
+		this.phone=phone;
 	}
 	public void setTimeOfOrder(int hour) {
 		if(hour<10)
@@ -124,6 +127,10 @@ public class Order implements Serializable {
 	{
 		return email;
 	}
+	public String getPhone()
+	{
+		return phone;
+	}
 	@Override
 	public String toString() {
 		StringBuilder orderDetails=new StringBuilder();
@@ -136,6 +143,7 @@ public class Order implements Serializable {
 		orderDetails.append("Creation Date:"+orderCreationDate+"\n");
 		orderDetails.append("Time:"+timeOfOrder+"\n");
 		orderDetails.append("Email:"+email+"\n");
+		orderDetails.append("Phone:"+phone+"\n");
 		orderDetails.append("Total Price:"+price);
 		return orderDetails.toString();
 	}
