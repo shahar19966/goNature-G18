@@ -82,7 +82,7 @@ public class OrderRegularEmployeeController implements Initializable {
 		System.out.println(dateFormat.format(now));
 		System.out.println(timeFormat.format(now));
 		Order order = new Order(idText.getText(), ((Employee) guiControl.getUser()).getParkName(),
-				peopleAmount.getValue(), null, dateFormat.format(now), timeFormat.format(now), -1, "");
+				peopleAmount.getValue(), null, dateFormat.format(now), timeFormat.format(now), -1, "","");
 		if (idBtn.isSelected())
 			order.setType(OrderType.REGULAR);
 		if (subscriberBtn.isSelected())
