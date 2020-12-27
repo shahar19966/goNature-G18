@@ -41,6 +41,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import entity.EntityConstants.OrderStatus;
 import entity.EntityConstants.OrderType;
+import entity.EntityConstants.RequestStatus;
 
 /*
  * class that holds static methods related to database actions such as connection, queries,updates and more
@@ -530,6 +531,22 @@ public class MySQLConnection {
 		return null;
 	}
 
+
+	public static List<ParkDiscount> getDiscountRequests(String employeeId) throws SQLException {
+		List<ParkDiscount> parkDiscountRequestList= new ArrayList<>();
+		String query = "Select * From discounts where employeeId=? ;";
+		PreparedStatement discountsRequestsForId = con.prepareStatement(query);
+		discountsRequestsForId.setString(1, employeeId);
+		ResultSet rs = discountsRequestsForId.executeQuery();
+		while (rs.next()) {
+			ParkDiscount tmpOrder = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			parkDiscountRequestList.add(tmpOrder);
+		}
+				return parkDiscountRequestList;
+	}
+
+
+
 	public static Integer validateOrderAndReturnPrice(String[] idVisitorsAndParkName) throws SQLException {
 		Order orderToValidate=getCurrentOrderByIDAndParkName(idVisitorsAndParkName[0],idVisitorsAndParkName[2]);
 		if(orderToValidate==null)
@@ -639,4 +656,5 @@ public class MySQLConnection {
 		
 		
 	}
+
 }
