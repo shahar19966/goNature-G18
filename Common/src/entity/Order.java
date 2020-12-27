@@ -46,7 +46,11 @@ public class Order implements Serializable {
 		this.numOfVisitors = numOfVisitors;
 		this.type = type;
 		this.dateOfOrder = dateOfOrder;
-		this.timeOfOrder =  timeOfOrder+":00";
+		String timeOfOrderSplit[] = timeOfOrder.split(":");
+		if(timeOfOrderSplit.length==2)
+			this.timeOfOrder =  timeOfOrder+":00";
+		else
+			this.timeOfOrder =  timeOfOrder;
 		this.price = price;
 		this.email=email;
 		this.phone=phone;

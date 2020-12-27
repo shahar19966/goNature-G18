@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import entity.Order;
 import entity.Subscriber;
 import entity.Visitor;
+import entity.EntityConstants;
 import entity.EntityConstants.OrderStatus;
 import gui.ClientConstants.AlertType;
 import gui.ClientConstants.Sizes;
@@ -45,7 +46,7 @@ public class MyOrdersController implements Initializable {
 	private TableColumn<Order, Integer> amountCol;
 
 	@FXML
-	private TableColumn<Order, String> typeCol;
+	private TableColumn<Order, EntityConstants.OrderType> typeCol;
 
 	@FXML
 	private TableColumn action1Col;
@@ -88,202 +89,27 @@ public class MyOrdersController implements Initializable {
 	}
 
 	private void setOrderNumberCol() {
-		orderNumberCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-		Callback<TableColumn<Order, String>, TableCell<Order, String>> cellFactory = //
-				new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
-
-					@Override
-					public TableCell<Order, String> call(TableColumn<Order, String> param) {
-						final TableCell<Order, String> cell = new TableCell<Order, String>() {
-							// final Button btn = new Button("Just Do It");
-							// final GuiButton btn = new GuiButton("Approve", AlertType.Success,
-							// Sizes.Small);
-
-							@Override
-							public void updateItem(String item, boolean empty) {
-								super.updateItem(item, empty);
-								if (empty) {
-									setGraphic(null);
-									setText(null);
-								} else {
-									setText(getTableView().getItems().get(getIndex()).getOrderNum());
-								}
-
-							}
-						};
-						return cell;
-
-					}
-
-				};
-
-		orderNumberCol.setCellFactory(cellFactory);
+		orderNumberCol.setCellValueFactory(new PropertyValueFactory<Order, String>("orderNum"));
 	}
 
 	private void setParkNameCol() {
-		parkNameCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-		Callback<TableColumn<Order, String>, TableCell<Order, String>> cellFactory = //
-				new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
-
-					@Override
-					public TableCell<Order, String> call(TableColumn<Order, String> param) {
-						final TableCell<Order, String> cell = new TableCell<Order, String>() {
-							// final Button btn = new Button("Just Do It");
-							// final GuiButton btn = new GuiButton("Approve", AlertType.Success,
-							// Sizes.Small);
-
-							@Override
-							public void updateItem(String item, boolean empty) {
-								super.updateItem(item, empty);
-								if (empty) {
-									setGraphic(null);
-									setText(null);
-								} else {
-									setText(getTableView().getItems().get(getIndex()).getParkName());
-								}
-
-							}
-						};
-						return cell;
-
-					}
-
-				};
-
-		parkNameCol.setCellFactory(cellFactory);
+		parkNameCol.setCellValueFactory(new PropertyValueFactory<Order, String>("parkName"));
 	}
 
 	private void setDateCol() {
-		dateCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-		Callback<TableColumn<Order, String>, TableCell<Order, String>> cellFactory = //
-				new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
-
-					@Override
-					public TableCell<Order, String> call(TableColumn<Order, String> param) {
-						final TableCell<Order, String> cell = new TableCell<Order, String>() {
-							// final Button btn = new Button("Just Do It");
-							// final GuiButton btn = new GuiButton("Approve", AlertType.Success,
-							// Sizes.Small);
-
-							@Override
-							public void updateItem(String item, boolean empty) {
-								super.updateItem(item, empty);
-								if (empty) {
-									setGraphic(null);
-									setText(null);
-								} else {
-									setText(getTableView().getItems().get(getIndex()).getDateOfOrder());
-								}
-
-							}
-						};
-						return cell;
-
-					}
-
-				};
-
-		dateCol.setCellFactory(cellFactory);
+		dateCol.setCellValueFactory(new PropertyValueFactory<Order, String>("dateOfOrder"));
 	}
 
 	private void setTimeCol() {
-		timeCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-		Callback<TableColumn<Order, String>, TableCell<Order, String>> cellFactory = //
-				new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
-
-					@Override
-					public TableCell<Order, String> call(TableColumn<Order, String> param) {
-						final TableCell<Order, String> cell = new TableCell<Order, String>() {
-							// final Button btn = new Button("Just Do It");
-							// final GuiButton btn = new GuiButton("Approve", AlertType.Success,
-							// Sizes.Small);
-
-							@Override
-							public void updateItem(String item, boolean empty) {
-								super.updateItem(item, empty);
-								if (empty) {
-									setGraphic(null);
-									setText(null);
-								} else {
-									setText(getTableView().getItems().get(getIndex()).getTimeOfOrder());
-								}
-
-							}
-						};
-						return cell;
-
-					}
-
-				};
-
-		timeCol.setCellFactory(cellFactory);
+		timeCol.setCellValueFactory(new PropertyValueFactory<Order, String>("timeOfOrder"));
 	}
 
 	private void setPeopleAmountCol() {
-		amountCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-		Callback<TableColumn<Order, Integer>, TableCell<Order, Integer>> cellFactory = //
-				new Callback<TableColumn<Order, Integer>, TableCell<Order, Integer>>() {
-
-					@Override
-					public TableCell<Order, Integer> call(TableColumn<Order, Integer> param) {
-						final TableCell<Order, Integer> cell = new TableCell<Order, Integer>() {
-							// final Button btn = new Button("Just Do It");
-							// final GuiButton btn = new GuiButton("Approve", AlertType.Success,
-							// Sizes.Small);
-
-							@Override
-							public void updateItem(Integer item, boolean empty) {
-								super.updateItem(item, empty);
-								if (empty) {
-									setGraphic(null);
-									setText(null);
-								} else {
-									setText(String
-											.valueOf(getTableView().getItems().get(getIndex()).getNumOfVisitors()));
-								}
-
-							}
-						};
-						return cell;
-
-					}
-
-				};
-
-		amountCol.setCellFactory(cellFactory);
+		amountCol.setCellValueFactory(new PropertyValueFactory<Order, Integer>("numOfVisitors"));
 	}
 
 	private void setTypeCol() {
-		typeCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-		Callback<TableColumn<Order, String>, TableCell<Order, String>> cellFactory = //
-				new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
-
-					@Override
-					public TableCell<Order, String> call(TableColumn<Order, String> param) {
-						final TableCell<Order, String> cell = new TableCell<Order, String>() {
-							// final Button btn = new Button("Just Do It");
-							// final GuiButton btn = new GuiButton("Approve", AlertType.Success,
-							// Sizes.Small);
-
-							@Override
-							public void updateItem(String item, boolean empty) {
-								super.updateItem(item, empty);
-								if (empty) {
-									setGraphic(null);
-									setText(null);
-								} else {
-									setText(getTableView().getItems().get(getIndex()).getType().name());
-								}
-
-							}
-						};
-						return cell;
-
-					}
-
-				};
-
-		typeCol.setCellFactory(cellFactory);
+		typeCol.setCellValueFactory(new PropertyValueFactory<Order, EntityConstants.OrderType>("type"));
 	}
 
 	private void setAction1Col() {
