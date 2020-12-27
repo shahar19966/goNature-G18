@@ -31,7 +31,8 @@ public class ClientConstants {
 		PARK_CAPACITY_REPORT("/gui/ParkManagerCapacityReport.fxml"),
 		DEPARTMENT_CANCELLATION_REPORT("/gui/DepartmentManagerCancellationReport.fxml"),
 		AVAILABLE_DATES_PAGE("/gui/AvailableDatesPage.fxml"),
-		ORDER_TRACKING("/gui/MyOrdersPane.fxml");
+		ORDER_TRACKING("/gui/MyOrdersPane.fxml"),
+		REQUESTS("/gui/RequestsDepManager.fxml");
 
 		public final String path;
 
