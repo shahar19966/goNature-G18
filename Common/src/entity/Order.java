@@ -87,6 +87,9 @@ public class Order implements Serializable {
 	public int getNumOfVisitors() {
 		return numOfVisitors;
 	}
+	public int getPrice() {
+		return price;
+	}
 
 	public void setOrderNum(String orderNum) {
 		this.orderNum = orderNum;

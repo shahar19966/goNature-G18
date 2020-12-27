@@ -1,5 +1,6 @@
 package gui;
 
+import entity.Employee;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,14 +18,14 @@ public class ExitControlPaneController {
 
     @FXML
     void validateOrder(ActionEvent event) {
-    	String id=idNumTextField.getText();
-    	guiControl.sendToServer(new ClientMessage(ClientMessageType.VALIDATE_ORDER_EXIT,id));
-    	if(guiControl.getServerMsg().getMessage() instanceof Integer) {
-    		Integer sumToPay=(Integer)guiControl.getServerMsg().getMessage();
-    		guiControl.popUpMessage("Order Validated","Your order has been validated.\nTotal amount is:"+sumToPay+" NIS.");
+    	Employee emp= (Employee)guiControl.getUser();
+    	String[] idAndParkName= {idNumTextField.getText(),emp.getParkName()};
+    	guiControl.sendToServer(new ClientMessage(ClientMessageType.VALIDATE_ORDER_EXIT,idAndParkName));
+    	if(guiControl.getServerMsg().getMessage() !=null) {
+    		GUIControl.popUpMessage("Exit Registered","Your leave has been registered.\nThank you for choosing GoNature");
     	}
     	else
-    		guiControl.popUpError("Invalid order!");
+    		GUIControl.popUpError("No order exists for this identification number!");
     	idNumTextField.setText("");
     		
     }

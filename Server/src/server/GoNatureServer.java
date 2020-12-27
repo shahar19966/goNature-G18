@@ -171,6 +171,8 @@ public class GoNatureServer extends AbstractServer {
 					type=ServerMessageType.VALIDATE_ORDER_ENTRY;
 					break;
 				case VALIDATE_ORDER_EXIT:
+					returnVal=MySQLConnection.validateOrderAndRegisterExit((String[])clientMsg.getMessage());
+					type=ServerMessageType.VALIDATE_ORDER_EXIT;
 					break;
 				
 				}
