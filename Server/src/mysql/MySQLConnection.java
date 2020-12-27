@@ -276,7 +276,7 @@ public class MySQLConnection {
 		}
 		for (int i = Integer.parseInt(startTime.split(":")[0]); i <= Integer.parseInt(finishTime.split(":")[0]); i++) {
 			int sum = 0;
-			for (int j = park.getParkVisitDuration(); j >= 0; j--) {
+			for (int j = park.getParkVisitDuration()-1; j >= 0; j--) {
 				if (timeOfOrderForHour.containsKey(i - j))
 					sum += timeOfOrderForHour.get(i - j);
 			}
