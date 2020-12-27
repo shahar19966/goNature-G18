@@ -64,10 +64,12 @@ public class GUIControl {
 	public void disconnect() {
 		ClientMessage cMsg=new ClientMessage(ClientMessageType.DISCONNECTED,currentUser);
 		sendToServer(cMsg);
+		currentUser=null;
 	}
 	public void logOut() {
 		ClientMessage cMsg=new ClientMessage(ClientMessageType.LOGOUT,currentUser);
 		sendToServer(cMsg);
+		currentUser=null;
 	}
 	public void openLogInPage() {
 		try {

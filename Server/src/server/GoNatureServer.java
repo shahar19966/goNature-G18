@@ -147,7 +147,7 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.PARK_CAPACITY_REPORT;
 					break;
 				case GET_ORDERS_BY_ID:
-					returnVal = MySQLConnection.getOrdersById((String) (clientMsg.getMessage()));
+					returnVal = MySQLConnection.getUnfinishedOrdersById((String) (clientMsg.getMessage()));
 					type = ServerMessageType.GET_ORDERS_BY_ID;
 					break;
 				case CANCEL_ORDER:
@@ -169,6 +169,14 @@ public class GoNatureServer extends AbstractServer {
 				case GET_DISCOUNT_REQUESTS_FRON_DB:
 					returnVal = MySQLConnection.getDiscountRequests((String) (clientMsg.getMessage()));
 					type = ServerMessageType.GET_DISCOUNT_REQUESTS_FRON_DB;
+            break;
+				case VALIDATE_ORDER_ENTRY:
+					returnVal=MySQLConnection.validateOrderAndReturnPrice((String[])clientMsg.getMessage());
+					type=ServerMessageType.VALIDATE_ORDER_ENTRY;
+					break;
+				case VALIDATE_ORDER_EXIT:
+					returnVal=MySQLConnection.validateOrderAndRegisterExit((String[])clientMsg.getMessage());
+					type=ServerMessageType.VALIDATE_ORDER_EXIT;
 					break;
 				
 				}
@@ -182,6 +190,7 @@ public class GoNatureServer extends AbstractServer {
 		}
 
 		System.out.println("Message received: " + msg + " from " + client);
+		System.out.println(userList.toString());
 		try {
 			client.sendToClient(new ServerMessage(type, returnVal));
 		} catch (IOException e) {
