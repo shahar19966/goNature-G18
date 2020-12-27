@@ -9,15 +9,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<GridPane hgap="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1280.0" stylesheets="@application.css" vgap="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.OrderPaneController">
+<GridPane fx:id="mainPane" hgap="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1280.0" stylesheets="@application.css" vgap="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.OrderPaneController">
   <columnConstraints>
     <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" percentWidth="30.0" />
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.333333333333336" />
-      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" percentWidth="40.0" />
+      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" percentWidth="43.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
@@ -54,9 +56,10 @@
             <Spinner fx:id="peopleAmount" styleClass="text-field-Small" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <GridPane fx:id="mailGrid" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      <GridPane fx:id="mailGrid" hgap="7.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="SOMETIMES" />
@@ -65,6 +68,30 @@
          <children>
             <Label styleClass="labelSmall" text="Email" />
             <TextField fx:id="emailText" promptText="Email" styleClass="text-field-Small" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+            <Label styleClass="labelSmall" text="Phone Number" GridPane.columnIndex="1" />
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <ComboBox fx:id="startPhone" prefWidth="150.0" styleClass="text-field-Small" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="-" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="finishPhone" promptText="Phone Number" styleClass="text-field-Small" GridPane.columnIndex="2">
+                     <tooltip>
+                        <Tooltip text="Digits only! Length:7" wrapText="true" />
+                     </tooltip>
+                  </TextField>
+               </children>
+            </GridPane>
          </children>
       </GridPane>
       <GridPane GridPane.rowIndex="2">
@@ -121,6 +148,6 @@
       </Button>
    </children>
    <padding>
-      <Insets left="50.0" right="50.0" top="20.0" />
+      <Insets top="20.0" />
    </padding>
 </GridPane>
