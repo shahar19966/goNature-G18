@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -490,7 +490,7 @@ public class MySQLConnection {
 		return null;
 	}
 
-	public static List<Order> getOrdersById(String id) throws SQLException {
+	public static List<Order> getUnfinishedOrdersById(String id) throws SQLException {
 		List<Order> orders = new ArrayList<Order>();
 		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL');";
 		PreparedStatement getOrdersForId = con.prepareStatement(query);
@@ -527,4 +527,29 @@ public class MySQLConnection {
 		return null;
 	}
 
+	public static Object validateOrderAndReturnPrice(String[] idAndAmountOfVisitors) {
+		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL');";
+		PreparedStatement getOrdersForId = con.prepareStatement(query);
+		//getOrdersForId.setString(1, id);
+		ResultSet rs = getOrdersForId.executeQuery();
+		return null;
+	}
+	private static Order getCurrentOrderByID(String id) throws SQLException {
+		Order order;
+		String date=LocalDate.now().toString();
+		String earliestTime=LocalTime.now().minusMinutes(5).toString();
+		String latestTime=LocalTime.now().plusMinutes(30).toString();
+		String query = "Select * From orders where id_fk=? AND status='APPROVED' AND dateOfOrder=? AND timeOfOrder>=? AND timeOfOrder<=? ;";
+		PreparedStatement getOrder = con.prepareStatement(query);
+		getOrder.setString(1, id);
+		getOrder.setString(2, date);
+		getOrder.setString(3, earliestTime);
+		getOrder.setString(3, latestTime);
+		ResultSet rs = getOrder.executeQuery();
+		if(rs.next())
+			 order = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8), rs.getString(9), rs.getInt(10), rs.getString(11),rs.getString(12));
+	}
+	public static void main(String[] args) {
+		System.out.println(LocalTime.now().minusMinutes(30).toString());
+	}
 }

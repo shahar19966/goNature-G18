@@ -121,7 +121,6 @@ public class GoNatureClient extends AbstractClient {
 			}
 		}
 		awaitResponse = false;
-
 	}
 
 	/**
