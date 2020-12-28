@@ -136,6 +136,18 @@ public class GoNatureClient extends AbstractClient {
 			case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case APPROVE_PARAMETER:
+				guiControl.setServerMsg(serverMsg);
+				break;
+			case DECLINE_PARAMETER:
+				guiControl.setServerMsg(serverMsg);
+				break;
+			case APPROVE_DISCOUNT:
+				guiControl.setServerMsg(serverMsg);
+				break;
+			case DECLINE_DISCOUNT:
+				guiControl.setServerMsg(serverMsg);
+				break;
 
 			}
 		}
