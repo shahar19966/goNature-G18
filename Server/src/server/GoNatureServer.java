@@ -169,7 +169,7 @@ public class GoNatureServer extends AbstractServer {
 				case GET_DISCOUNT_REQUESTS_FRON_DB:
 					returnVal = MySQLConnection.getDiscountRequests((String) (clientMsg.getMessage()));
 					type = ServerMessageType.GET_DISCOUNT_REQUESTS_FRON_DB;
-            break;
+					break;
 				case VALIDATE_ORDER_ENTRY:
 					returnVal=MySQLConnection.validateOrderAndReturnPrice((String[])clientMsg.getMessage());
 					type=ServerMessageType.VALIDATE_ORDER_ENTRY;
