@@ -31,7 +31,8 @@ public class EntityConstants{
 	}
 	public enum RequestStatus{
 		WAITING,
-		APPROVED
+		APPROVED,
+		DECLINED
 	}
 	
 }

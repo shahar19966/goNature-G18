@@ -700,10 +700,63 @@ public class MySQLConnection {
 		}catch(Exception e) {
 			return null;
 		}
-		
-		
 	}
+		public static boolean approveParameterUpdate(ParameterUpdate parameterToApprove) throws SQLException
+		{
+			String query1 = "DELETE FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;";
+			String query2 = "UPDATE park SET maxVisitors=? WHERE parkName=?;";
+			String query3 = "UPDATE park SET diffFromMax=? WHERE parkName=?;";
+			String query4 = "UPDATE park SET visitDur=? WHERE parkName=?;";
 
+			
+			PreparedStatement deleteParameter = con.prepareStatement(query1);
+			
+			deleteParameter.setString(1, parameterToApprove.getParameter());
+			deleteParameter.setInt(2, parameterToApprove.getNewValue());
+			deleteParameter.setString(3, parameterToApprove.getParkName());
+			PreparedStatement updateParameter;
+			if(parameterToApprove.getParameter().equals("CAPACITY"))
+				 updateParameter = con.prepareStatement(query2);
+			else {
+			if(parameterToApprove.getParameter().equals("DIFFERENCE"))
+				updateParameter = con.prepareStatement(query3);
+			
+			else
+				updateParameter = con.prepareStatement(query4);
+			}
+			updateParameter.setInt(1, parameterToApprove.getNewValue());
+			updateParameter.setString(2, parameterToApprove.getParkName());
+			updateParameter.executeUpdate();
+			deleteParameter.executeUpdate();
+			return true;
+		}
+		
+	
+public static boolean declineParameterUpdate(ParameterUpdate parameterToDecline) throws SQLException
+{
+	String query1 = "DELETE FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;";
+	PreparedStatement deleteParameter = con.prepareStatement(query1);
+	
+	deleteParameter.setString(1, parameterToDecline.getParameter());
+	deleteParameter.setInt(2, parameterToDecline.getNewValue());
+	deleteParameter.setString(3, parameterToDecline.getParkName());
+	deleteParameter.executeUpdate();
+
+	return true;
+}
+public static boolean approveDiscountUpdate(ParkDiscount discountToApprove) throws SQLException
+{
+	String query1 ="UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
+	PreparedStatement approveDiscount = con.prepareStatement(query1);
+	approveDiscount.setString(1, entity.EntityConstants.RequestStatus.APPROVED.name());
+	approveDiscount.setString(2, discountToApprove.getParkName());
+	approveDiscount.setString(3, discountToApprove.getStartDate());
+	approveDiscount.setString(4, discountToApprove.getFinishDate());
+	approveDiscount.setInt(5, discountToApprove.getDiscountAmount());
+	approveDiscount.executeUpdate();
+
+	return true;
+}
 	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
 		// TODO!!!!!!!!! maybe to check in the visitor table for existing id!!!!!
 		PreparedStatement registerPreparedStatement;
@@ -740,7 +793,26 @@ public class MySQLConnection {
 
 		return new ServerMessage(ServerMessageType.REGISTRATION_SUCCESSED, subscriber);
 
+
 	}
 
 }
+
+public static boolean declineDiscountUpdate(ParkDiscount discountToDecline) throws SQLException
+{
+	String query1 ="UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
+	PreparedStatement declineDiscount = con.prepareStatement(query1);
+	declineDiscount.setString(1, entity.EntityConstants.RequestStatus.DECLINED.name());
+	declineDiscount.setString(2, discountToDecline.getParkName());
+	declineDiscount.setString(3, discountToDecline.getStartDate());
+	declineDiscount.setString(4, discountToDecline.getFinishDate());
+	declineDiscount.setInt(5, discountToDecline.getDiscountAmount());
+	declineDiscount.executeUpdate();
+
+	return true;
+}
+}
+
+
+
 

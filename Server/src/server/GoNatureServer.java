@@ -193,11 +193,30 @@ public class GoNatureServer extends AbstractServer {
 					returnVal=MySQLConnection.getDepManagerDiscountRequests();
 					type=ServerMessageType.REQUESTS_PARAMETERS;
 					break;
+
+				case APPROVE_PARAMETER:
+					returnVal=MySQLConnection.approveParameterUpdate((ParameterUpdate)(clientMsg.getMessage()));
+					type=ServerMessageType.APPROVE_PARAMETER;
+					break;	
+				case DECLINE_PARAMETER:
+					returnVal=MySQLConnection.declineParameterUpdate((ParameterUpdate)(clientMsg.getMessage()));
+					type=ServerMessageType.DECLINE_PARAMETER;
+					break;	
+				case APPROVE_DISCOUNT:
+					returnVal=MySQLConnection.approveDiscountUpdate((ParkDiscount)(clientMsg.getMessage()));
+					type=ServerMessageType.APPROVE_DISCOUNT;	
+					break;
+				case DECLINE_DISCOUNT:
+					returnVal=MySQLConnection.declineDiscountUpdate((ParkDiscount)(clientMsg.getMessage()));
+					type=ServerMessageType.DECLINE_DISCOUNT;	
+					break;
+
 				case REGISTRATION:
 					ServerMessage message = MySQLConnection.registerSubscriber((Subscriber) clientMsg.getMessage());
 					returnVal = message.getMessage();
 					type = message.getType();
 					break;
+
 				}
 			}
 		} catch (Exception e) {
