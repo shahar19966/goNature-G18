@@ -109,37 +109,40 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case DEPARTMENT_CANCELLATION_REPORT:
-          guiControl.setServerMsg(serverMsg);
-				break;
-			case GET_ORDERS_BY_ID:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case DEPARTMENT_VISITATION_REPORT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case CANCEL_ORDER:
-				guiControl.setServerMsg(serverMsg);
-				break;
+		          guiControl.setServerMsg(serverMsg);
+						break;
+					case GET_ORDERS_BY_ID:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case DEPARTMENT_VISITATION_REPORT:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case CANCEL_ORDER:
+						guiControl.setServerMsg(serverMsg);
+						break;
 
-			case GET_DISCOUNT_REQUESTS_FROM_DB:
-				guiControl.setServerMsg(serverMsg);
+					case GET_DISCOUNT_REQUESTS_FROM_DB:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case VALIDATE_ORDER_ENTRY:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case VALIDATE_ORDER_EXIT:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case REQUESTS_PARAMETERS:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
+						guiControl.setServerMsg(serverMsg);
+						break;
+default:
+	guiControl.setServerMsg(serverMsg);
 				break;
-			case VALIDATE_ORDER_ENTRY:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case VALIDATE_ORDER_EXIT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case REQUESTS_PARAMETERS:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
-				guiControl.setServerMsg(serverMsg);
-				break;
-
 			}
 		}
 		awaitResponse = false;
+
 	}
 
 	/**

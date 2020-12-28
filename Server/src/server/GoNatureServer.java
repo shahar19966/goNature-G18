@@ -11,6 +11,7 @@ import application.ServerMain;
 import entity.Employee;
 import entity.Order;
 import entity.ParameterUpdate;
+import entity.Subscriber;
 import entity.ParkDiscount;
 import message.ClientMessage;
 import message.ServerMessage;
@@ -144,7 +145,7 @@ public class GoNatureServer extends AbstractServer {
 					break;
 				case PARK_MNG_CAPACITY_REPORT:
 					returnVal = MySQLConnection.getParkCapacityReport((String) (clientMsg.getMessage()));
-					type = ServerMessageType.PARK_CAPACITY_REPORT;
+					type=ServerMessageType.PARK_CAPACITY_REPORT;
 					break;
 				case GET_ORDERS_BY_ID:
 					returnVal = MySQLConnection.getUnfinishedOrdersById((String) (clientMsg.getMessage()));
@@ -192,9 +193,11 @@ public class GoNatureServer extends AbstractServer {
 					returnVal=MySQLConnection.getDepManagerDiscountRequests();
 					type=ServerMessageType.REQUESTS_PARAMETERS;
 					break;
-
-
-				
+				case REGISTRATION:
+					ServerMessage message = MySQLConnection.registerSubscriber((Subscriber) clientMsg.getMessage());
+					returnVal = message.getMessage();
+					type = message.getType();
+					break;
 				}
 			}
 		} catch (Exception e) {
