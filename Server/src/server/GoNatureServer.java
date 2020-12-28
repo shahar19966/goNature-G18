@@ -171,9 +171,9 @@ public class GoNatureServer extends AbstractServer {
 					returnVal = MySQLConnection.getVisitionReport((String) (clientMsg.getMessage()));
 					type=ServerMessageType.DEPARTMENT_VISITATION_REPORT;
 					break;
-				case GET_DISCOUNT_REQUESTS_FRON_DB:
+				case GET_DISCOUNT_REQUESTS_FROM_DB:
 					returnVal = MySQLConnection.getDiscountRequests((String) (clientMsg.getMessage()));
-					type = ServerMessageType.GET_DISCOUNT_REQUESTS_FRON_DB;
+					type = ServerMessageType.GET_DISCOUNT_REQUESTS_FROM_DB;
 					break;
 				case VALIDATE_ORDER_ENTRY:
 					returnVal=MySQLConnection.validateOrderAndReturnPrice((String[])clientMsg.getMessage());
@@ -187,7 +187,11 @@ public class GoNatureServer extends AbstractServer {
 				case REQUESTS_PARAMETERS:
 					returnVal=MySQLConnection.getParameterRequests();
 					type=ServerMessageType.REQUESTS_PARAMETERS;
-
+					break;
+				case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
+					returnVal=MySQLConnection.getDepManagerDiscountRequests();
+					type=ServerMessageType.REQUESTS_PARAMETERS;
+					break;
 
 
 				

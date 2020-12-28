@@ -128,7 +128,7 @@ import message.ClientMessageType;
 		        }
 		    });
 			discountFinishDatePicker.setValue(LocalDate.now());
-			guiControl.sendToServer(new ClientMessage(ClientMessageType.GET_DISCOUNT_REQUESTS_FRON_DB,((Employee) guiControl.getUser()).getEmployeeNumber() ));
+			guiControl.sendToServer(new ClientMessage(ClientMessageType.GET_DISCOUNT_REQUESTS_FROM_DB,((Employee) guiControl.getUser()).getEmployeeNumber() ));
 			List<ParkDiscount> discountRequestsarr = (List<ParkDiscount>) guiControl.getServerMsg().getMessage();
 			for( ParkDiscount pd:discountRequestsarr)	
 			{

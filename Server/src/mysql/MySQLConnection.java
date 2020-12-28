@@ -441,7 +441,7 @@ public class MySQLConnection {
 
 	public static ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest)
 			throws SQLException, ParseException {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		Date startDate = formatter.parse(newDiscountRequest.getStartDate());
 		Date finishDate = formatter.parse(newDiscountRequest.getFinishDate());
 		PreparedStatement insertDiscountRequestStatement = con.prepareStatement(
@@ -584,10 +584,22 @@ public class MySQLConnection {
 		discountsRequestsForId.setString(1, employeeId);
 		ResultSet rs = discountsRequestsForId.executeQuery();
 		while (rs.next()) {
-			ParkDiscount tmpOrder = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
-			parkDiscountRequestList.add(tmpOrder);
+			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			parkDiscountRequestList.add(tmp);
 		}
 				return parkDiscountRequestList;
+	}
+	public static List<ParkDiscount> getDepManagerDiscountRequests() throws SQLException {
+		List<ParkDiscount> parkDiscountRequestList= new ArrayList<>();
+		String query= "Select * from discounts;";
+		PreparedStatement discountRequests=con.prepareStatement(query);
+		ResultSet rs = discountRequests.executeQuery();
+		while(rs.next())
+		{
+			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			parkDiscountRequestList.add(tmp);
+		}
+		return parkDiscountRequestList;
 	}
 
 
@@ -701,5 +713,7 @@ public class MySQLConnection {
 		
 		
 	}
+
+
 
 }

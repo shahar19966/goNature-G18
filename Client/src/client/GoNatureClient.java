@@ -121,7 +121,7 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(serverMsg);
 				break;
 
-			case GET_DISCOUNT_REQUESTS_FRON_DB:
+			case GET_DISCOUNT_REQUESTS_FROM_DB:
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case VALIDATE_ORDER_ENTRY:
@@ -131,6 +131,9 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case REQUESTS_PARAMETERS:
+				guiControl.setServerMsg(serverMsg);
+				break;
+			case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
 				guiControl.setServerMsg(serverMsg);
 				break;
 

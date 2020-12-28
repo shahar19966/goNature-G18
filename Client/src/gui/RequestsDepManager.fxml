@@ -24,7 +24,6 @@
             <Label alignment="CENTER" contentDisplay="CENTER" styleClass="seconderyTitle" text="Discount Requests" />
             <TableView fx:id="discountTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                <columns>
-                  <TableColumn fx:id="discountParkNumberCol" prefWidth="75.0" text="ID" />
                   <TableColumn fx:id="parkNameCol" prefWidth="75.0" text="Park Name" />
                   <TableColumn fx:id="startDateCol" prefWidth="75.0" text="Start Date" />
                   <TableColumn fx:id="finishDateCol" prefWidth="75.0" text="Finish Date" />
