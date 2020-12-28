@@ -105,12 +105,10 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		prefixPhoneComboBox.setPrefWidth(100);
 		prefixPhoneComboBox.setItems(phonePrefixObsList);
 		prefixPhoneComboBox.getSelectionModel().selectFirst();
-		yearComboBox.prefWidthProperty().bind(lNameTextFiled.widthProperty());
+		yearComboBox.setPrefWidth(100);
 		yearComboBox.setItems(yearObsList);
-		// yearComboBox.getSelectionModel().selectFirst();
-		monthComboBox.prefWidthProperty().bind(lNameTextFiled.widthProperty());
+		monthComboBox.setPrefWidth(105);
 		monthComboBox.setItems(monthObsList);
-		// monthComboBox.getSelectionModel().selectFirst();
 		familiyCount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 15));
 	}
 

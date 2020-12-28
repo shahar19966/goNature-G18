@@ -434,39 +434,38 @@ public class MySQLConnection {
 	}
 
 	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
-		// TODO!!!!!!!!! ASK- maybe to check in the visitor table for existing id!!!!!
-		String subNum = "999";
+		// TODO!!!!!!!!! maybe to check in the visitor table for existing id!!!!!
 		PreparedStatement registerPreparedStatement;
-		registerPreparedStatement = con.prepareStatement("SELECT * FROM subscriber");
-		ResultSet rs = registerPreparedStatement.executeQuery();
-		while (rs.next()) {
-			if (rs.getString(2).equals(subscriber.getID())) {
-				Subscriber registerd = new Subscriber(rs.getString(1), rs.getString(2), rs.getString(3),
-						rs.getString(4), rs.getString(5), rs.getString(6), Integer.parseInt(rs.getString(7)),
-						rs.getString(8), rs.getString(9).contentEquals("0") ? false : true);
-				return new ServerMessage(ServerMessageType.REGISTRATION_FAILED, registerd);
-			}
-			subNum = rs.getString(1);
-		}
-		subNum = Integer.toString(Integer.parseInt(subNum) + 1);
-		subscriber.setSuibscriberNum(subNum);
-		registerPreparedStatement = con.prepareStatement("INSERT INTO visitor " + "(id) VALUES " + "(?);");
+		registerPreparedStatement = con.prepareStatement("SELECT * FROM subscriber WHERE id_fk=? ");
 		registerPreparedStatement.setString(1, subscriber.getID());
+		ResultSet rs = registerPreparedStatement.executeQuery();
+		if (rs.next()) {
+			Subscriber registered = new Subscriber(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+					rs.getString(5), rs.getString(6), Integer.parseInt(rs.getString(7)), rs.getString(8),
+					rs.getString(9).contentEquals("0") ? false : true);
+			return new ServerMessage(ServerMessageType.REGISTRATION_FAILED, registered);
+		}
+		validateVisitor(subscriber.getID());
+		registerPreparedStatement = con.prepareStatement("INSERT INTO subscriber "
+				+ "(id_fk,firstName,lastName, phone, email, familyMembers, cardDetails,isGuide) VALUES "
+				+ "(?,?,?,?,?,?,?,?);");
+		// registerPreparedStatement.setString(1, subscriber.getSubscriberNumber());
+		registerPreparedStatement.setString(1, subscriber.getID());
+		registerPreparedStatement.setString(2, subscriber.getFirstName());
+		registerPreparedStatement.setString(3, subscriber.getLastName());
+		registerPreparedStatement.setString(4, subscriber.getPhone());
+		registerPreparedStatement.setString(5, subscriber.getEmail());
+		registerPreparedStatement.setInt(6, subscriber.getSubscriberFamilyMembers());
+		registerPreparedStatement.setString(7, subscriber.getSubscriberCardDetails());
+		registerPreparedStatement.setBoolean(8, subscriber.getIsGuide());
 		registerPreparedStatement.executeUpdate();
 
-		registerPreparedStatement = con.prepareStatement("INSERT INTO subscriber "
-				+ "(subNum,id_fk,firstName,lastName, phone, email, familyMembers, cardDetails,isGuide) VALUES "
-				+ "(?,?,?,?,?,?,?,?,?);");
-		registerPreparedStatement.setString(1, subscriber.getSubscriberNumber());
-		registerPreparedStatement.setString(2, subscriber.getID());
-		registerPreparedStatement.setString(3, subscriber.getFirstName());
-		registerPreparedStatement.setString(4, subscriber.getLastName());
-		registerPreparedStatement.setString(5, subscriber.getPhone());
-		registerPreparedStatement.setString(6, subscriber.getEmail());
-		registerPreparedStatement.setInt(7, subscriber.getSubscriberFamilyMembers());
-		registerPreparedStatement.setString(8, subscriber.getSubscriberCardDetails());
-		registerPreparedStatement.setBoolean(9, subscriber.getIsGuide());
-		registerPreparedStatement.executeUpdate();
+		registerPreparedStatement = con.prepareStatement("SELECT * FROM subscriber WHERE id_fk=? ");
+		registerPreparedStatement.setString(1, subscriber.getID());
+		ResultSet rs1 = registerPreparedStatement.executeQuery();
+		if (rs1.next()) {
+			subscriber.setSuibscriberNum(rs1.getString(1));
+		}
 
 		return new ServerMessage(ServerMessageType.REGISTRATION_SUCCESSED, subscriber);
 
