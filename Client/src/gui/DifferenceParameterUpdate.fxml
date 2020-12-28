@@ -28,7 +28,7 @@
                   <Insets right="20.0" />
                </HBox.margin>
             </Label>
-            <TextField prefHeight="38.0" prefWidth="259.0" promptText="Enter new difference parameter">
+            <TextField fx:id="newvalue" onAction="#newValue" prefHeight="38.0" prefWidth="259.0" promptText="Enter new difference parameter">
                <font>
                   <Font size="16.0" />
                </font>

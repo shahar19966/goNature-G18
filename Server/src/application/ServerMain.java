@@ -2,9 +2,12 @@ package application;
 	
 import gui.ServerScreenController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import message.ServerMessage;
@@ -37,28 +40,49 @@ public class ServerMain extends Application {
 	/*
 	 * static method that upon being called,sets up a server connection to default port and connects to database
 	 */
-	public static void runServer(){
-	    	
-			server = new GoNatureServer(DEFAULT_PORT);
+	public static boolean runServer(){
+	    	if(server==null)
+	    		server = new GoNatureServer(DEFAULT_PORT);
 	        
 	        try 
 	        {
 	        	server.listen(); //Start listening for connections
+	        	guiController.serverConnected();
 	        } 
 	        catch (Exception ex) 
 	        {
 	          System.out.println("ERROR - Could not listen for clients!");
+	          showError("Server encountered an issue and cannot run,please try again later");
+	          return false;
 	        }
-	        guiController.serverConnected();
-	        MySQLConnection.connectToDB();
-	        guiController.dataBaseConnected();
+	        try {
+	        	 MySQLConnection.connectToDB();
+	        	 guiController.dataBaseConnected();
+	        }catch(Exception e) {
+	        	showError("Could not connect to SQL, please try again later");
+	        	server.stopListening();
+	        	return false;
+	        }
+	        return true;
+	       
+	       
 	}
 	/*
 	 * static method that upon being called sends a crash message to all clients and exits the application
 	 */
 	public static void stopServer() {
-		server.sendToAllClients(new ServerMessage(ServerMessageType.SERVER_ERROR,"Server crashed!\nYour client will shut down in a few seconds"));
+		if(server!=null)
+			server.sendToAllClients(new ServerMessage(ServerMessageType.SERVER_ERROR,"Server crashed!\nSorry for the inconvenience\nClick 'OK' to exit..."));
 		System.exit(0);
 		
+	}
+	private static void showError(String msg) {
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("");
+				alert.setContentText(msg);
+				alert.showAndWait();
+			});
 	}
 }

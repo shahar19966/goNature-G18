@@ -7,11 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,6 +43,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import entity.EntityConstants.OrderStatus;
 import entity.EntityConstants.OrderType;
+import entity.EntityConstants.ParkParameter;
+import entity.EntityConstants.RequestStatus;
 
 /*
  * class that holds static methods related to database actions such as connection, queries,updates and more
@@ -47,24 +52,12 @@ import entity.EntityConstants.OrderType;
 public class MySQLConnection {
 	private static Connection con;
 
-	public static void connectToDB() {
-		try {
+	public static void connectToDB() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 			System.out.println("Driver definition succeed");
-		} catch (Exception ex) {
-			/* handle the error */
-			System.out.println("Driver definition failed");
-		}
-
-		try {
 			con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/S7BzDq6Xs6?serverTimezone=IST",
 					"S7BzDq6Xs6", "puC0UgMgeM");
 			System.out.println("SQL connection succeed");
-		} catch (SQLException ex) {/* handle any errors */
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-		}
 	}
 
 	/*
@@ -168,6 +161,72 @@ public class MySQLConnection {
 
 	}
 
+	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
+		Map<Integer, VisitorReport> reportVisitorMap =  new LinkedHashMap<Integer, VisitorReport>();
+
+		PreparedStatement GetIncomeReport;
+		GetIncomeReport = con.prepareStatement(
+				"SELECT orders.type,sum(finishedOrders.visitDuration)/sum(finishedOrders.actualNumOfVisitors ),finishedOrders.actualTimeOfArrival "
+				+ "FROM orders"
+				+ " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) and orders.parkName_fk=?"
+				+ " GROUP by orders.type ,finishedOrders.actualTimeOfArrival");
+		GetIncomeReport.setString(1, namePark);
+		ResultSet rs = GetIncomeReport.executeQuery();
+		for (int i = EntityConstants.PARK_OPEN; i <= EntityConstants.PARK_CLOSED; i++) {
+			reportVisitorMap.put(i, new VisitorReport(i));
+		}
+
+		if (!rs.next()) {
+			return reportVisitorMap;
+		}
+
+		do {
+			String temp=rs.getString(3);
+			temp=temp.substring(0, 2);
+			if (rs.getString(1).equals("GUIDE"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setAvgGuid(Double.parseDouble(rs.getString(2)));
+			if (rs.getString(1).equals("SUBSCRIBER"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setAvgSubscriber(Double.parseDouble(rs.getString(2)));
+			if (rs.getString(1).equals("REGULAR"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setAvgRegular(Double.parseDouble(rs.getString(2)));
+		} while (rs.next());
+		return reportVisitorMap;
+
+	}
+
+	public static Map<String, VisitorReport> getCancellationReport() throws SQLException {
+		Map<String, VisitorReport> reportVisitorMap = new HashMap<String, VisitorReport>();
+		Statement getCancellationReport;
+		getCancellationReport = con.createStatement();
+		ResultSet rs = getCancellationReport.executeQuery("SELECT  orders.parkName_fk,COUNT(*) FROM orders "
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND "
+				+ "(orders.status='APPROVED' AND CURDATE()>=orders.dateOfOrder ) GROUP by orders.parkName_fk");
+		List<Park> parkList = getParks();
+		for (Park p : parkList)
+			reportVisitorMap.put(p.getParkName(), new VisitorReport(p.getParkName()));
+		if (rs.next()) {
+			String namePark = rs.getString(1);
+			do {
+				reportVisitorMap.get(namePark).setCountNotRealized((Integer.parseInt(rs.getString(2))));
+
+			} while (rs.next());
+
+		}
+		rs = getCancellationReport.executeQuery("SELECT orders.parkName_fk,COUNT(*) FROM orders "
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
+				+ "AND orders.status='CANCELLED' GROUP by orders.parkName_fk");
+		if (rs.next()) {
+			String namePark = rs.getString(1);
+			do {
+				reportVisitorMap.get(namePark).setCountCancellations((Integer.parseInt(rs.getString(2))));
+
+			} while (rs.next());
+
+		}
+		return reportVisitorMap;
+	}
+
 	public static List<ParkCapacityReport> getParkCapacityReport(String parkName) throws SQLException {
 		List<ParkCapacityReport> dateList = new ArrayList<>();
 		PreparedStatement getParkCapacityReport;
@@ -228,7 +287,7 @@ public class MySQLConnection {
 		finishTime = String.valueOf(Integer.parseInt(splitTimeFinish[0]) + park.getParkVisitDuration() - 1) + ":00:00";
 		Map<Integer, Integer> parkCapacity = new LinkedHashMap<Integer, Integer>();
 		String query = "SELECT timeOfOrder,SUM(numOfVisitors) FROM orders WHERE (status='ACTIVE' OR status='PENDING_APPROVAL_FROM_WAITING_LIST'"
-				+ " OR status='PENDING_FINAL_APPROVAL') AND orders.dateOfOrder=?"
+				+ " OR status='PENDING_FINAL_APPROVAL' OR status='APPROVED') AND orders.dateOfOrder=?"
 				+ " AND timeOfOrder>=? AND timeOfOrder <=? GROUP BY timeOfOrder;";
 		PreparedStatement validateDatePrepStmt = con.prepareStatement(query);
 		validateDatePrepStmt.setString(1, date);
@@ -241,7 +300,7 @@ public class MySQLConnection {
 		}
 		for (int i = Integer.parseInt(startTime.split(":")[0]); i <= Integer.parseInt(finishTime.split(":")[0]); i++) {
 			int sum = 0;
-			for (int j = park.getParkVisitDuration(); j >= 0; j--) {
+			for (int j = park.getParkVisitDuration()-1; j >= 0; j--) {
 				if (timeOfOrderForHour.containsKey(i - j))
 					sum += timeOfOrderForHour.get(i - j);
 			}
@@ -304,7 +363,7 @@ public class MySQLConnection {
 	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus, boolean isOccasional)
 			throws SQLException {
 		PreparedStatement insertOrderStatement = con.prepareStatement(
-				"INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email) VALUES (?,?,?,?,?,?,?,?,?,?);");
+				"INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email,phone) VALUES (?,?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateNow = formatter.format(date);
@@ -319,6 +378,7 @@ public class MySQLConnection {
 		double price = calculateOrder(orderToInsert, isOccasional);
 		insertOrderStatement.setString(9, String.valueOf((int) price));
 		insertOrderStatement.setString(10, orderToInsert.getEmail());
+		insertOrderStatement.setString(11, orderToInsert.getPhone());
 		insertOrderStatement.executeUpdate();
 		String query = "SELECT orderNum FROM orders where id_fk=? AND parkName_fk=? AND orderCreationDate=?;";
 		PreparedStatement getOrderNumStatement = con.prepareStatement(query);
@@ -353,6 +413,17 @@ public class MySQLConnection {
 		parameterPreparedStatement.executeUpdate();
 		return parameterUpdate;
 	}
+	public static List<ParameterUpdate> getParameterRequests() throws SQLException {//liron
+		List<ParameterUpdate> parametersUpdateRequestList= new ArrayList<>();
+		String query = "Select * From parameterUpdate ;";
+		PreparedStatement parametersRequests = con.prepareStatement(query);
+		ResultSet rs = parametersRequests.executeQuery();
+		while (rs.next()) {
+			ParameterUpdate tmpParameter = new ParameterUpdate(ParkParameter.valueOf(rs.getString(1)), rs.getInt(2), rs.getString(3));
+			parametersUpdateRequestList.add(tmpParameter);
+		}
+				return parametersUpdateRequestList;
+	}
 
 	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
 		return insertNewOrder(orderRequest, OrderStatus.WAITING, false);
@@ -360,7 +431,7 @@ public class MySQLConnection {
 
 	public static ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest)
 			throws SQLException, ParseException {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		Date startDate = formatter.parse(newDiscountRequest.getStartDate());
 		Date finishDate = formatter.parse(newDiscountRequest.getFinishDate());
 		PreparedStatement insertDiscountRequestStatement = con.prepareStatement(
@@ -433,6 +504,206 @@ public class MySQLConnection {
 		return dateMap;
 	}
 
+	public static Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
+
+		if (order.getType().equals(OrderType.REGULAR)) {
+			Visitor visitor = validateVisitor(order.getId());
+		}
+		if (order.getType().equals(OrderType.SUBSCRIBER)) {
+			Subscriber subscriber = validateSubscriber(order.getId());
+			if (subscriber == null)
+				return "Subscriber Number" + order.getId() + " " + "is not in the system";
+			order.setId(subscriber.getID());
+		}
+		if (order.getType().equals(OrderType.GUIDE)) {
+			Subscriber subscriber = validateSubscriber(order.getId());
+			if (subscriber == null)
+				return "Subscriber Number" + order.getId() + " " + "is not in the system";
+			if (!subscriber.getIsGuide())
+				return "Subscriber Number" + order.getId() + " " + "is not a guide";
+			order.setId(subscriber.getID());
+		}
+		if (validateDate(order)) {
+			return insertNewOrder(order, OrderStatus.APPROVED, true);
+		}
+		return null;
+	}
+
+	public static List<Order> getUnfinishedOrdersById(String id) throws SQLException {
+		List<Order> orders = new ArrayList<Order>();
+		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL');";
+		PreparedStatement getOrdersForId = con.prepareStatement(query);
+		getOrdersForId.setString(1, id);
+		ResultSet rs = getOrdersForId.executeQuery();
+		while (rs.next()) {
+			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8), rs.getString(9), rs.getInt(10), rs.getString(11), rs.getString(12));
+			orders.add(tmpOrder);
+		}
+		return orders;
+	}
+
+	public static Boolean cancelOrder(String orderNum) throws SQLException {
+		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+		String query = "Update orders SET status='CANCELLED' WHERE orderNum=?";
+		PreparedStatement cancelOrder = con.prepareStatement(query);
+		cancelOrder.setString(1, orderNum);
+		cancelOrder.executeUpdate();
+		return true;
+	}
+
+	public static Boolean approveOrder(String orderNum) throws SQLException {
+		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+		String query = "Update orders SET status='APPROVED' WHERE orderNum=?";
+		PreparedStatement approveOrder = con.prepareStatement(query);
+		approveOrder.setString(1, orderNum);
+		approveOrder.executeUpdate();
+		return true;
+	}
+	public static Order activateOrderFromWatingList(Order order) {
+		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+		// TODO: IF Order Time and date is less than 2 hours then change it to WATING
+		// FOR APPROVAL. Else change it to Active
+		return null;
+	}
+
+
+	public static List<ParkDiscount> getDiscountRequests(String employeeId) throws SQLException {
+		List<ParkDiscount> parkDiscountRequestList= new ArrayList<>();
+		String query = "Select * From discounts where employeeId=? ;";
+		PreparedStatement discountsRequestsForId = con.prepareStatement(query);
+		discountsRequestsForId.setString(1, employeeId);
+		ResultSet rs = discountsRequestsForId.executeQuery();
+		while (rs.next()) {
+			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			parkDiscountRequestList.add(tmp);
+		}
+				return parkDiscountRequestList;
+	}
+	public static List<ParkDiscount> getDepManagerDiscountRequests() throws SQLException {
+		List<ParkDiscount> parkDiscountRequestList= new ArrayList<>();
+		String query= "Select * from discounts;";
+		PreparedStatement discountRequests=con.prepareStatement(query);
+		ResultSet rs = discountRequests.executeQuery();
+		while(rs.next())
+		{
+			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			parkDiscountRequestList.add(tmp);
+		}
+		return parkDiscountRequestList;
+	}
+
+
+
+	public static Integer validateOrderAndReturnPrice(String[] idVisitorsAndParkName) throws SQLException {
+		Order orderToValidate=getCurrentOrderByIDAndParkName(idVisitorsAndParkName[0],idVisitorsAndParkName[2]);
+		if(orderToValidate==null)
+			return null;
+		if(!updateOrderToDone(orderToValidate))
+			throw new SQLException("FAILED TO UPDATE ORDER TO DONE");
+		int actualPrice=(orderToValidate.getPrice()/orderToValidate.getNumOfVisitors())*Integer.parseInt(idVisitorsAndParkName[1]);
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:00:00");
+		String timeNow=formatter.format(new Date());
+		if(!insertFinishedOrder(orderToValidate.getOrderNum(),idVisitorsAndParkName[1],
+				timeNow,String.valueOf(actualPrice)))
+			throw new SQLException("FAILED TO INSERT FINISHED ORDER");
+		return new Integer(actualPrice);
+				
+	}
+	private static Order getCurrentOrderByIDAndParkName(String id,String parkName) throws SQLException {
+		Order order=null;
+		String date=LocalDate.now().toString();
+		String earliestTime=LocalTime.now().minusMinutes(5).toString();
+		String latestTime=LocalTime.now().plusMinutes(30).toString();
+		String query = "Select * From orders where id_fk=? AND status='APPROVED' AND dateOfOrder=? AND timeOfOrder>=? AND timeOfOrder<=? AND parkName_fk=? ;";
+		PreparedStatement getOrder = con.prepareStatement(query);
+		getOrder.setString(1, id);
+		getOrder.setString(2, date);
+		getOrder.setString(3, earliestTime);
+		getOrder.setString(4, latestTime);
+		getOrder.setString(5, parkName);
+		ResultSet rs = getOrder.executeQuery();
+		if(rs.next())
+			 order = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+					 rs.getInt(5), OrderStatus.valueOf(rs.getString(6)),
+					 OrderType.valueOf(rs.getString(7)), rs.getString(8), 
+					 rs.getString(9), rs.getInt(10), rs.getString(11),rs.getString(12));
+		return order;
+	}
+	private static boolean updateOrderToDone(Order order) {
+		try {
+			String query = "Update orders SET status='DONE' WHERE orderNum=?";
+			PreparedStatement approveOrder = con.prepareStatement(query);
+			approveOrder.setString(1, order.getOrderNum());
+			approveOrder.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+	private static boolean insertFinishedOrder(String orderNum,String numOfVisitors,String timeOfArrival,String price) {
+		try {
+			String query = "INSERT INTO finishedOrders (orderNum_fk,actualNumOfVisitors,actualTimeOfArrival,actualPrice) VALUES (?,?,?,?);";
+			PreparedStatement insertFinishedOrder = con.prepareStatement(query);
+			insertFinishedOrder.setString(1, orderNum);
+			insertFinishedOrder.setString(2,numOfVisitors);
+			insertFinishedOrder.setString(3,timeOfArrival );
+			insertFinishedOrder.setString(4, price);
+			insertFinishedOrder.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+	public static void main(String[] args) throws ParseException {
+		Date dateNow=new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:00:00");
+		String timeNow=formatter.format(new Date());
+		System.out.println(timeNow);
+		String time1 = "16:00:00";
+		String time2 = "19:00:00";
+
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+		Date date1 = format.parse(time1);
+		Date date2 = format.parse(time2);
+		long difference = date2.getTime() - date1.getTime(); 
+	}
+
+	public static Boolean validateOrderAndRegisterExit(String[] idAndParkName) {
+		try {
+			String orderNum,timeOfArrival;
+			String date=LocalDate.now().toString();
+			String query = "SELECT finishedOrders.orderNum_fk,finishedOrders.actualTimeOfArrival from finishedOrders join orders on (orders.orderNum=finishedOrders.orderNum_fk) where orders.id_fk=? and orders.parkName_fk=? and orders.dateOfOrder=? and (finishedOrders.actualTimeOfLeave is null);";
+			PreparedStatement getOrder = con.prepareStatement(query);
+			getOrder.setString(1, idAndParkName[0]);
+			getOrder.setString(2,idAndParkName[1]);
+			getOrder.setString(3,date );
+			ResultSet rs = getOrder.executeQuery();
+			if(rs.next()) {
+				orderNum=rs.getString(1);
+				timeOfArrival=rs.getString(2);
+			}
+			else
+				return null;
+			query="UPDATE finishedOrders set actualTimeOfLeave=? , visitDuration=? where orderNum_fk=?;";
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			String timeNow=format.format(new Date());
+			Date date1 = format.parse(timeOfArrival);
+			Date date2 = format.parse(timeNow);
+			long difference = (date2.getTime() - date1.getTime())/60000; //in minutes
+			String visitDuration=String.valueOf(difference);
+			PreparedStatement updateFinishedOrder = con.prepareStatement(query);
+			updateFinishedOrder.setString(1, timeNow);
+			updateFinishedOrder.setString(2,visitDuration);
+			updateFinishedOrder.setString(3,orderNum );
+			updateFinishedOrder.executeUpdate();
+			return new Boolean(true);
+		}catch(Exception e) {
+			return null;
+		}
+		
+		
+	}
+
 	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
 		// TODO!!!!!!!!! maybe to check in the visitor table for existing id!!!!!
 		PreparedStatement registerPreparedStatement;
@@ -471,39 +742,5 @@ public class MySQLConnection {
 
 	}
 
-	public static void main(String[] args) {
-		Calendar cal = Calendar.getInstance();
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, 1); // minus number would decrement the days
-		Date nextDate = cal.getTime();
-		System.out.println(format.format(nextDate));
-	}
-
-	public static Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
-
-		if (order.getType().equals(OrderType.REGULAR)) {
-			Visitor visitor = validateVisitor(order.getId());
-		}
-		if (order.getType().equals(OrderType.SUBSCRIBER)) {
-			Subscriber subscriber = validateSubscriber(order.getId());
-			if (subscriber == null)
-				return "Subscriber Number" + order.getId() + " " + "is not in the system";
-			order.setId(subscriber.getID());
-		}
-		if (order.getType().equals(OrderType.GUIDE)) {
-			Subscriber subscriber = validateSubscriber(order.getId());
-			if (subscriber == null)
-				return "Subscriber Number" + order.getId() + " " + "is not in the system";
-			if (!subscriber.getIsGuide())
-				return "Subscriber Number" + order.getId() + " " + "is not a guide";
-			order.setId(subscriber.getID());
-		}
-		if (validateDate(order)) {
-			return insertNewOrder(order, OrderStatus.APPROVED, true);
-		}
-		return null;
-	}
-
 }
+

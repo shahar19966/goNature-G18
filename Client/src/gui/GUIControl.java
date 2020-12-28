@@ -64,10 +64,12 @@ public class GUIControl {
 	public void disconnect() {
 		ClientMessage cMsg=new ClientMessage(ClientMessageType.DISCONNECTED,currentUser);
 		sendToServer(cMsg);
+		currentUser=null;
 	}
 	public void logOut() {
 		ClientMessage cMsg=new ClientMessage(ClientMessageType.LOGOUT,currentUser);
 		sendToServer(cMsg);
+		currentUser=null;
 	}
 	public void openLogInPage() {
 		try {
@@ -91,6 +93,18 @@ public class GUIControl {
 			alert.setTitle("Error");
 			alert.setHeaderText("");
 			alert.setContentText(msg);
+			alert.showAndWait();
+		});
+	}
+	public static void popUpErrorExitOnClick(String msg) {
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("");
+			alert.setContentText(msg);
+			alert.setOnCloseRequest(e->{
+				System.exit(0);
+			});
 			alert.showAndWait();
 		});
 	}

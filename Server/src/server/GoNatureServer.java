@@ -131,7 +131,7 @@ public class GoNatureServer extends AbstractServer {
 					returnVal = MySQLConnection.getAvailableDates((Order) clientMsg.getMessage());
 					type = ServerMessageType.AVAILABLE_DATES;
 					break;
-				case PARAMETER_UPDATE:// liron
+				case PARAMETER_UPDATE:
 					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate) clientMsg.getMessage());
 					type = ServerMessageType.PARAMETER_UPDATE;
 					break;
@@ -140,12 +140,58 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.OCCASIONAL_ORDER;
 					break;
 				case DISCOUNT_REQUEST:
-					returnVal=MySQLConnection.insertNewDiscountRequest((ParkDiscount)clientMsg.getMessage());
-					type=ServerMessageType.DISCOUNT_REQUEST;
+					returnVal = MySQLConnection.insertNewDiscountRequest((ParkDiscount) clientMsg.getMessage());
+					type = ServerMessageType.DISCOUNT_REQUEST;
 					break;
 				case PARK_MNG_CAPACITY_REPORT:
 					returnVal = MySQLConnection.getParkCapacityReport((String) (clientMsg.getMessage()));
 					type=ServerMessageType.PARK_CAPACITY_REPORT;
+					break;
+				case GET_ORDERS_BY_ID:
+					returnVal = MySQLConnection.getUnfinishedOrdersById((String) (clientMsg.getMessage()));
+					type = ServerMessageType.GET_ORDERS_BY_ID;
+					break;
+				case CANCEL_ORDER:
+					returnVal = MySQLConnection.cancelOrder((String) (clientMsg.getMessage()));
+					type = ServerMessageType.CANCEL_ORDER;
+					break;
+				case APPROVE_ORDER:
+					returnVal = MySQLConnection.approveOrder((String) (clientMsg.getMessage()));
+					type = ServerMessageType.APPROVE_ORDER;
+					break;
+				case ACTIVATE_ORDER_FROM_WATING_LIST:
+					returnVal = MySQLConnection.activateOrderFromWatingList((Order) (clientMsg.getMessage()));
+					type = ServerMessageType.APPROVE_ORDER;
+					break;
+				case DEP_MNG_CANCELLATION_REPORT:
+					returnVal = MySQLConnection.getCancellationReport();
+					type=ServerMessageType.DEPARTMENT_CANCELLATION_REPORT;
+					break;
+
+				case DEP_MNG_VISITION_REPORT:
+					returnVal = MySQLConnection.getVisitionReport((String) (clientMsg.getMessage()));
+					type=ServerMessageType.DEPARTMENT_VISITATION_REPORT;
+					break;
+				case GET_DISCOUNT_REQUESTS_FROM_DB:
+					returnVal = MySQLConnection.getDiscountRequests((String) (clientMsg.getMessage()));
+					type = ServerMessageType.GET_DISCOUNT_REQUESTS_FROM_DB;
+					break;
+				case VALIDATE_ORDER_ENTRY:
+					returnVal=MySQLConnection.validateOrderAndReturnPrice((String[])clientMsg.getMessage());
+					type=ServerMessageType.VALIDATE_ORDER_ENTRY;
+					break;
+				case VALIDATE_ORDER_EXIT:
+					returnVal=MySQLConnection.validateOrderAndRegisterExit((String[])clientMsg.getMessage());
+					type=ServerMessageType.VALIDATE_ORDER_EXIT;
+					break;
+
+				case REQUESTS_PARAMETERS:
+					returnVal=MySQLConnection.getParameterRequests();
+					type=ServerMessageType.REQUESTS_PARAMETERS;
+					break;
+				case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
+					returnVal=MySQLConnection.getDepManagerDiscountRequests();
+					type=ServerMessageType.REQUESTS_PARAMETERS;
 					break;
 				case REGISTRATION:
 					ServerMessage message = MySQLConnection.registerSubscriber((Subscriber) clientMsg.getMessage());
@@ -163,6 +209,7 @@ public class GoNatureServer extends AbstractServer {
 		}
 
 		System.out.println("Message received: " + msg + " from " + client);
+		System.out.println(userList.toString());
 		try {
 			client.sendToClient(new ServerMessage(type, returnVal));
 		} catch (IOException e) {

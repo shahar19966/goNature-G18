@@ -1,6 +1,7 @@
 package client;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.sql.SQLException;
 
 import entity.Employee;
@@ -26,7 +27,7 @@ public class GoNatureClient extends AbstractClient {
 	 * method in the client.
 	 */
 	public static boolean awaitResponse = false;
-	private GUIControl guiControl = GUIControl.getInstance();
+	private GUIControl guiControl;
 
 	// Constructors ****************************************************
 
@@ -40,7 +41,7 @@ public class GoNatureClient extends AbstractClient {
 
 	public GoNatureClient(String host, int port) throws IOException {
 		super(host, port); // Call the superclass constructor
-		openConnection();
+		guiControl = GUIControl.getInstance();
 	}
 
 	// Instance methods ************************************************
@@ -64,14 +65,7 @@ public class GoNatureClient extends AbstractClient {
 					GUIControl.popUpError("Server encountered an error!");
 					guiControl.setServerMsg(serverMsg);
 				} else {
-					GUIControl.popUpError((String) serverMsg.getMessage());
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					System.exit(0);
+					GUIControl.popUpErrorExitOnClick((String) serverMsg.getMessage());
 				}
 				break;
 			case PARK_LIST:
@@ -99,19 +93,49 @@ public class GoNatureClient extends AbstractClient {
 			case AVAILABLE_DATES:
 				guiControl.setServerMsg(serverMsg);
 				break;
-			case PARAMETER_UPDATE://liron
-				GUIControl.popUpMessage("Parameter Update Succeeded", ((ParameterUpdate) serverMsg.getMessage()).toString());
+			case PARAMETER_UPDATE:
+				GUIControl.popUpMessage("Parameter Update Succeeded",
+						((ParameterUpdate) serverMsg.getMessage()).toString());
 				break;
 			case DISCOUNT_REQUEST:
-				GUIControl.popUpMessage("Request sent to department manager","Request successfully sent to department manager");
+				GUIControl.popUpMessage("Request sent to department manager",
+						"Request successfully sent to department manager");
 				break;
-				
+
 			case OCCASIONAL_ORDER:
 				guiControl.setServerMsg(serverMsg);
-                 break;
+				break;
 			case PARK_CAPACITY_REPORT:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case DEPARTMENT_CANCELLATION_REPORT:
+		          guiControl.setServerMsg(serverMsg);
+						break;
+					case GET_ORDERS_BY_ID:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case DEPARTMENT_VISITATION_REPORT:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case CANCEL_ORDER:
+						guiControl.setServerMsg(serverMsg);
+						break;
+
+					case GET_DISCOUNT_REQUESTS_FROM_DB:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case VALIDATE_ORDER_ENTRY:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case VALIDATE_ORDER_EXIT:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case REQUESTS_PARAMETERS:
+						guiControl.setServerMsg(serverMsg);
+						break;
+					case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
+						guiControl.setServerMsg(serverMsg);
+						break;
 default:
 	guiControl.setServerMsg(serverMsg);
 				break;

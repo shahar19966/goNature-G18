@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="579.0" prefWidth="753.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DepartmentManagerCancellationReportController">
+   <children>
+      <BarChart fx:id="cancellationReport" layoutX="127.0" layoutY="149.0">
+        <xAxis>
+          <CategoryAxis label="type" side="BOTTOM" fx:id="x" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="y" label="The amount of orders" side="LEFT" />
+        </yAxis>
+      </BarChart>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="127.0" layoutY="102.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Month:" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label fx:id="month" alignment="CENTER" layoutX="203.0" layoutY="102.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="164.0" layoutY="14.0" prefHeight="58.0" prefWidth="463.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 40;" text="Cancellation Report" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <ImageView fitHeight="96.0" fitWidth="107.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/logo.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
