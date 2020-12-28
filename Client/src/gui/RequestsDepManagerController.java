@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import entity.EntityConstants;
 import entity.Order;
 import entity.ParameterUpdate;
+import entity.ParkDiscount;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,25 +22,22 @@ public class RequestsDepManagerController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
 
     @FXML
-    private TableView<?> discountTableView;
+    private TableView<ParkDiscount> discountTableView;
 
     @FXML
-    private TableColumn<?, ?> discountParkNumberCol;
+    private TableColumn<ParkDiscount, String> parkNameCol;
 
     @FXML
-    private TableColumn<?, ?> parkNameCol;
+    private TableColumn<ParkDiscount, String> startDateCol;
 
     @FXML
-    private TableColumn<?, ?> startDateCol;
+    private TableColumn<ParkDiscount, String> finishDateCol;
 
     @FXML
-    private TableColumn<?, ?> finishDateCol;
+    private TableColumn<ParkDiscount, Integer> discountAmountCol;
 
     @FXML
-    private TableColumn<?, ?> discountAmountCol;
-
-    @FXML
-    private TableColumn<?, ?> discountStatusCol;
+    private TableColumn<ParkDiscount, EntityConstants.RequestStatus> discountStatusCol;
 
     @FXML
     private TableColumn<?, ?> approveCol;
@@ -64,6 +62,8 @@ public class RequestsDepManagerController implements Initializable {
     @FXML
     private TableColumn<?, ?> declineCol1;
 	private ObservableList<ParameterUpdate> parameters = FXCollections.observableArrayList();
+	private ObservableList<ParkDiscount> discountRequests = FXCollections.observableArrayList();
+
 
 
 	@Override
@@ -76,8 +76,16 @@ public class RequestsDepManagerController implements Initializable {
 		parameter.setCellValueFactory(new PropertyValueFactory<ParameterUpdate, EntityConstants.ParkParameter>("parameter"));
 		newvalue.setCellValueFactory(new PropertyValueFactory<ParameterUpdate, Integer>("newValue"));
 		parkname.setCellValueFactory(new PropertyValueFactory<ParameterUpdate, String>("parkName"));
-
 		parametersTable.setItems(parameters);
+		guiControl.sendToServer(new ClientMessage(ClientMessageType.DEP_MANAGER_GET_DISCOUNT_REQUESTS, null));
+		List<ParkDiscount> discountList=(List<ParkDiscount>)guiControl.getServerMsg().getMessage();
+		discountRequests.addAll(discountList);
+		parkNameCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("parkName"));
+		startDateCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("startDate"));
+		finishDateCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("finishDate"));
+		discountAmountCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, Integer>("discountAmount"));
+		discountStatusCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, EntityConstants.RequestStatus>("discountStatus"));
+		discountTableView.setItems(discountRequests);
 		
 	}
 	
