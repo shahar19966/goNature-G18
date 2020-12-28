@@ -93,7 +93,7 @@ public class GoNatureClient extends AbstractClient {
 			case AVAILABLE_DATES:
 				guiControl.setServerMsg(serverMsg);
 				break;
-			case PARAMETER_UPDATE:// liron
+			case PARAMETER_UPDATE:
 				GUIControl.popUpMessage("Parameter Update Succeeded",
 						((ParameterUpdate) serverMsg.getMessage()).toString());
 				break;
@@ -128,6 +128,9 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case VALIDATE_ORDER_EXIT:
+				guiControl.setServerMsg(serverMsg);
+				break;
+			case REQUESTS_PARAMETERS:
 				guiControl.setServerMsg(serverMsg);
 				break;
 

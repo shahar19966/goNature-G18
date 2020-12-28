@@ -130,7 +130,7 @@ public class GoNatureServer extends AbstractServer {
 					returnVal = MySQLConnection.getAvailableDates((Order) clientMsg.getMessage());
 					type = ServerMessageType.AVAILABLE_DATES;
 					break;
-				case PARAMETER_UPDATE:// liron
+				case PARAMETER_UPDATE:
 					returnVal = MySQLConnection.createParameterUpdate((ParameterUpdate) clientMsg.getMessage());
 					type = ServerMessageType.PARAMETER_UPDATE;
 					break;
@@ -183,6 +183,12 @@ public class GoNatureServer extends AbstractServer {
 					returnVal=MySQLConnection.validateOrderAndRegisterExit((String[])clientMsg.getMessage());
 					type=ServerMessageType.VALIDATE_ORDER_EXIT;
 					break;
+
+				case REQUESTS_PARAMETERS:
+					returnVal=MySQLConnection.getParameterRequests();
+					type=ServerMessageType.REQUESTS_PARAMETERS;
+
+
 
 				
 				}

@@ -41,6 +41,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import entity.EntityConstants.OrderStatus;
 import entity.EntityConstants.OrderType;
+import entity.EntityConstants.ParkParameter;
 import entity.EntityConstants.RequestStatus;
 
 /*
@@ -421,6 +422,17 @@ public class MySQLConnection {
 		parameterPreparedStatement.setString(3, parameterUpdate.getParkName());
 		parameterPreparedStatement.executeUpdate();
 		return parameterUpdate;
+	}
+	public static List<ParameterUpdate> getParameterRequests() throws SQLException {//liron
+		List<ParameterUpdate> parametersUpdateRequestList= new ArrayList<>();
+		String query = "Select * From parameterUpdate ;";
+		PreparedStatement parametersRequests = con.prepareStatement(query);
+		ResultSet rs = parametersRequests.executeQuery();
+		while (rs.next()) {
+			ParameterUpdate tmpParameter = new ParameterUpdate(ParkParameter.valueOf(rs.getString(1)), rs.getInt(2), rs.getString(3));
+			parametersUpdateRequestList.add(tmpParameter);
+		}
+				return parametersUpdateRequestList;
 	}
 
 	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
