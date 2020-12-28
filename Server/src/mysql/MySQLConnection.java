@@ -170,37 +170,69 @@ public class MySQLConnection {
 
 	}
 
+	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
+		Map<Integer, VisitorReport> reportVisitorMap =  new LinkedHashMap<Integer, VisitorReport>();
+
+		PreparedStatement GetIncomeReport;
+		GetIncomeReport = con.prepareStatement(
+				"SELECT orders.type,sum(finishedOrders.visitDuration)/sum(finishedOrders.actualNumOfVisitors ),finishedOrders.actualTimeOfArrival "
+				+ "FROM orders"
+				+ " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) and orders.parkName_fk=?"
+				+ " GROUP by orders.type ,finishedOrders.actualTimeOfArrival");
+		GetIncomeReport.setString(1, namePark);
+		ResultSet rs = GetIncomeReport.executeQuery();
+		for (int i = EntityConstants.PARK_OPEN; i <= EntityConstants.PARK_CLOSED; i++) {
+			reportVisitorMap.put(i, new VisitorReport(i));
+		}
+
+		if (!rs.next()) {
+			return reportVisitorMap;
+		}
+
+		do {
+			String temp=rs.getString(3);
+			temp=temp.substring(0, 2);
+			if (rs.getString(1).equals("GUIDE"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setAvgGuid(Double.parseDouble(rs.getString(2)));
+			if (rs.getString(1).equals("SUBSCRIBER"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setAvgSubscriber(Double.parseDouble(rs.getString(2)));
+			if (rs.getString(1).equals("REGULAR"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setAvgRegular(Double.parseDouble(rs.getString(2)));
+		} while (rs.next());
+		return reportVisitorMap;
+
+	}
+
 	public static Map<String, VisitorReport> getCancellationReport() throws SQLException {
 		Map<String, VisitorReport> reportVisitorMap = new HashMap<String, VisitorReport>();
 		Statement getCancellationReport;
 		getCancellationReport = con.createStatement();
-		ResultSet rs = getCancellationReport
-				.executeQuery("SELECT  orders.parkName_fk,COUNT(*) FROM orders "
-						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND "
-						+ "(orders.status='APPROVED' AND CURDATE()>=orders.dateOfOrder ) GROUP by orders.parkName_fk");
+		ResultSet rs = getCancellationReport.executeQuery("SELECT  orders.parkName_fk,COUNT(*) FROM orders "
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND "
+				+ "(orders.status='APPROVED' AND CURDATE()>=orders.dateOfOrder ) GROUP by orders.parkName_fk");
 		List<Park> parkList = getParks();
 		for (Park p : parkList)
 			reportVisitorMap.put(p.getParkName(), new VisitorReport(p.getParkName()));
 		if (rs.next()) {
-		String namePark = rs.getString(1);
-		do {
-			reportVisitorMap.get(namePark).setCountNotRealized((Integer.parseInt(rs.getString(2))));
-			
-		} while (rs.next());
-		
+			String namePark = rs.getString(1);
+			do {
+				reportVisitorMap.get(namePark).setCountNotRealized((Integer.parseInt(rs.getString(2))));
+
+			} while (rs.next());
+
 		}
-		 rs = getCancellationReport
-				.executeQuery("SELECT orders.parkName_fk,COUNT(*) FROM orders "
-						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
-						+ "AND orders.status='CANCELLED' GROUP by orders.parkName_fk");
+		rs = getCancellationReport.executeQuery("SELECT orders.parkName_fk,COUNT(*) FROM orders "
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
+				+ "AND orders.status='CANCELLED' GROUP by orders.parkName_fk");
 		if (rs.next()) {
 			String namePark = rs.getString(1);
 			do {
 				reportVisitorMap.get(namePark).setCountCancellations((Integer.parseInt(rs.getString(2))));
-				
+
 			} while (rs.next());
-			
-			}
+
+		}
 		return reportVisitorMap;
 	}
 
@@ -508,8 +540,8 @@ public class MySQLConnection {
 		return orders;
 	}
 
-	public static Boolean cancelOrder(String orderNum) throws SQLException  {
-		//TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+	public static Boolean cancelOrder(String orderNum) throws SQLException {
+		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
 		String query = "Update orders SET status='CANCELLED' WHERE orderNum=?";
 		PreparedStatement cancelOrder = con.prepareStatement(query);
 		cancelOrder.setString(1, orderNum);
@@ -518,7 +550,7 @@ public class MySQLConnection {
 	}
 
 	public static Boolean approveOrder(String orderNum) throws SQLException {
-		//TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
 		String query = "Update orders SET status='APPROVED' WHERE orderNum=?";
 		PreparedStatement approveOrder = con.prepareStatement(query);
 		approveOrder.setString(1, orderNum);
@@ -526,8 +558,9 @@ public class MySQLConnection {
 		return true;
 	}
 	public static Order activateOrderFromWatingList(Order order) {
-		//TODO: CHECK IF OrderNum status is not canceled. if canceled return false
-		//TODO: IF Order Time and date is less than 2 hours then change it to WATING FOR APPROVAL. Else change it to Active
+		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
+		// TODO: IF Order Time and date is less than 2 hours then change it to WATING
+		// FOR APPROVAL. Else change it to Active
 		return null;
 	}
 
