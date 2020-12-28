@@ -76,7 +76,13 @@ public class OrderPaneController implements Initializable {
 
 	@FXML
 	private Button orderButton;
+	@FXML
+	private ComboBox<String> startPhone;
 
+	@FXML
+	private GridPane mainPane;
+	@FXML
+	private TextField finishPhone;
 	@FXML
 	private Button clearButton;
 	private Tooltip tooltip = new Tooltip();
@@ -100,32 +106,34 @@ public class OrderPaneController implements Initializable {
 
 	@FXML
 	void orderFunc(ActionEvent event) {
-		if(!orderButtonAble)
+		if (!orderButtonAble)
 			return;
-		Order order=createOrderFromForm();
+		Order order = createOrderFromForm();
 		guiControl.sendToServer(new ClientMessage(ClientMessageType.ORDER, order));
 		if (guiControl.getServerMsg() == null) {
 			GuiButton cancelButton = new GuiButton("Cancel Order", AlertType.Warning, Sizes.Medium);
 			cancelButton.setOnAction(e -> {
 				guiControl.getClientMainPageController().hideAlert();
-				
+
 			});
 			GuiButton watingListButton = new GuiButton("Enter Wating List", AlertType.Info, Sizes.Medium);
 			watingListButton.setOnAction(e -> {
 				guiControl.sendToServer(new ClientMessage(ClientMessageType.WAITING_LIST, order));
-				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Enter Wating List Succeeded",
-						((Order) guiControl.getServerMsg().getMessage()).toString(), null);
+				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
+						"Enter Wating List Succeeded", ((Order) guiControl.getServerMsg().getMessage()).toString(),
+						null);
 			});
 			GuiButton datePickerListButton = new GuiButton("Pick Another Date", AlertType.Info, Sizes.Medium);
 			datePickerListButton.setOnAction(e -> {
-				guiControl.sendToServer(new ClientMessage(ClientMessageType.PICK_AVAILABLE_DATES,order));
-				displayAvailableDates((Map<String,List<String>>)guiControl.getServerMsg().getMessage(),order);
+				guiControl.sendToServer(new ClientMessage(ClientMessageType.PICK_AVAILABLE_DATES, order));
+				displayAvailableDates((Map<String, List<String>>) guiControl.getServerMsg().getMessage(), order);
 			});
 			List<Button> buttonList = new ArrayList<Button>();
 			buttonList.add(cancelButton);
 			buttonList.add(watingListButton);
 			buttonList.add(datePickerListButton);
-			guiControl.getClientMainPageController().showAlert(AlertType.Warning, "Unavailable Date", "The date you picked is unavailable.\nHow would you like to proceed?", buttonList);
+			guiControl.getClientMainPageController().showAlert(AlertType.Warning, "Unavailable Date",
+					"The date you picked is unavailable.\nHow would you like to proceed?", buttonList);
 		} else {
 			guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Order Succeeded",
 					((Order) guiControl.getServerMsg().getMessage()).toString(), null);
@@ -146,20 +154,29 @@ public class OrderPaneController implements Initializable {
 		}
 		AvailableDatesPageController adpc = fxmlLoader.getController();
 		adpc.setTable(map, order);
-		GuiButton cancelButton=new GuiButton("Cancel",AlertType.Danger,Sizes.Medium);
-		cancelButton.setOnAction(e->{
+		GuiButton cancelButton = new GuiButton("Cancel", AlertType.Danger, Sizes.Medium);
+		cancelButton.setOnAction(e -> {
 			guiControl.getClientMainPageController().hideAlert();
 		});
-		List<Button> buttonList=new ArrayList<>();
+		List<Button> buttonList = new ArrayList<>();
 		buttonList.add(cancelButton);
 		guiControl.getClientMainPageController().showAlert(AlertType.Info, "Smart Date Picker", root, buttonList);
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		parkNameComboBox.minWidthProperty().bind(mainPane.widthProperty().multiply(0.3).subtract(20));
+		date.minWidthProperty().bind(mainPane.widthProperty().multiply(0.3).subtract(20));
+		peopleAmount.minWidthProperty().bind(mainPane.widthProperty().multiply(1.0/3).subtract(20));
+		timeComboBox.minWidthProperty().bind(mainPane.widthProperty().multiply(1.0/3).subtract(20));
+		emailText.minWidthProperty().bind(mainPane.widthProperty().multiply(0.43*0.5).subtract(20));
+		startPhone.minWidthProperty().bind(mainPane.widthProperty().multiply(0.43*0.5*0.4).subtract(20));
+		finishPhone.minWidthProperty().bind(mainPane.widthProperty().multiply(0.43*0.5*0.4).subtract(20));
 		if (!(guiControl.getUser() instanceof Subscriber) || !((Subscriber) guiControl.getUser()).getIsGuide()) {
 			guideGroupGridPane.setVisible(false);
 		}
+		startPhone.getItems().addAll("050", "052", "053", "054", "055", "058");
+		startPhone.getSelectionModel().selectFirst();
 		parkNameComboBox.prefWidthProperty().bind(emailText.widthProperty());
 		peopleAmount.prefWidthProperty().bind(timeComboBox.widthProperty());
 		date.prefWidthProperty().bind(emailText.widthProperty());
@@ -196,40 +213,57 @@ public class OrderPaneController implements Initializable {
 		timeComboBox.getSelectionModel().selectFirst();
 		parkNameComboBox.getSelectionModel().selectFirst();
 		orderButton.disableProperty().bind(Bindings.createBooleanBinding(() -> {
-			
-			StringBuilder toolTipText= new StringBuilder();
+
+			StringBuilder toolTipText = new StringBuilder();
 			orderButtonAble = true;
 			Date now = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date chosenDate = format.parse(date.getValue().toString()+" "+timeComboBox.getValue()+":00");
-			if(chosenDate.before(now))
-			{
+			Date chosenDate = format.parse(date.getValue().toString() + " " + timeComboBox.getValue() + ":00");
+			if (chosenDate.before(now)) {
 				orderButtonAble = false;
-				toolTipText.append("You can't order a trip before "+format.format(now));
+				toolTipText.append("You can't order a trip before " + format.format(now));
 			}
-			if(GUIControl.isEmailValid(emailText.getText())==false)
-			{
-				if(!orderButtonAble)
+			if (GUIControl.isEmailValid(emailText.getText()) == false) {
+				if (!orderButtonAble)
 					toolTipText.append("\n");
-				if(emailText.getText().length()>0)
-					toolTipText.append(emailText.getText()+" is not a valid Email");
+				if (emailText.getText().length() > 0)
+					toolTipText.append(emailText.getText() + " is not a valid Email");
 				else
 					toolTipText.append("You have to enter Email");
 				orderButtonAble = false;
 			}
+			if (finishPhone.getText().length() == 0) {
+				if (!orderButtonAble)
+					toolTipText.append("\n");
+				toolTipText.append("You have to enter Phone Number");
+				orderButtonAble = false;
+			}
+			else {
+				if (!finishPhone.getText().matches("[0-9]+"))
+				{
+					if (!orderButtonAble)
+						toolTipText.append("\n");
+					toolTipText.append("Phone Number is only digits");
+				}
+				if (finishPhone.getText().length() != 7)
+				{
+					if (!orderButtonAble)
+						toolTipText.append("\n");
+					toolTipText.append("Phone Number is 10 digit with initial");
+					orderButtonAble = false;
+				}
+
+			}
 			orderButton.setTooltip(null);
 			orderButton.setOpacity(1);
-			if(!orderButton.getStyleClass().contains("logInBtn"))
-			{
+			if (!orderButton.getStyleClass().contains("logInBtn")) {
 				orderButton.getStyleClass().add("logInBtn");
 				orderButton.getStyleClass().remove("logInDisabledBtn");
 			}
-			if(!orderButton.getStyleClass().contains("button"))
-			{
+			if (!orderButton.getStyleClass().contains("button")) {
 				orderButton.getStyleClass().add("button");
 			}
-			if(!orderButtonAble)
-			{
+			if (!orderButtonAble) {
 				tooltip.setText(toolTipText.toString());
 				orderButton.setTooltip(tooltip);
 				orderButton.getStyleClass().clear();
@@ -237,13 +271,13 @@ public class OrderPaneController implements Initializable {
 				orderButton.setOpacity(0.6);
 			}
 			return false;
-		}, emailText.textProperty(),date.valueProperty(),timeComboBox.valueProperty()));
+		}, emailText.textProperty(), date.valueProperty(), timeComboBox.valueProperty(),finishPhone.textProperty()));
 
 	}
-	private Order createOrderFromForm()
-	{
+
+	private Order createOrderFromForm() {
 		Order order = new Order(null, parkNameComboBox.getValue(), peopleAmount.getValue(), null,
-				date.getValue().toString(), timeComboBox.getValue(), -1, emailText.getText());
+				date.getValue().toString(), timeComboBox.getValue(), -1, emailText.getText(),startPhone.getValue()+finishPhone.getText());
 		if (guiControl.getUser() instanceof Visitor) {
 			Visitor visitor = (Visitor) guiControl.getUser();
 			order.setId(visitor.getId());
@@ -258,11 +292,14 @@ public class OrderPaneController implements Initializable {
 		}
 		return order;
 	}
+
 	@FXML
 	private void clearFunc(ActionEvent event) {
 		emailText.setText("");
 		parkNameComboBox.getSelectionModel().selectFirst();
 		timeComboBox.getSelectionModel().selectFirst();
+		startPhone.getSelectionModel().selectFirst();
+		finishPhone.setText("");
 		guideGroupCheckBox.setSelected(false);
 		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ClientConstants.MAX_PEOPLE));
 		peopleAmount.getValueFactory().setValue(1);

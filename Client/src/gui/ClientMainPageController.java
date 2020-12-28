@@ -98,7 +98,8 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void EntryControlBtnClick(ActionEvent event) {
-
+		loadEntryControl();
+		setSwitchPane(panesMap.get("entryControl"));
 	}
 
 	@FXML
@@ -109,6 +110,8 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void exitControlBtnClick(ActionEvent event) {
+		loadExitControl();
+		setSwitchPane(panesMap.get("exitControl"));
 
 	}
 
@@ -146,6 +149,7 @@ public class ClientMainPageController implements Initializable {
 		setSwitchPane(panesMap.get("parameters"));
 
 	}
+	
 
 	// Switch to registration screen when the registration button is clicked- OR
 	@FXML
@@ -155,8 +159,9 @@ public class ClientMainPageController implements Initializable {
 	}
 
 	@FXML
-	void requestsBtnClick(ActionEvent event) {
-
+	void requestsBtnClick(ActionEvent event) {//liron
+		loadRequestsDepManager();
+		setSwitchPane(panesMap.get("requests"));
 	}
 
 	@FXML
@@ -291,6 +296,20 @@ public class ClientMainPageController implements Initializable {
 		}
 		// ParkManagerReportsController pmrc=fxmlLoader1.getController();
 		panesMap.put("reports", root);
+	}
+	private void loadRequestsDepManager()//liron
+	{
+		FXMLLoader fxmlLoader1 = new FXMLLoader(
+				getClass().getResource(ClientConstants.Screens.REQUESTS.toString()));
+		VBox root = null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		panesMap.put("requests", root);
 	}
 
 	private void loadParkManagerParametersUpdate()// liron
@@ -490,5 +509,29 @@ public class ClientMainPageController implements Initializable {
 			e.printStackTrace();
 		}
 		panesMap.put("orderTracking", root);
+	}
+	private void loadEntryControl() {
+		FXMLLoader fxmlLoader1 = new FXMLLoader(
+				getClass().getResource(ClientConstants.Screens.ENTRY_CONTROL_PAGE.toString()));
+		VBox root = null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		panesMap.put("entryControl", root);
+	}
+	private void loadExitControl() {
+		FXMLLoader fxmlLoader1 = new FXMLLoader(
+				getClass().getResource(ClientConstants.Screens.EXIT_CONTROL_PAGE.toString()));
+		VBox root = null;
+		try {
+			root = fxmlLoader1.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		panesMap.put("exitControl", root);
 	}
 }

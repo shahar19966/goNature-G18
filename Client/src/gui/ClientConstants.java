@@ -33,6 +33,11 @@ public class ClientConstants {
 		AVAILABLE_DATES_PAGE("/gui/AvailableDatesPage.fxml"),
 		DEPARTMENT_VISITATION_REPORT("/gui/DepartmentManagerVisitionReport.fxml"),
 		ORDER_TRACKING("/gui/MyOrdersPane.fxml");
+		ORDER_TRACKING("/gui/MyOrdersPane.fxml"),
+		REQUESTS("/gui/RequestsDepManager.fxml"),
+		ENTRY_CONTROL_PAGE("/gui/EntryControlPane.fxml"),
+		EXIT_CONTROL_PAGE("/gui/ExitControlPane.fxml");
+
 
 		public final String path;
 

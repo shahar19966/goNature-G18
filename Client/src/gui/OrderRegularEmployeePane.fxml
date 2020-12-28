@@ -20,13 +20,13 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints percentHeight="15.0" valignment="BOTTOM" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+    <RowConstraints percentHeight="15.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="20.0" valignment="TOP" />
       <RowConstraints percentHeight="30.0" />
-      <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" />
   </rowConstraints>
    <children>
       <Label styleClass="seconderyTitle" text="Occasional Order" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-      <HBox spacing="40.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+      <HBox spacing="40.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
          <children>
             <VBox>
                <children>
@@ -86,11 +86,11 @@
       </HBox>
       <GridPane hgap="10.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="60.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <GridPane GridPane.valignment="TOP">
@@ -103,7 +103,7 @@
                </rowConstraints>
                <children>
                   <Label styleClass="labelSmall" GridPane.valignment="TOP" />
-                  <TextField fx:id="idText" styleClass="text-field-Small" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                  <TextField fx:id="idText" styleClass="text-field-Medium" GridPane.rowIndex="1" GridPane.valignment="TOP" />
                </children>
             </GridPane>
             <GridPane GridPane.columnIndex="1" GridPane.valignment="TOP">
@@ -116,11 +116,11 @@
                </rowConstraints>
                <children>
                   <Label styleClass="labelSmall" text="People Amount" GridPane.valignment="TOP" />
-                  <Spinner fx:id="peopleAmount" styleClass="text-field-Small" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                  <Spinner fx:id="peopleAmount" styleClass="text-field-Medium" GridPane.rowIndex="1" GridPane.valignment="TOP" />
                </children>
             </GridPane>
          </children>
       </GridPane>
-      <Button fx:id="orderButton" mnemonicParsing="false" onAction="#orderFunc" styleClass="logInBtn" text="Order" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+      <Button fx:id="orderButton" mnemonicParsing="false" onAction="#orderFunc" styleClass="logInBtn" text="Order" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
    </children>
 </GridPane>
