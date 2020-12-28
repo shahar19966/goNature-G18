@@ -134,7 +134,7 @@ import message.ClientMessageType;
 			{
 				discountRequestsObservableList.add(pd);
 			}
-		//	discountParkNumberCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, Integer>("discountParkNumber"));
+			updateIdColumn();//update id column with running counter;
 			parkNameCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("parkName"));
 			startDateCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("startDate"));
 			finishDateCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("finishDate"));
@@ -144,6 +144,25 @@ import message.ClientMessageType;
 
 		}
 
+	
+	public void updateIdColumn()
+	{
+		 discountParkNumberCol.setCellFactory(new Callback<TableColumn<ParkDiscount, Integer>, TableCell<ParkDiscount, Integer>>() {
+	            @Override
+	            public TableCell<ParkDiscount, Integer> call(TableColumn<ParkDiscount, Integer> col) {
+	                final TableCell<ParkDiscount, Integer> cell = new TableCell<ParkDiscount, Integer>() {
+	                    @Override
+	                    public void updateItem(Integer item, boolean empty) {
+	                        super.updateItem(item, empty);
+	                        if (empty) {
+	                            setText(null);
+	                        } else {
+	                             setText(String.valueOf(discountNumberCol++));
+	                        }
+	                    }
+	                };
+	return cell; }});
+		}
 	}
 
 
