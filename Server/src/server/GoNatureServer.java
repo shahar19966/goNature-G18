@@ -166,6 +166,11 @@ public class GoNatureServer extends AbstractServer {
 					returnVal = MySQLConnection.getCancellationReport();
 					type=ServerMessageType.DEPARTMENT_CANCELLATION_REPORT;
 					break;
+				case DEP_MNG_VISITION_REPORT:
+					returnVal = MySQLConnection.getVisitionReport((String) (clientMsg.getMessage()));
+					type=ServerMessageType.DEPARTMENT_VISITATION_REPORT;
+					break;
+				
 				
 				}
 			}
