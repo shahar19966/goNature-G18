@@ -40,9 +40,9 @@
             <Label alignment="CENTER" contentDisplay="CENTER" styleClass="seconderyTitle" text="Parameter Update Requests" GridPane.rowIndex="2" />
             <TableView fx:id="parametersTable" prefHeight="276.0" prefWidth="600.0" GridPane.rowIndex="3">
                <columns>
-                  <TableColumn fx:id="parameter" prefWidth="75.0" text="parameter" />
-                  <TableColumn fx:id="newvalue" prefWidth="75.0" text="New Value" />
                   <TableColumn fx:id="parkname" prefWidth="75.0" text="Park Name" />
+                  <TableColumn fx:id="newvalue" prefWidth="75.0" text="New Value" />
+                  <TableColumn fx:id="parameter" prefWidth="75.0" text="Parameter" />
                   <TableColumn fx:id="approveCol1" prefWidth="75.0" />
                   <TableColumn fx:id="declineCol1" prefWidth="75.0" />
                </columns>
