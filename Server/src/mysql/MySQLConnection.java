@@ -796,7 +796,7 @@ public static boolean approveDiscountUpdate(ParkDiscount discountToApprove) thro
 
 	}
 
-}
+
 
 public static boolean declineDiscountUpdate(ParkDiscount discountToDecline) throws SQLException
 {
