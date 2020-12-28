@@ -1,11 +1,15 @@
 package gui;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import application.ServerMain;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -20,7 +24,7 @@ import ocsf.server.ConnectionToClient;
 /*
  * controller class for the server UI
  */
-public class ServerScreenController {
+public class ServerScreenController implements Initializable {
     @FXML
     private AnchorPane enableDisablePane;
 
@@ -60,11 +64,11 @@ public class ServerScreenController {
      */
     @FXML
     void startServerClicked(ActionEvent event) {
+    	serverDisconnected();
+    	dataBaseDisconnected();
     	if(_startBtn.getText().equals("Start")) {
-    		_startBtn.setText("Exit");
-    		clientsConnectedObservableList = FXCollections.observableArrayList();
-			clientsConnectedList.setItems(clientsConnectedObservableList);
-    		ServerMain.runServer();
+    		if(ServerMain.runServer()==true)
+    			_startBtn.setText("Exit");
     	}
     	else {
     		ServerMain.stopServer();
@@ -73,8 +77,14 @@ public class ServerScreenController {
     public void serverConnected() {
     	_serverLedIndicator.setFill(Paint.valueOf("GREEN"));
     }
+    private void serverDisconnected() {
+    	_serverLedIndicator.setFill(Paint.valueOf("RED"));
+    }
     public void dataBaseConnected() {
     	_dbLedIndicator.setFill(Paint.valueOf("GREEN"));
+    }
+    private void dataBaseDisconnected() {
+    	_dbLedIndicator.setFill(Paint.valueOf("RED"));
     }
 	public void connectClient(ConnectionToClient client) {
 		Platform.runLater(new Runnable() {
@@ -94,6 +104,12 @@ public class ServerScreenController {
 			}
 		});
 
+	}
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		clientsConnectedObservableList = FXCollections.observableArrayList();
+		clientsConnectedList.setItems(clientsConnectedObservableList);
+		
 	}
 
 }

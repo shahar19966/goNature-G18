@@ -50,24 +50,12 @@ import entity.EntityConstants.RequestStatus;
 public class MySQLConnection {
 	private static Connection con;
 
-	public static void connectToDB() {
-		try {
+	public static void connectToDB() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 			System.out.println("Driver definition succeed");
-		} catch (Exception ex) {
-			/* handle the error */
-			System.out.println("Driver definition failed");
-		}
-
-		try {
 			con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/S7BzDq6Xs6?serverTimezone=IST",
 					"S7BzDq6Xs6", "puC0UgMgeM");
 			System.out.println("SQL connection succeed");
-		} catch (SQLException ex) {/* handle any errors */
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-		}
 	}
 
 	/*
