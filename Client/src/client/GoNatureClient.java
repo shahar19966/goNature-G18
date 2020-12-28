@@ -114,6 +114,9 @@ public class GoNatureClient extends AbstractClient {
 			case GET_ORDERS_BY_ID:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case DEPARTMENT_VISITATION_REPORT:
+				guiControl.setServerMsg(serverMsg);
+				break;
 			case CANCEL_ORDER:
 				guiControl.setServerMsg(serverMsg);
 				break;

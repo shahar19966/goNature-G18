@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane prefHeight="893.0" prefWidth="707.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DepartmentManagerVisitionReportController">
+   <content>
+      <VBox alignment="TOP_CENTER" prefHeight="1634.0" prefWidth="689.0" spacing="30.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="500.0" spacing="40.0">
+               <children>
+                  <ImageView fitHeight="75.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="39.0" prefWidth="306.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 20;" text="Visitation Report" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="23.0" prefWidth="500.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 15;" text="Month:" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+                  <Label fx:id="month" alignment="CENTER" prefHeight="26.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 15;" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="500.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 15;" text="park  name:" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+                  <Label fx:id="park1" alignment="CENTER" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 15;" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+               </children>
+            </HBox>
+            <BarChart fx:id="barPark1" prefHeight="400.0" prefWidth="620.0">
+               <xAxis>
+                  <CategoryAxis label="Arrival hours" prefHeight="58.0" prefWidth="414.0" side="BOTTOM" fx:id="xPark1" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="yPark1" label="Average stay (hour)" side="LEFT" />
+               </yAxis>
+            </BarChart>
+            <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="500.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 15;" text="park name:" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+                  <Label fx:id="park2" alignment="CENTER" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 15;" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+               </children>
+            </HBox>
+            <BarChart fx:id="barPark2">
+               <xAxis>
+                  <CategoryAxis label="Arrival hours" prefHeight="58.0" prefWidth="776.0" side="BOTTOM" fx:id="xPark2" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="yPark2" label="Average stay (hour)" side="LEFT" />
+               </yAxis>
+            </BarChart>
+            <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 15;" text="park name:" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+                  <Label fx:id="park3" alignment="CENTER" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 15;" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+               </children>
+            </HBox>
+            <BarChart fx:id="barPark3" title="Average stay (hour)">
+               <xAxis>
+                  <CategoryAxis label="Arrival hours" prefHeight="58.0" side="BOTTOM" fx:id="xPark3" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="yPark3" label="Average stay" side="LEFT" />
+               </yAxis>
+            </BarChart>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </content>
+</ScrollPane>
