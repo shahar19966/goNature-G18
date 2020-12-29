@@ -11,6 +11,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -52,12 +53,13 @@ import entity.EntityConstants.RequestStatus;
 public class MySQLConnection {
 	private static Connection con;
 
-	public static void connectToDB() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-			System.out.println("Driver definition succeed");
-			con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/S7BzDq6Xs6?serverTimezone=IST",
-					"S7BzDq6Xs6", "puC0UgMgeM");
-			System.out.println("SQL connection succeed");
+	public static void connectToDB()
+			throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+		System.out.println("Driver definition succeed");
+		con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/S7BzDq6Xs6?serverTimezone=IST",
+				"S7BzDq6Xs6", "puC0UgMgeM");
+		System.out.println("SQL connection succeed");
 	}
 
 	/*
@@ -162,15 +164,14 @@ public class MySQLConnection {
 	}
 
 	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
-		Map<Integer, VisitorReport> reportVisitorMap =  new LinkedHashMap<Integer, VisitorReport>();
+		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 
 		PreparedStatement GetIncomeReport;
 		GetIncomeReport = con.prepareStatement(
 				"SELECT orders.type,sum(finishedOrders.visitDuration)/sum(finishedOrders.actualNumOfVisitors ),finishedOrders.actualTimeOfArrival "
-				+ "FROM orders"
-				+ " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
-				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) and orders.parkName_fk=?"
-				+ " GROUP by orders.type ,finishedOrders.actualTimeOfArrival");
+						+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) and orders.parkName_fk=?"
+						+ " GROUP by orders.type ,finishedOrders.actualTimeOfArrival");
 		GetIncomeReport.setString(1, namePark);
 		ResultSet rs = GetIncomeReport.executeQuery();
 		for (int i = EntityConstants.PARK_OPEN; i <= EntityConstants.PARK_CLOSED; i++) {
@@ -182,8 +183,8 @@ public class MySQLConnection {
 		}
 
 		do {
-			String temp=rs.getString(3);
-			temp=temp.substring(0, 2);
+			String temp = rs.getString(3);
+			temp = temp.substring(0, 2);
 			if (rs.getString(1).equals("GUIDE"))
 				reportVisitorMap.get(Integer.parseInt(temp)).setAvgGuid(Double.parseDouble(rs.getString(2)));
 			if (rs.getString(1).equals("SUBSCRIBER"))
@@ -288,19 +289,35 @@ public class MySQLConnection {
 		Map<Integer, Integer> parkCapacity = new LinkedHashMap<Integer, Integer>();
 		String query = "SELECT timeOfOrder,SUM(numOfVisitors) FROM orders WHERE (status='ACTIVE' OR status='PENDING_APPROVAL_FROM_WAITING_LIST'"
 				+ " OR status='PENDING_FINAL_APPROVAL' OR status='APPROVED') AND orders.dateOfOrder=?"
-				+ " AND timeOfOrder>=? AND timeOfOrder <=? GROUP BY timeOfOrder;";
+				+ " AND timeOfOrder>=? AND timeOfOrder <=? AND parkName_fk=? GROUP BY timeOfOrder;";
 		PreparedStatement validateDatePrepStmt = con.prepareStatement(query);
 		validateDatePrepStmt.setString(1, date);
 		validateDatePrepStmt.setString(2, startTime);
 		validateDatePrepStmt.setString(3, finishTime);
+		validateDatePrepStmt.setString(4, park.getParkName());
 		ResultSet rs = validateDatePrepStmt.executeQuery();
 		Map<Integer, Integer> timeOfOrderForHour = new HashMap<Integer, Integer>();
 		while (rs.next()) {
 			timeOfOrderForHour.put(Integer.parseInt(rs.getString(1).split(":")[0]), Integer.parseInt(rs.getString(2)));
 		}
+		query = "SELECT actualTimeOfArrival,SUM(actualNumOfVisitors) FROM finishedOrders WHERE orderNum_fk IN (SELECT orderNum FROM orders WHERE orders.dateOfOrder=? AND parkName_fk=?) AND actualTimeOfLeave IS NOT NULL GROUP BY actualTimeOfArrival";
+		PreparedStatement validateDateInParkPrepStmt = con.prepareStatement(query);
+		validateDateInParkPrepStmt.setString(1, date);
+		validateDateInParkPrepStmt.setString(2, park.getParkName());
+		rs = validateDateInParkPrepStmt.executeQuery();
+		while (rs.next()) {
+			if (timeOfOrderForHour.containsKey(Integer.parseInt(rs.getString(1).split(":")[0]))) {
+				int newAmount = timeOfOrderForHour.get(Integer.parseInt(rs.getString(1).split(":")[0]))
+						+ Integer.parseInt(rs.getString(2));
+				timeOfOrderForHour.replace(Integer.parseInt(rs.getString(1).split(":")[0]), newAmount);
+			} else
+
+				timeOfOrderForHour.put(Integer.parseInt(rs.getString(1).split(":")[0]),
+						Integer.parseInt(rs.getString(2)));
+		}
 		for (int i = Integer.parseInt(startTime.split(":")[0]); i <= Integer.parseInt(finishTime.split(":")[0]); i++) {
 			int sum = 0;
-			for (int j = park.getParkVisitDuration()-1; j >= 0; j--) {
+			for (int j = park.getParkVisitDuration() - 1; j >= 0; j--) {
 				if (timeOfOrderForHour.containsKey(i - j))
 					sum += timeOfOrderForHour.get(i - j);
 			}
@@ -413,16 +430,18 @@ public class MySQLConnection {
 		parameterPreparedStatement.executeUpdate();
 		return parameterUpdate;
 	}
-	public static List<ParameterUpdate> getParameterRequests() throws SQLException {//liron
-		List<ParameterUpdate> parametersUpdateRequestList= new ArrayList<>();
+
+	public static List<ParameterUpdate> getParameterRequests() throws SQLException {// liron
+		List<ParameterUpdate> parametersUpdateRequestList = new ArrayList<>();
 		String query = "Select * From parameterUpdate ;";
 		PreparedStatement parametersRequests = con.prepareStatement(query);
 		ResultSet rs = parametersRequests.executeQuery();
 		while (rs.next()) {
-			ParameterUpdate tmpParameter = new ParameterUpdate(ParkParameter.valueOf(rs.getString(1)), rs.getInt(2), rs.getString(3));
+			ParameterUpdate tmpParameter = new ParameterUpdate(ParkParameter.valueOf(rs.getString(1)), rs.getInt(2),
+					rs.getString(3));
 			parametersUpdateRequestList.add(tmpParameter);
 		}
-				return parametersUpdateRequestList;
+		return parametersUpdateRequestList;
 	}
 
 	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
@@ -536,7 +555,9 @@ public class MySQLConnection {
 		getOrdersForId.setString(1, id);
 		ResultSet rs = getOrdersForId.executeQuery();
 		while (rs.next()) {
-			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8), rs.getString(9), rs.getInt(10), rs.getString(11), rs.getString(12));
+			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+					OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8),
+					rs.getString(9), rs.getInt(10), rs.getString(11), rs.getString(12));
 			orders.add(tmpOrder);
 		}
 		return orders;
@@ -559,6 +580,7 @@ public class MySQLConnection {
 		approveOrder.executeUpdate();
 		return true;
 	}
+
 	public static Order activateOrderFromWatingList(Order order) {
 		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
 		// TODO: IF Order Time and date is less than 2 hours then change it to WATING
@@ -566,54 +588,55 @@ public class MySQLConnection {
 		return null;
 	}
 
-
 	public static List<ParkDiscount> getDiscountRequests(String employeeId) throws SQLException {
-		List<ParkDiscount> parkDiscountRequestList= new ArrayList<>();
+		List<ParkDiscount> parkDiscountRequestList = new ArrayList<>();
 		String query = "Select * From discounts where employeeId=? ;";
 		PreparedStatement discountsRequestsForId = con.prepareStatement(query);
 		discountsRequestsForId.setString(1, employeeId);
 		ResultSet rs = discountsRequestsForId.executeQuery();
 		while (rs.next()) {
-			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
-			parkDiscountRequestList.add(tmp);
-		}
-				return parkDiscountRequestList;
-	}
-	public static List<ParkDiscount> getDepManagerDiscountRequests() throws SQLException {
-		List<ParkDiscount> parkDiscountRequestList= new ArrayList<>();
-		String query= "Select * from discounts;";
-		PreparedStatement discountRequests=con.prepareStatement(query);
-		ResultSet rs = discountRequests.executeQuery();
-		while(rs.next())
-		{
-			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4),
+					RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
 			parkDiscountRequestList.add(tmp);
 		}
 		return parkDiscountRequestList;
 	}
 
-
+	public static List<ParkDiscount> getDepManagerDiscountRequests() throws SQLException {
+		List<ParkDiscount> parkDiscountRequestList = new ArrayList<>();
+		String query = "Select * from discounts;";
+		PreparedStatement discountRequests = con.prepareStatement(query);
+		ResultSet rs = discountRequests.executeQuery();
+		while (rs.next()) {
+			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4),
+					RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			parkDiscountRequestList.add(tmp);
+		}
+		return parkDiscountRequestList;
+	}
 
 	public static Integer validateOrderAndReturnPrice(String[] idVisitorsAndParkName) throws SQLException {
-		Order orderToValidate=getCurrentOrderByIDAndParkName(idVisitorsAndParkName[0],idVisitorsAndParkName[2]);
-		if(orderToValidate==null)
+		Order orderToValidate = getCurrentOrderByIDAndParkName(idVisitorsAndParkName[0], idVisitorsAndParkName[2]);
+		if (orderToValidate == null)
 			return null;
-		if(!updateOrderToDone(orderToValidate))
+		if (!updateOrderToDone(orderToValidate))
 			throw new SQLException("FAILED TO UPDATE ORDER TO DONE");
-		int actualPrice=(orderToValidate.getPrice()/orderToValidate.getNumOfVisitors())*Integer.parseInt(idVisitorsAndParkName[1]);
+		int actualPrice = (orderToValidate.getPrice() / orderToValidate.getNumOfVisitors())
+				* Integer.parseInt(idVisitorsAndParkName[1]);
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:00:00");
-		String timeNow=formatter.format(new Date());
-		if(!insertFinishedOrder(orderToValidate.getOrderNum(),idVisitorsAndParkName[1],
-				timeNow,String.valueOf(actualPrice)))
+		String timeNow = formatter.format(new Date());
+		if (!insertFinishedOrder(orderToValidate.getOrderNum(), idVisitorsAndParkName[1], timeNow,
+				String.valueOf(actualPrice)))
 			throw new SQLException("FAILED TO INSERT FINISHED ORDER");
 		return new Integer(actualPrice);
-				
+
 	}
-	private static Order getCurrentOrderByIDAndParkName(String id,String parkName) throws SQLException {
-		Order order=null;
-		String date=LocalDate.now().toString();
-		String earliestTime=LocalTime.now().minusMinutes(5).toString();
-		String latestTime=LocalTime.now().plusMinutes(30).toString();
+
+	private static Order getCurrentOrderByIDAndParkName(String id, String parkName) throws SQLException {
+		Order order = null;
+		String date = LocalDate.now().toString();
+		String earliestTime = LocalTime.now().minusMinutes(5).toString();
+		String latestTime = LocalTime.now().plusMinutes(30).toString();
 		String query = "Select * From orders where id_fk=? AND status='APPROVED' AND dateOfOrder=? AND timeOfOrder>=? AND timeOfOrder<=? AND parkName_fk=? ;";
 		PreparedStatement getOrder = con.prepareStatement(query);
 		getOrder.setString(1, id);
@@ -622,13 +645,13 @@ public class MySQLConnection {
 		getOrder.setString(4, latestTime);
 		getOrder.setString(5, parkName);
 		ResultSet rs = getOrder.executeQuery();
-		if(rs.next())
-			 order = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-					 rs.getInt(5), OrderStatus.valueOf(rs.getString(6)),
-					 OrderType.valueOf(rs.getString(7)), rs.getString(8), 
-					 rs.getString(9), rs.getInt(10), rs.getString(11),rs.getString(12));
+		if (rs.next())
+			order = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+					OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8),
+					rs.getString(9), rs.getInt(10), rs.getString(11), rs.getString(12));
 		return order;
 	}
+
 	private static boolean updateOrderToDone(Order order) {
 		try {
 			String query = "Update orders SET status='DONE' WHERE orderNum=?";
@@ -640,13 +663,15 @@ public class MySQLConnection {
 			return false;
 		}
 	}
-	private static boolean insertFinishedOrder(String orderNum,String numOfVisitors,String timeOfArrival,String price) {
+
+	private static boolean insertFinishedOrder(String orderNum, String numOfVisitors, String timeOfArrival,
+			String price) {
 		try {
 			String query = "INSERT INTO finishedOrders (orderNum_fk,actualNumOfVisitors,actualTimeOfArrival,actualPrice) VALUES (?,?,?,?);";
 			PreparedStatement insertFinishedOrder = con.prepareStatement(query);
 			insertFinishedOrder.setString(1, orderNum);
-			insertFinishedOrder.setString(2,numOfVisitors);
-			insertFinishedOrder.setString(3,timeOfArrival );
+			insertFinishedOrder.setString(2, numOfVisitors);
+			insertFinishedOrder.setString(3, timeOfArrival);
 			insertFinishedOrder.setString(4, price);
 			insertFinishedOrder.executeUpdate();
 			return true;
@@ -654,10 +679,12 @@ public class MySQLConnection {
 			return false;
 		}
 	}
-	public static void main(String[] args) throws ParseException {
-		Date dateNow=new Date();
+
+	public static void main(String[] args) throws ParseException, InstantiationException, IllegalAccessException,
+			ClassNotFoundException, SQLException {
+		Date dateNow = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:00:00");
-		String timeNow=formatter.format(new Date());
+		String timeNow = formatter.format(new Date());
 		System.out.println(timeNow);
 		String time1 = "16:00:00";
 		String time2 = "19:00:00";
@@ -665,98 +692,98 @@ public class MySQLConnection {
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		Date date1 = format.parse(time1);
 		Date date2 = format.parse(time2);
-		long difference = date2.getTime() - date1.getTime(); 
+		long difference = date2.getTime() - date1.getTime();
+		connectToDB();
+		expiredApprovedOrders();
+
 	}
 
 	public static Boolean validateOrderAndRegisterExit(String[] idAndParkName) {
 		try {
-			String orderNum,timeOfArrival;
-			String date=LocalDate.now().toString();
+			String orderNum, timeOfArrival;
+			String date = LocalDate.now().toString();
 			String query = "SELECT finishedOrders.orderNum_fk,finishedOrders.actualTimeOfArrival from finishedOrders join orders on (orders.orderNum=finishedOrders.orderNum_fk) where orders.id_fk=? and orders.parkName_fk=? and orders.dateOfOrder=? and (finishedOrders.actualTimeOfLeave is null);";
 			PreparedStatement getOrder = con.prepareStatement(query);
 			getOrder.setString(1, idAndParkName[0]);
-			getOrder.setString(2,idAndParkName[1]);
-			getOrder.setString(3,date );
+			getOrder.setString(2, idAndParkName[1]);
+			getOrder.setString(3, date);
 			ResultSet rs = getOrder.executeQuery();
-			if(rs.next()) {
-				orderNum=rs.getString(1);
-				timeOfArrival=rs.getString(2);
-			}
-			else
+			if (rs.next()) {
+				orderNum = rs.getString(1);
+				timeOfArrival = rs.getString(2);
+			} else
 				return null;
-			query="UPDATE finishedOrders set actualTimeOfLeave=? , visitDuration=? where orderNum_fk=?;";
+			query = "UPDATE finishedOrders set actualTimeOfLeave=? , visitDuration=? where orderNum_fk=?;";
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-			String timeNow=format.format(new Date());
+			String timeNow = format.format(new Date());
 			Date date1 = format.parse(timeOfArrival);
 			Date date2 = format.parse(timeNow);
-			long difference = (date2.getTime() - date1.getTime())/60000; //in minutes
-			String visitDuration=String.valueOf(difference);
+			long difference = (date2.getTime() - date1.getTime()) / 60000; // in minutes
+			String visitDuration = String.valueOf(difference);
 			PreparedStatement updateFinishedOrder = con.prepareStatement(query);
 			updateFinishedOrder.setString(1, timeNow);
-			updateFinishedOrder.setString(2,visitDuration);
-			updateFinishedOrder.setString(3,orderNum );
+			updateFinishedOrder.setString(2, visitDuration);
+			updateFinishedOrder.setString(3, orderNum);
 			updateFinishedOrder.executeUpdate();
 			return new Boolean(true);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
-		public static boolean approveParameterUpdate(ParameterUpdate parameterToApprove) throws SQLException
-		{
-			String query1 = "DELETE FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;";
-			String query2 = "UPDATE park SET maxVisitors=? WHERE parkName=?;";
-			String query3 = "UPDATE park SET diffFromMax=? WHERE parkName=?;";
-			String query4 = "UPDATE park SET visitDur=? WHERE parkName=?;";
 
-			
-			PreparedStatement deleteParameter = con.prepareStatement(query1);
-			
-			deleteParameter.setString(1, parameterToApprove.getParameter());
-			deleteParameter.setInt(2, parameterToApprove.getNewValue());
-			deleteParameter.setString(3, parameterToApprove.getParkName());
-			PreparedStatement updateParameter;
-			if(parameterToApprove.getParameter().equals("CAPACITY"))
-				 updateParameter = con.prepareStatement(query2);
-			else {
-			if(parameterToApprove.getParameter().equals("DIFFERENCE"))
+	public static boolean approveParameterUpdate(ParameterUpdate parameterToApprove) throws SQLException {
+		String query1 = "DELETE FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;";
+		String query2 = "UPDATE park SET maxVisitors=? WHERE parkName=?;";
+		String query3 = "UPDATE park SET diffFromMax=? WHERE parkName=?;";
+		String query4 = "UPDATE park SET visitDur=? WHERE parkName=?;";
+
+		PreparedStatement deleteParameter = con.prepareStatement(query1);
+
+		deleteParameter.setString(1, parameterToApprove.getParameter());
+		deleteParameter.setInt(2, parameterToApprove.getNewValue());
+		deleteParameter.setString(3, parameterToApprove.getParkName());
+		PreparedStatement updateParameter;
+		if (parameterToApprove.getParameter().equals("CAPACITY"))
+			updateParameter = con.prepareStatement(query2);
+		else {
+			if (parameterToApprove.getParameter().equals("DIFFERENCE"))
 				updateParameter = con.prepareStatement(query3);
-			
+
 			else
 				updateParameter = con.prepareStatement(query4);
-			}
-			updateParameter.setInt(1, parameterToApprove.getNewValue());
-			updateParameter.setString(2, parameterToApprove.getParkName());
-			updateParameter.executeUpdate();
-			deleteParameter.executeUpdate();
-			return true;
 		}
-		
-	
-public static boolean declineParameterUpdate(ParameterUpdate parameterToDecline) throws SQLException
-{
-	String query1 = "DELETE FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;";
-	PreparedStatement deleteParameter = con.prepareStatement(query1);
-	
-	deleteParameter.setString(1, parameterToDecline.getParameter());
-	deleteParameter.setInt(2, parameterToDecline.getNewValue());
-	deleteParameter.setString(3, parameterToDecline.getParkName());
-	deleteParameter.executeUpdate();
+		updateParameter.setInt(1, parameterToApprove.getNewValue());
+		updateParameter.setString(2, parameterToApprove.getParkName());
+		updateParameter.executeUpdate();
+		deleteParameter.executeUpdate();
+		return true;
+	}
 
-	return true;
-}
-public static boolean approveDiscountUpdate(ParkDiscount discountToApprove) throws SQLException
-{
-	String query1 ="UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
-	PreparedStatement approveDiscount = con.prepareStatement(query1);
-	approveDiscount.setString(1, entity.EntityConstants.RequestStatus.APPROVED.name());
-	approveDiscount.setString(2, discountToApprove.getParkName());
-	approveDiscount.setString(3, discountToApprove.getStartDate());
-	approveDiscount.setString(4, discountToApprove.getFinishDate());
-	approveDiscount.setInt(5, discountToApprove.getDiscountAmount());
-	approveDiscount.executeUpdate();
+	public static boolean declineParameterUpdate(ParameterUpdate parameterToDecline) throws SQLException {
+		String query1 = "DELETE FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;";
+		PreparedStatement deleteParameter = con.prepareStatement(query1);
 
-	return true;
-}
+		deleteParameter.setString(1, parameterToDecline.getParameter());
+		deleteParameter.setInt(2, parameterToDecline.getNewValue());
+		deleteParameter.setString(3, parameterToDecline.getParkName());
+		deleteParameter.executeUpdate();
+
+		return true;
+	}
+
+	public static boolean approveDiscountUpdate(ParkDiscount discountToApprove) throws SQLException {
+		String query1 = "UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
+		PreparedStatement approveDiscount = con.prepareStatement(query1);
+		approveDiscount.setString(1, entity.EntityConstants.RequestStatus.APPROVED.name());
+		approveDiscount.setString(2, discountToApprove.getParkName());
+		approveDiscount.setString(3, discountToApprove.getStartDate());
+		approveDiscount.setString(4, discountToApprove.getFinishDate());
+		approveDiscount.setInt(5, discountToApprove.getDiscountAmount());
+		approveDiscount.executeUpdate();
+
+		return true;
+	}
+
 	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
 		// TODO!!!!!!!!! maybe to check in the visitor table for existing id!!!!!
 		PreparedStatement registerPreparedStatement;
@@ -793,26 +820,116 @@ public static boolean approveDiscountUpdate(ParkDiscount discountToApprove) thro
 
 		return new ServerMessage(ServerMessageType.REGISTRATION_SUCCESSED, subscriber);
 
-
 	}
 
+	public static boolean declineDiscountUpdate(ParkDiscount discountToDecline) throws SQLException {
+		String query1 = "UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
+		PreparedStatement declineDiscount = con.prepareStatement(query1);
+		declineDiscount.setString(1, entity.EntityConstants.RequestStatus.DECLINED.name());
+		declineDiscount.setString(2, discountToDecline.getParkName());
+		declineDiscount.setString(3, discountToDecline.getStartDate());
+		declineDiscount.setString(4, discountToDecline.getFinishDate());
+		declineDiscount.setInt(5, discountToDecline.getDiscountAmount());
+		declineDiscount.executeUpdate();
 
+		return true;
+	}
 
-public static boolean declineDiscountUpdate(ParkDiscount discountToDecline) throws SQLException
-{
-	String query1 ="UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
-	PreparedStatement declineDiscount = con.prepareStatement(query1);
-	declineDiscount.setString(1, entity.EntityConstants.RequestStatus.DECLINED.name());
-	declineDiscount.setString(2, discountToDecline.getParkName());
-	declineDiscount.setString(3, discountToDecline.getStartDate());
-	declineDiscount.setString(4, discountToDecline.getFinishDate());
-	declineDiscount.setInt(5, discountToDecline.getDiscountAmount());
-	declineDiscount.executeUpdate();
+	public static List<String[]> sendSmsToActiveOrders() throws SQLException {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime tommorow = now.plusDays(1);
+		String tommorowDateString = tommorow.getYear() + "-";
+		String tommorowTimeString = tommorow.getHour() + ":";
+		if (tommorow.getMonthValue() < 10)
+			tommorowDateString += "0";
+		tommorowDateString += tommorow.getMonthValue() + "-";
+		if (tommorow.getDayOfMonth() < 10)
+			tommorowDateString += "0";
+		tommorowDateString += tommorow.getDayOfMonth();
+		if (tommorow.getHour() < 10)
+			tommorowTimeString = "0" + tommorowTimeString;
+		if (tommorow.getMinute() < 10)
+			tommorowTimeString += "0";
+		tommorowTimeString += tommorow.getMinute() + ":";
+		if (tommorow.getSecond() < 10)
+			tommorowTimeString += "0";
+		tommorowTimeString += tommorow.getSecond();
+		System.out.println(tommorowTimeString);
+		List<String[]> idAndOrders = new ArrayList<>();
+		String query = "SELECT orderNum,id_fk FROM orders WHERE dateOfOrder=? AND HOUR(timeOfOrder)=? AND status='ACTIVE';";
+		PreparedStatement getOrdersToSendSms = con.prepareStatement(query);
+		getOrdersToSendSms.setString(1, tommorowDateString);
+		getOrdersToSendSms.setInt(2, tommorow.getHour());
+		ResultSet rs = getOrdersToSendSms.executeQuery();
+		while (rs.next()) {
+			String[] tmp = { rs.getString(2), rs.getString(1) };
+			idAndOrders.add(tmp);
+		}
+		if (idAndOrders.size() > 0) {
+			String queryUpdateStatus = "Update orders SET status='PENDING_FINAL_APPROVAL' WHERE dateOfOrder=? AND HOUR(timeOfOrder)=? AND status='ACTIVE'";
+			PreparedStatement updateStatus = con.prepareStatement(queryUpdateStatus);
+			updateStatus.setString(1, tommorowDateString);
+			updateStatus.setInt(2, tommorow.getHour());
+			updateStatus.executeUpdate();
+			PreparedStatement sendSms;
+			String sendSmsQuery = "INSERT INTO smsSend (orderNum_fk,smsRecviedDate,smsRecviedTime) VALUES ";
+			for (int i = 0; i < idAndOrders.size(); i++) {
+				System.out.println(idAndOrders.get(i)[1]);
+				sendSmsQuery += "(" + idAndOrders.get(i)[1] + ",DATE(NOW()),'" + tommorowTimeString + "')";
+				if (i != idAndOrders.size() - 1) {
+					sendSmsQuery += ",";
+				}
+			}
+			System.out.println(sendSmsQuery);
+			sendSms = con.prepareStatement(sendSmsQuery);
+			sendSms.executeUpdate();
+		}
+		return idAndOrders;
+	}
 
-	return true;
+	public static List<String[]> sendSmsToCancelOrders() throws SQLException {
+		List<String[]> idAndOrders = new ArrayList<>();
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+		String timeNow = formatter.format(new Date());
+		String query = "SELECT orderNum,id_fk FROM orders JOIN smsSend on orders.orderNum=smsSend.orderNum_fk WHERE "
+				+ "smsSend.smsRecviedDate=DATE(NOW()) AND ((orders.status='PENDING_FINAL_APPROVAL' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=2) OR ((orders.status='PENDING_APPROVAL_FROM_WAITING_LIST' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=1)))";
+		PreparedStatement getOrdersToSendSms = con.prepareStatement(query);
+		getOrdersToSendSms.setString(1, timeNow);
+		getOrdersToSendSms.setString(2, timeNow);
+		ResultSet rs = getOrdersToSendSms.executeQuery();
+		while (rs.next()) {
+			String[] tmp = { rs.getString(2), rs.getString(1) };
+			idAndOrders.add(tmp);
+		}
+		if (idAndOrders.size() > 0) {
+			String queryCancelOrders = "UPDATE orders SET status='CANCELLED' WHERE ";
+			String queryDelSms = "DELETE FROM smsSend WHERE ";
+			for (int i = 0; i < idAndOrders.size(); i++) {
+				queryCancelOrders += "orderNum=" + idAndOrders.get(i)[1];
+				queryDelSms += "orderNum_fk=" + idAndOrders.get(i)[1];
+				if (i != idAndOrders.size() - 1) {
+					queryCancelOrders += " OR ";
+					queryDelSms += " OR ";
+				}
+			}
+			con.prepareStatement(queryCancelOrders).executeUpdate();
+			con.prepareStatement(queryDelSms).executeUpdate();
+		}
+		return idAndOrders;
+	}
+
+	public static void expiredApprovedOrders() throws SQLException {
+		String queryUpdateStatus = "Update orders SET status='EXPIRED' WHERE ((dateOfOrder=? AND HOUR(TIMEDIFF(?,timeOfOrder))>=1 AND ?>timeOfOrder) OR dateOfOrder<?) AND status='APPROVED'";
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
+		Date now = new Date();
+		String timeNow = timeFormat.format(now);
+		String dateNow = dateFormat.format(now);
+		PreparedStatement expirePreparedStatement = con.prepareStatement(queryUpdateStatus);
+		expirePreparedStatement.setString(1, dateNow);
+		expirePreparedStatement.setString(2, timeNow);
+		expirePreparedStatement.setString(3, timeNow);
+		expirePreparedStatement.setString(4, dateNow);
+		expirePreparedStatement.executeUpdate();
+	}
 }
-}
-
-
-
-
