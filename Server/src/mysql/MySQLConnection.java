@@ -450,9 +450,6 @@ public class MySQLConnection {
 
 	public static ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest)
 			throws SQLException, ParseException {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		Date startDate = formatter.parse(newDiscountRequest.getStartDate());
-		Date finishDate = formatter.parse(newDiscountRequest.getFinishDate());
 		PreparedStatement insertDiscountRequestStatement = con.prepareStatement(
 				"INSERT INTO discounts (parkName_fk,startDate,finishDate,discountAmount,status,employeeId) VALUES (?,?,?,?,?,?);");
 		insertDiscountRequestStatement.setString(1, newDiscountRequest.getParkName());

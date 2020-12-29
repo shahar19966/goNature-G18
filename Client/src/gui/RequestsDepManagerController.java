@@ -206,6 +206,7 @@ public class RequestsDepManagerController implements Initializable {
 							if (guiControl.getServerMsg().getMessage() != null) {
 								GUIControl.popUpMessage("Discount Updated",
 										"discount updated successfully");
+								
 								//discountRequests.remove(getTableView().getItems().get(getIndex()));
 							}
 						});
