@@ -13,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -109,7 +108,6 @@ public class ServerScreenController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		clientsConnectedObservableList = FXCollections.observableArrayList();
 		clientsConnectedList.setItems(clientsConnectedObservableList);
-		
 	}
 
 }
