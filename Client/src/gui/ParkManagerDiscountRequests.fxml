@@ -2,18 +2,18 @@
 
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MyDiscountRequestsController">
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MyDiscountRequestsController">
    <children>
       <GridPane fx:id="mainPane" alignment="CENTER" stylesheets="@application.css">
          <columnConstraints>
@@ -25,11 +25,10 @@
             <RowConstraints percentHeight="15.0" valignment="CENTER" vgrow="ALWAYS" />
          </rowConstraints>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="seconderyTitle" stylesheets="@styleSheet.css" text="Discount Requests" />
+            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="seconderyTitle" stylesheets="@application.css" text="Discount Requests" />
             <TableView fx:id="discountTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
               <columns>
                 <TableColumn fx:id="discountParkNumberCol" prefWidth="75.0" text="ID" />
-                <TableColumn fx:id="parkNameCol" prefWidth="75.0" text="Park Name" />
                   <TableColumn fx:id="startDateCol" prefWidth="75.0" text="Start Date" />
                   <TableColumn fx:id="finishDateCol" prefWidth="75.0" text="Finish Date" />
                   <TableColumn fx:id="discountAmountCol" prefWidth="75.0" text="Amount(%)" />
@@ -46,7 +45,6 @@
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" />
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" />
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -62,7 +60,7 @@
                      </rowConstraints>
                      <children>
                         <Label text="Park Name" />
-                        <ComboBox fx:id="parkNameComboBox" prefWidth="150.0" GridPane.rowIndex="1" />
+                        <TextField fx:id="parkName" prefHeight="31.0" prefWidth="100.0" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <GridPane GridPane.columnIndex="1">
@@ -105,12 +103,6 @@
                      </children>
                   </GridPane>
                   <Button fx:id="addButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addFunc" text="Add" GridPane.columnIndex="4">
-                     <styleClass>
-                        <String fx:value="logInBtn" />
-                        <String fx:value="text-field-Small" />
-                     </styleClass>
-                  </Button>
-                  <Button fx:id="createButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#createDiscountRequest" text="Create" GridPane.columnIndex="5">
                      <styleClass>
                         <String fx:value="logInBtn" />
                         <String fx:value="text-field-Small" />
