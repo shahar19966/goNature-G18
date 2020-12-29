@@ -8,6 +8,8 @@ import entity.Employee;
 import entity.Order;
 import entity.ParameterUpdate;
 import entity.ParkDiscount;
+import entity.Subscriber;
+import entity.Visitor;
 import gui.GUIControl;
 import gui.GuiButton;
 import gui.ClientConstants.AlertType;
@@ -146,6 +148,40 @@ public class GoNatureClient extends AbstractClient {
 			case DECLINE_DISCOUNT:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case TO_APPROVE_EMAIL_AND_SMS:
+				String[] idAndOrderToApprove=(String[])serverMsg.getMessage();
+				if (guiControl.getUser() instanceof Subscriber) {
+					Subscriber sub=(Subscriber)guiControl.getUser();
+					if(sub.getID().equals(idAndOrderToApprove[0]))
+						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Waiting Approval","Your order is waiting for approval,please go "
+								+ "to Order Tracking and approve your order\n Order details:\n"
+								+idAndOrderToApprove[1].toString() );
+				}
+				else if(guiControl.getUser() instanceof Visitor) {
+					Visitor visitor=(Visitor)guiControl.getUser();
+					if(visitor.getId().equals(idAndOrderToApprove[0]))
+						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Waiting Approval","Your order is waiting for approval,please go "
+								+ "to Order Tracking and approve your order\n Order details:\n"
+								+idAndOrderToApprove[1].toString() );
+				}
+				return; //this message should not interfere with the client in case he's waiting for server's response
+			case CANCEL_EMAIL_AND_SMS:
+					String[] idAndOrder=(String[])serverMsg.getMessage();
+					if (guiControl.getUser() instanceof Subscriber) {
+						Subscriber sub=(Subscriber)guiControl.getUser();
+						if(sub.getID().equals(idAndOrder[0]))
+							GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Cancelled Order","You haven't approved your order in the given time space, "
+									+ "therefore it was cancelled.\n Order details:\n"
+									+idAndOrder[1] );
+					}
+					else if(guiControl.getUser() instanceof Visitor) {
+						Visitor visitor=(Visitor)guiControl.getUser();
+						if(visitor.getId().equals(idAndOrder[0]))
+							GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Cancelled Order","You haven't approved your order in the given time space, "
+									+ "therefore it was cancelled.\n Order details:\n"
+									+idAndOrder[1] );
+					}
+				return; //this message should not interfere with the client in case he's waiting for server's response
         default:
 	            guiControl.setServerMsg(serverMsg);
 				break;
