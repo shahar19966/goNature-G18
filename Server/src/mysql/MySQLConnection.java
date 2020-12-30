@@ -753,7 +753,7 @@ public class MySQLConnection {
 	public static void main(String[] args) throws ParseException, InstantiationException, IllegalAccessException,
 			ClassNotFoundException, SQLException {
 		connectToDB();
-		addToCurrentParkVisitors("1", -45);
+		sendSmsToCancelOrders();
 
 	}
 
@@ -903,87 +903,77 @@ public class MySQLConnection {
 		return true;
 	}
 
-	public static List<String[]> sendSmsToActiveOrders() throws SQLException {
+	public static List<Order> sendSmsToActiveOrders() throws SQLException {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime tommorow = now.plusDays(1);
-		String tommorowDateString = tommorow.getYear() + "-";
-		String tommorowTimeString = tommorow.getHour() + ":";
-		if (tommorow.getMonthValue() < 10)
-			tommorowDateString += "0";
-		tommorowDateString += tommorow.getMonthValue() + "-";
-		if (tommorow.getDayOfMonth() < 10)
-			tommorowDateString += "0";
-		tommorowDateString += tommorow.getDayOfMonth();
-		if (tommorow.getHour() < 10)
-			tommorowTimeString = "0" + tommorowTimeString;
-		if (tommorow.getMinute() < 10)
-			tommorowTimeString += "0";
-		tommorowTimeString += tommorow.getMinute() + ":";
-		if (tommorow.getSecond() < 10)
-			tommorowTimeString += "0";
-		tommorowTimeString += tommorow.getSecond();
-		System.out.println(tommorowTimeString);
-		List<String[]> idAndOrders = new ArrayList<>();
-		String query = "SELECT orderNum,id_fk FROM orders WHERE dateOfOrder=? AND HOUR(timeOfOrder)=? AND status='ACTIVE';";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String nowString = now.format(formatter);
+		String tommorowString = now.format(formatter);
+		List<Order> orders = new ArrayList<>();
+		String query = "SELECT orders.* FROM orders WHERE dateOfOrder=? AND HOUR(timeOfOrder)=? AND status='ACTIVE';";
 		PreparedStatement getOrdersToSendSms = con.prepareStatement(query);
-		getOrdersToSendSms.setString(1, tommorowDateString);
+		getOrdersToSendSms.setString(1, tommorowString.split(" ")[0]);
 		getOrdersToSendSms.setInt(2, tommorow.getHour());
 		ResultSet rs = getOrdersToSendSms.executeQuery();
 		while (rs.next()) {
-			String[] tmp = { rs.getString(2), rs.getString(1) };
-			idAndOrders.add(tmp);
+			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+					OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8),
+					rs.getString(9), rs.getInt(10), rs.getString(11), rs.getString(12));
+			orders.add(tmpOrder);
 		}
-		if (idAndOrders.size() > 0) {
+		if (orders.size() > 0) {
 			String queryUpdateStatus = "Update orders SET status='PENDING_FINAL_APPROVAL' WHERE dateOfOrder=? AND HOUR(timeOfOrder)=? AND status='ACTIVE'";
 			PreparedStatement updateStatus = con.prepareStatement(queryUpdateStatus);
-			updateStatus.setString(1, tommorowDateString);
+			updateStatus.setString(1, tommorowString.split(" ")[0]);
 			updateStatus.setInt(2, tommorow.getHour());
 			updateStatus.executeUpdate();
 			PreparedStatement sendSms;
 			String sendSmsQuery = "INSERT INTO smsSend (orderNum_fk,smsRecviedDate,smsRecviedTime) VALUES ";
-			for (int i = 0; i < idAndOrders.size(); i++) {
-				System.out.println(idAndOrders.get(i)[1]);
-				sendSmsQuery += "(" + idAndOrders.get(i)[1] + ",DATE(NOW()),'" + tommorowTimeString + "')";
-				if (i != idAndOrders.size() - 1) {
+			for (int i = 0; i < orders.size(); i++) {
+				sendSmsQuery += "(" + orders.get(i).getOrderNum() + ",'"+nowString.split(" ")[0]+"','" + nowString.split(" ")[1] + "')";
+				if (i != orders.size() - 1) {
 					sendSmsQuery += ",";
 				}
+				System.out.println(orders.get(i).toString());
 			}
-			System.out.println(sendSmsQuery);
 			sendSms = con.prepareStatement(sendSmsQuery);
 			sendSms.executeUpdate();
 		}
-		return idAndOrders;
+		return orders;
 	}
 
-	public static List<String[]> sendSmsToCancelOrders() throws SQLException {
-		List<String[]> idAndOrders = new ArrayList<>();
+	public static List<Order> sendSmsToCancelOrders() throws SQLException {
+		List<Order> orders = new ArrayList<>();
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 		String timeNow = formatter.format(new Date());
-		String query = "SELECT orderNum,id_fk FROM orders JOIN smsSend on orders.orderNum=smsSend.orderNum_fk WHERE "
+		String query = "SELECT * FROM orders JOIN smsSend on orders.orderNum=smsSend.orderNum_fk WHERE "
 				+ "smsSend.smsRecviedDate=DATE(NOW()) AND ((orders.status='PENDING_FINAL_APPROVAL' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=2) OR ((orders.status='PENDING_APPROVAL_FROM_WAITING_LIST' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=1)))";
 		PreparedStatement getOrdersToSendSms = con.prepareStatement(query);
 		getOrdersToSendSms.setString(1, timeNow);
 		getOrdersToSendSms.setString(2, timeNow);
 		ResultSet rs = getOrdersToSendSms.executeQuery();
 		while (rs.next()) {
-			String[] tmp = { rs.getString(2), rs.getString(1) };
-			idAndOrders.add(tmp);
+			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+					OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8),
+					rs.getString(9), rs.getInt(10), rs.getString(11), rs.getString(12));
+			orders.add(tmpOrder);
 		}
-		if (idAndOrders.size() > 0) {
+		if (orders.size() > 0) {
 			String queryCancelOrders = "UPDATE orders SET status='CANCELLED' WHERE ";
 			String queryDelSms = "DELETE FROM smsSend WHERE ";
-			for (int i = 0; i < idAndOrders.size(); i++) {
-				queryCancelOrders += "orderNum=" + idAndOrders.get(i)[1];
-				queryDelSms += "orderNum_fk=" + idAndOrders.get(i)[1];
-				if (i != idAndOrders.size() - 1) {
+			for (int i = 0; i < orders.size(); i++) {
+				queryCancelOrders += "orderNum=" + orders.get(i).getOrderNum();
+				queryDelSms += "orderNum_fk=" + orders.get(i).getOrderNum();
+				if (i != orders.size() - 1) {
 					queryCancelOrders += " OR ";
 					queryDelSms += " OR ";
 				}
+				System.out.println(orders.get(i).toString());
 			}
 			con.prepareStatement(queryCancelOrders).executeUpdate();
 			con.prepareStatement(queryDelSms).executeUpdate();
 		}
-		return idAndOrders;
+		return orders;
 	}
 
 	public static void expiredApprovedOrders() throws SQLException {
