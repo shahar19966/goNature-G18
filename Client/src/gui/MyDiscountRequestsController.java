@@ -30,6 +30,8 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import message.ClientMessage;
 import message.ClientMessageType;
+import message.ServerMessage;
+import message.ServerMessageType;
 
 	public class MyDiscountRequestsController implements Initializable {
 		private ObservableList<ParkDiscount> discountRequestsObservableList = FXCollections.observableArrayList();
@@ -82,8 +84,13 @@ import message.ClientMessageType;
 	    			(parkName.getText(),discountStartDatePicker.getValue().toString(),
 	    					discountFinishDatePicker.getValue().toString(), discountAmountSpinner.getValue(),
 	    					EntityConstants.RequestStatus.WAITING, ((Employee) guiControl.getUser()).getEmployeeNumber());
-	    	guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_REQUEST, newDiscountRequest));
+	    	guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_VALIDATION, newDiscountRequest));
+	    	if( guiControl.getServerMsg().getType()== ServerMessageType.DISCOUNT_IS_ALREADY_EXIST)
+	    		guiControl.popUpMessage("Discount Is Exist","There is already existing discount\nBy you with the same amount and dates\nPlease try different values" );
+	    	else if( guiControl.getServerMsg().getType()== ServerMessageType.CAN_INSERT_NEW_DISCOUNT)
+	    		guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_REQUEST, newDiscountRequest));
 	    }
+	    
 	    
 
 	    
@@ -122,6 +129,7 @@ import message.ClientMessageType;
 			List<ParkDiscount> discountRequestsarr = (List<ParkDiscount>) guiControl.getServerMsg().getMessage();
 			for( ParkDiscount pd:discountRequestsarr)	
 			{
+
 				discountRequestsObservableList.add(pd);
 			}
 			updateIdColumn();//update id column with running counter
@@ -130,6 +138,7 @@ import message.ClientMessageType;
 			discountAmountCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, Integer>("discountAmount"));
 			discountStatusCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, EntityConstants.RequestStatus>("discountStatus"));
 			discountTableView.setItems(discountRequestsObservableList);
+			
 
 		}
 
