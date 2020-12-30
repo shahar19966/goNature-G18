@@ -696,6 +696,7 @@ public class MySQLConnection {
 
 	public static List<ParkDiscount> getDiscountRequests(String employeeId) throws SQLException {
 		List<ParkDiscount> parkDiscountRequestList = new ArrayList<>();
+		LocalDate today = LocalDate.now();
 		String query = "Select * From discounts where finishDate>=? And employeeId=? ;";
 		PreparedStatement discountsRequestsForId = con.prepareStatement(query);
 		discountsRequestsForId.setString(1,today.toString() );
