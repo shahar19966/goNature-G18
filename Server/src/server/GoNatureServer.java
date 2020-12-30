@@ -109,7 +109,7 @@ public class GoNatureServer extends AbstractServer {
 				case CONNECTION:
 					break;
 				case VISITOR_REPORT:
-					returnVal = MySQLConnection.getVisitorReport();
+					returnVal = MySQLConnection.getVisitorReport((String) (clientMsg.getMessage()));
 					type = ServerMessageType.PARK_VISITATION_REPORT;
 					break;
 				case ORDER:

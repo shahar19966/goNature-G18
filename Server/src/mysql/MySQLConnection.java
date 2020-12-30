@@ -130,35 +130,41 @@ public class MySQLConnection {
 		return null;
 	}
 
-	public static Map<String, VisitorReport> getVisitorReport() throws SQLException {
-		Map<String, VisitorReport> reportVisitorMap = new HashMap<String, VisitorReport>();
-		// List<VisitorReport> reportVisitorList = new ArrayList<>();
-		Statement getReportVisitorStatement;
-		getReportVisitorStatement = con.createStatement();
-		ResultSet rs = getReportVisitorStatement.executeQuery(
-				"SELECT  orders.parkName_fk,orders.type,sum(finishedOrders.actualNumOfVisitors ) as sumvisit "
+	public static 	Map<Integer, VisitorReport>getVisitorReport(String namePark) throws SQLException {
+		PreparedStatement getVisitorReport;
+		Map<Integer, VisitorReport> reportVisitorMap =  new LinkedHashMap<Integer, VisitorReport>();
+		Calendar c=Calendar.getInstance();
+		getVisitorReport = con.prepareStatement(
+				"SELECT  orders.type ,orders.dateOfOrder ,sum(finishedOrders.actualNumOfVisitors ) "
 						+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
-						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
-						+ "GROUP by orders.type, orders.parkName_fk");
-		List<Park> parkList = getParks();
-		for (Park p : parkList)
-			reportVisitorMap.put(p.getParkName(), new VisitorReport(p.getParkName()));
+						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND orders.parkName_fk=?  "
+						+ "GROUP by orders.type, orders.dateOfOrder");
+		getVisitorReport.setString(1, namePark);
+		ResultSet rs = getVisitorReport.executeQuery();
+		int daysInMonth  =c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		
+		for(int i=1;i<=daysInMonth;i++)
+			reportVisitorMap.put(i, new VisitorReport(namePark));
+			
+
 		if (!rs.next()) {
 			return reportVisitorMap;
 		}
-		String namePark = rs.getString(1);
+
 		do {
-			if (!rs.getString(1).equals(namePark))
-				namePark = rs.getString(1);
-			if (rs.getString(2).equals("GUIDE"))
-				reportVisitorMap.get(namePark).setCountGuid(Integer.parseInt(rs.getString(3)));
-			if (rs.getString(2).equals("SUBSCRIBER"))
-				reportVisitorMap.get(namePark).setCountSubscriber(Integer.parseInt(rs.getString(3)));
-			if (rs.getString(2).equals("REGULAR"))
-				reportVisitorMap.get(namePark).setCountRegular(Integer.parseInt(rs.getString(3)));
+			String temp=rs.getString(2);
+			temp=temp.substring(8, 9);
+			if (rs.getString(1).equals("GUIDE"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setCountGuid(Integer.parseInt((rs.getString(3))));
+			if (rs.getString(1).equals("SUBSCRIBER"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setCountSubscriber(Integer.parseInt((rs.getString(3))));
+			if (rs.getString(1).equals("REGULAR"))
+				reportVisitorMap.get(Integer.parseInt(temp)).setCountRegular(Integer.parseInt((rs.getString(3))));
+				
+			
 		} while (rs.next());
 		return reportVisitorMap;
-
+		
 	}
 
 	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
@@ -199,9 +205,9 @@ public class MySQLConnection {
 		Map<String, VisitorReport> reportVisitorMap = new HashMap<String, VisitorReport>();
 		Statement getCancellationReport;
 		getCancellationReport = con.createStatement();
-		ResultSet rs = getCancellationReport.executeQuery("SELECT  orders.parkName_fk,COUNT(*) FROM orders "
-				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND "
-				+ "(orders.status='APPROVED' AND CURDATE()>=orders.dateOfOrder ) GROUP by orders.parkName_fk");
+		ResultSet rs = getCancellationReport.executeQuery("SELECT orders.parkName_fk,COUNT(*) "
+				+ "FROM orders WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND orders.status='EXPIRED' "
+				+ "GROUP by orders.parkName_fk");
 		List<Park> parkList = getParks();
 		for (Park p : parkList)
 			reportVisitorMap.put(p.getParkName(), new VisitorReport(p.getParkName()));
@@ -242,20 +248,35 @@ public class MySQLConnection {
 
 	}
 
-	public static String getIncomeReport(String namePark) throws SQLException {
+	public static Map<Integer, VisitorReport>  getIncomeReport(String namePark) throws SQLException {
 		PreparedStatement GetIncomeReport;
-		GetIncomeReport = con.prepareStatement("SELECT sum(finishedOrders.actualPrice ) " + "FROM finishedOrders "
+		Map<Integer, VisitorReport> reportVisitorMap =  new LinkedHashMap<Integer, VisitorReport>();
+		Calendar c=Calendar.getInstance();
+		GetIncomeReport = con.prepareStatement("SELECT sum(finishedOrders.actualPrice ) ,"
+				+ "orders.dateOfOrder "
+				+ "FROM finishedOrders "
 				+ "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
-				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) "
-				+ "AND orders.parkName_fk=?" + "GROUP by orders.parkName_fk");
+				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND orders.parkName_fk=? "
+				+ "GROUP by orders.parkName_fk,orders.dateOfOrder");
 		GetIncomeReport.setString(1, namePark);
 		ResultSet rs = GetIncomeReport.executeQuery();
+		int daysInMonth  =c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		
+		for(int i=1;i<=daysInMonth;i++)
+			reportVisitorMap.put(i, new VisitorReport(namePark));
+			
 
-		if (rs.next()) {
-			String amount = rs.getString(1);
-			return amount;
+		if (!rs.next()) {
+			return reportVisitorMap;
 		}
-		return "0";
+
+		do {
+			String temp=rs.getString(2);
+			temp=temp.substring(8, 9);
+				reportVisitorMap.get(Integer.parseInt(temp)).setPrice(Integer.parseInt((rs.getString(1))));
+			
+		} while (rs.next());
+		return reportVisitorMap;
 
 	}
 
