@@ -41,7 +41,7 @@ public class ParkManagerReportsController {
         	 root = FXMLLoader.load(getClass().getResource(ClientConstants.Screens.PARK_INCOME_REPORT.toString()));
             Stage stage = new Stage();
             stage.setTitle("park manager icome report");
-            stage.setScene(new Scene(root,451, 445));
+            stage.setScene(new Scene(root,696, 677));
             stage.show();
 	} catch(Exception e) {
 		e.printStackTrace();
@@ -57,7 +57,7 @@ public class ParkManagerReportsController {
         	 root = FXMLLoader.load(getClass().getResource(ClientConstants.Screens.PARK_MNG_VISIT_REPORT.toString()));
             Stage stage = new Stage();
             stage.setTitle("park manager visitation report");
-            stage.setScene(new Scene(root,688, 438));
+            stage.setScene(new Scene(root,1027, 719));
             stage.show();
 	} catch(Exception e) {
 		e.printStackTrace();

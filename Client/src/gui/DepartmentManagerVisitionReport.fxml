@@ -37,7 +37,7 @@
                   <Insets left="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="23.0" prefWidth="500.0">
+            <HBox alignment="TOP_CENTER" prefHeight="23.0" prefWidth="500.0" stylesheets="@application.css">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 15;" text="Month:" textAlignment="CENTER">
                      <font>
@@ -133,12 +133,12 @@
                   </Label>
                </children>
             </HBox>
-            <BarChart fx:id="barPark3" title="Average stay (hour)">
+            <BarChart fx:id="barPark3">
                <xAxis>
                   <CategoryAxis label="Arrival hours" prefHeight="58.0" side="BOTTOM" fx:id="xPark3" />
                </xAxis>
                <yAxis>
-                  <NumberAxis fx:id="yPark3" label="Average stay" side="LEFT" />
+                  <NumberAxis fx:id="yPark3" label="Average stay (hour)" side="LEFT" />
                </yAxis>
             </BarChart>
          </children>
