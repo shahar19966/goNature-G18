@@ -113,14 +113,20 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.PARK_VISITATION_REPORT;
 					break;
 				case ORDER:
-					returnVal = MySQLConnection.createOrder((Order) clientMsg.getMessage());
+					List<Object> orderDes = (List<Object>) clientMsg.getMessage();
+					Order order = (Order) orderDes.get(0);
+					Boolean payInAdvance = (Boolean) orderDes.get(1);
+					returnVal = MySQLConnection.createOrder(order,payInAdvance);
 					if (returnVal == null)
 						type = ServerMessageType.ORDER_FAILURE;
 					else
 						type = ServerMessageType.ORDER_SUCCESS;
 					break;
 				case WAITING_LIST:
-					returnVal = MySQLConnection.enterWaitingist((Order) clientMsg.getMessage());
+					List<Object> orderDesWaitingList = (List<Object>) clientMsg.getMessage();
+					Order orderWaitingList = (Order) orderDesWaitingList.get(0);
+					Boolean payInAdvanceWaitingList = (Boolean) orderDesWaitingList.get(1);
+					returnVal = MySQLConnection.enterWaitingist(orderWaitingList,payInAdvanceWaitingList);
 					type = ServerMessageType.WAITING_LIST;
 					break;
 				case INCOME_REPORT:
