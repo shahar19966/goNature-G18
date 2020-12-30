@@ -6,7 +6,7 @@ public class VisitorReport implements Serializable {
 
 	private String namePark;
 	private int time;
-	private int countSubscriber,countGuid,countRegular,countCancellations,countNotRealized;
+	private int countSubscriber,countGuid,countRegular,countCancellations,countNotRealized,price;
 	private double avgSubscriber,avgRegular,avgGuid;
 	
 
@@ -17,6 +17,7 @@ public class VisitorReport implements Serializable {
 		this.countSubscriber=0;
 		this.countGuid=0;
 		this.countRegular=0;
+		this.price=0;
 		this.countCancellations=0;
 		this.countNotRealized=0;
 		
@@ -40,6 +41,10 @@ public class VisitorReport implements Serializable {
 	{
 		return namePark;
 	}
+	public int getPrice()
+	{
+		return price;
+	}
 	public int getCountGuid()
 	{
 		return countGuid;
@@ -47,6 +52,10 @@ public class VisitorReport implements Serializable {
 	public void setCountGuid(int countGuid)
 	{
 		this.countGuid=countGuid;
+	}
+	public void setPrice(int price)
+	{
+		this.price=price;
 	}
 	public void setCountCancellations(int countCancellations)
 	{
@@ -113,6 +122,7 @@ public class VisitorReport implements Serializable {
 	{
 		this.avgGuid=avgGuid;
 	}
+
 	
 	
 }

@@ -3,6 +3,7 @@ package client;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.sql.SQLException;
+import java.util.List;
 
 import entity.Employee;
 import entity.Order;
@@ -149,38 +150,44 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case TO_APPROVE_EMAIL_AND_SMS:
-				String[] idAndOrderToApprove = (String[]) serverMsg.getMessage();
+				List<Order> orderToApproveList  = (List<Order>) serverMsg.getMessage();
 				if (guiControl.getUser() instanceof Subscriber) {
 					Subscriber sub = (Subscriber) guiControl.getUser();
-					if (sub.getID().equals(idAndOrderToApprove[0]))
+					for(Order order:orderToApproveList)
+						if(sub.getID().equals(order.getId()))
 						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Waiting Approval",
 								"Your order is waiting for approval,please go "
 										+ "to Order Tracking and approve your order\n Order details:\n"
-										+ idAndOrderToApprove[1].toString());
+										+ order.toString()+"Sent to email: "+order.getEmail()+"\n Sent to Phone number: "+order.getPhone());
 				} else if (guiControl.getUser() instanceof Visitor) {
 					Visitor visitor = (Visitor) guiControl.getUser();
-					if (visitor.getId().equals(idAndOrderToApprove[0]))
+					for(Order order:orderToApproveList)
+						if(visitor.getId().equals(order.getId()))
 						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Waiting Approval",
 								"Your order is waiting for approval,please go "
 										+ "to Order Tracking and approve your order\n Order details:\n"
-										+ idAndOrderToApprove[1].toString());
+										+ order.toString()+"Sent to email: "+order.getEmail()+"\n Sent to Phone number: "+order.getPhone());
 				}
 				return; // this message should not interfere with the client in case he's waiting for
 						// server's response
 			case CANCEL_EMAIL_AND_SMS:
-				String[] idAndOrder = (String[]) serverMsg.getMessage();
+				List<Order> orderList = (List<Order>) serverMsg.getMessage();
 				if (guiControl.getUser() instanceof Subscriber) {
 					Subscriber sub = (Subscriber) guiControl.getUser();
-					if (sub.getID().equals(idAndOrder[0]))
+					for(Order order:orderList)
+						if(sub.getID().equals(order.getId()))
 						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Cancelled Order",
 								"You haven't approved your order in the given time space, "
-										+ "therefore it was cancelled.\n Order details:\n" + idAndOrder[1]);
+										+ "therefore it was cancelled.\n Order details:\n" +order.toString()
+										+"\nSent to email: "+order.getEmail()+"\n Sent to Phone number: "+order.getPhone());
 				} else if (guiControl.getUser() instanceof Visitor) {
 					Visitor visitor = (Visitor) guiControl.getUser();
-					if (visitor.getId().equals(idAndOrder[0]))
+					for(Order order:orderList)
+						if(visitor.getId().equals(order.getId()))
 						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Cancelled Order",
 								"You haven't approved your order in the given time space, "
-										+ "therefore it was cancelled.\n Order details:\n" + idAndOrder[1]);
+										+ "therefore it was cancelled.\n Order details:\n" + order.toString()
+										+"\nSent to email: "+order.getEmail()+"\n Sent to Phone number: "+order.getPhone());
 				}
 				return; // this message should not interfere with the client in case he's waiting for
 						// server's response

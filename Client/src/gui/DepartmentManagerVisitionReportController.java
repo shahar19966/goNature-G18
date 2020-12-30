@@ -59,12 +59,14 @@ public class DepartmentManagerVisitionReportController implements Initializable 
 
     @FXML
     private NumberAxis yPark3;
+  
     
     @Override
    	public void initialize(URL location, ResourceBundle resources) 
        {
     	Calendar c=Calendar.getInstance();
     	month.setText(c.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
+    	
     	 park1.setText("1");
     	 park2.setText("2");
     	 park3.setText("3");

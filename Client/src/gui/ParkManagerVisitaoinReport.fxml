@@ -1,31 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.BarChart?>
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="438.0" prefWidth="688.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerVisitationReportController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="719.0" prefWidth="1027.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerVisitationReportController">
    <children>
-      <BarChart fx:id="visitationReport" layoutX="89.0" layoutY="14.0" prefHeight="410.0" prefWidth="534.0" stylesheets="@application.css" title="Visitation Report">
-        <xAxis>
-          <CategoryAxis label="type" side="BOTTOM" fx:id="x">
-               <tickLabelFill>
-                  <RadialGradient centerX="0.6477272727272727" centerY="0.5" radius="0.5">
-                     <stops>
-                        <Stop color="#3b945b" />
-                        <Stop color="#70d394" offset="1.0" />
-                     </stops>
-                  </RadialGradient>
-               </tickLabelFill>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="347.0" layoutY="27.0" prefHeight="58.0" prefWidth="339.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 40;" text="Visit report" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="365.0" layoutY="154.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Park name:" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="360.0" layoutY="93.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Month:" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <ImageView fitHeight="132.0" fitWidth="147.0" layoutX="76.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/logo.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="year" alignment="TOP_LEFT" layoutX="421.0" layoutY="124.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label fx:id="parkName" alignment="TOP_LEFT" layoutX="475.0" layoutY="154.0" prefHeight="30.0" prefWidth="82.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="360.0" layoutY="124.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Year:" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label fx:id="month" alignment="TOP_LEFT" layoutX="440.0" layoutY="93.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="365.0" layoutY="191.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Total:" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label fx:id="total" alignment="TOP_LEFT" layoutX="426.0" layoutY="191.0" prefHeight="30.0" prefWidth="90.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <LineChart fx:id="lineChar" layoutX="34.0" layoutY="250.0" stylesheets="@application.css">
+         <xAxis>
+            <CategoryAxis label="Days a month" side="BOTTOM" fx:id="x1">
+               <rotationAxis>
+                  <Point3D />
+               </rotationAxis>
             </CategoryAxis>
-        </xAxis>
-        <yAxis>
-          <NumberAxis fx:id="y" label="number of visitation" side="LEFT" />
-        </yAxis>
-      </BarChart>
+         </xAxis>
+         <yAxis>
+            <NumberAxis fx:id="y1" label="number of visitation" side="LEFT" />
+         </yAxis>
+      </LineChart>
+      <PieChart fx:id="pieChart" layoutX="570.0" layoutY="250.0" prefHeight="400.0" prefWidth="435.0" title="Total amount" />
    </children>
 </AnchorPane>

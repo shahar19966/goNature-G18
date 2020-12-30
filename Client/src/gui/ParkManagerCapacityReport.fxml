@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.ScatterChart?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="564.0" prefWidth="511.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerCapacityReportController">
+<AnchorPane fx:id="year" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerCapacityReportController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="39.0" layoutY="28.0" prefHeight="58.0" prefWidth="339.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 40;" text="Capacity Report" textAlignment="CENTER">
          <font>
@@ -19,7 +20,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="90.0" layoutY="127.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Park name:" textAlignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="87.0" layoutY="146.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Park name:" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -27,7 +28,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="90.0" layoutY="86.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Month:" textAlignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="82.0" layoutY="86.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Month:" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -35,7 +36,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label fx:id="month" alignment="CENTER" layoutX="170.0" layoutY="86.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+      <Label fx:id="month" alignment="CENTER" layoutX="162.0" layoutY="86.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -43,7 +44,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label fx:id="parkName" alignment="CENTER" layoutX="208.0" layoutY="127.0" prefHeight="30.0" prefWidth="82.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+      <Label fx:id="parkName" alignment="CENTER" layoutX="205.0" layoutY="146.0" prefHeight="30.0" prefWidth="82.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -51,16 +52,34 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <TableView fx:id="tabel" layoutX="64.0" layoutY="170.0" prefHeight="357.0" prefWidth="370.0">
-        <columns>
-          <TableColumn fx:id="date" prefWidth="190.0" text="Date" />
-          <TableColumn fx:id="time" prefWidth="179.0" text="time" />
-        </columns>
-      </TableView>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="87.0" layoutY="116.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Year:" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
+      <Label fx:id="year2021" alignment="CENTER" layoutX="167.0" layoutY="116.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+         <font>
+            <Font size="40.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Label>
       <ImageView fitHeight="124.0" fitWidth="142.0" layoutX="373.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/logo.png" />
          </image>
       </ImageView>
+      <ScatterChart fx:id="scatterChart" layoutX="46.0" layoutY="187.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" fx:id="x" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="y" side="LEFT" />
+        </yAxis>
+      </ScatterChart>
    </children>
 </AnchorPane>
