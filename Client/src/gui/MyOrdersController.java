@@ -182,20 +182,53 @@ public class MyOrdersController implements Initializable {
 												.equals(OrderStatus.PENDING_FINAL_APPROVAL)) {
 											btn.setText("Approve");
 											btn.setOnAction(e -> {
-												guiControl.sendToServer(new ClientMessage(ClientMessageType.APPROVE_ORDER,
+												guiControl.sendToServer(new ClientMessage(
+														ClientMessageType.APPROVE_ORDER,
 														getTableView().getItems().get(getIndex()).getOrderNum()));
 												if (guiControl.getServerMsg().getMessage() != null) {
-													GUIControl.popUpMessage("Order Approved",
-															"Order " + getTableView().getItems().get(getIndex()).getOrderNum()
-																	+ " is approved successfully");
+													GUIControl.popUpMessage("Order Approved", "Order "
+															+ getTableView().getItems().get(getIndex()).getOrderNum()
+															+ " is approved successfully");
 													myOrders.remove(getTableView().getItems().get(getIndex()));
 												}
 											});
 										} else {
 											btn.setText("Activate");
 											btn.setOnAction(e -> {
-												guiControl.sendToServer(new ClientMessage(ClientMessageType.ACTIVATE_ORDER_FROM_WATING_LIST,
-														getTableView().getItems().get(getIndex()).getOrderNum()));
+												guiControl.sendToServer(new ClientMessage(
+														ClientMessageType.ACTIVATE_ORDER_FROM_WATING_LIST,
+														getTableView().getItems().get(getIndex())));
+												myOrders.remove(getTableView().getItems().get(getIndex()));
+												if (guiControl.getServerMsg().getMessage() != null) {
+													myOrders.add((Order) guiControl.getServerMsg().getMessage());
+													switch ((((Order) guiControl.getServerMsg().getMessage())
+															.getStatus())) {
+													case APPROVED:
+														GUIControl.popUpMessage("Order Status", "Order "
+																+ ((Order) guiControl.getServerMsg().getMessage())
+																		.getOrderNum()
+																+ " is now Approved.");
+														break;
+													case PENDING_FINAL_APPROVAL:
+														GUIControl.popUpMessage("Order Status", "Order "
+																+ ((Order) guiControl.getServerMsg().getMessage())
+																		.getOrderNum()
+																+ " is now Pending for final Approval!\nPlease Do it in 2 hours");
+														break;
+													case ACTIVE:
+														GUIControl.popUpMessage("Order Status", "Order "
+																+ ((Order) guiControl.getServerMsg().getMessage())
+																		.getOrderNum()
+																+ " is now ACTIVE. Please wait for final approval request");
+														break;
+													default:
+														break;
+													}
+												} else {
+													GUIControl.popUpError("Order "
+															+ getTableView().getItems().get(getIndex()).getOrderNum()
+															+ " was cancelled or expired by the system");
+												}
 											});
 										}
 										setGraphic(btn);

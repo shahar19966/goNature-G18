@@ -20,8 +20,10 @@ public class Order implements Serializable {
 	private int price;
 	private String email;
 	private String phone;
+
 	public Order(String id, String parkName, String orderNum, String orderCreationDate, int numOfVisitors,
-			OrderStatus status, OrderType type, String dateOfOrder, String timeOfOrder, int price,String email,String phone) {
+			OrderStatus status, OrderType type, String dateOfOrder, String timeOfOrder, int price, String email,
+			String phone) {
 		this.id = id;
 		this.parkName = parkName;
 		this.orderNum = orderNum;
@@ -30,37 +32,39 @@ public class Order implements Serializable {
 		this.status = status;
 		this.type = type;
 		this.dateOfOrder = dateOfOrder;
-		this.timeOfOrder = timeOfOrder+":00";
+		if (timeOfOrder.split(":").length == 2)
+			timeOfOrder = timeOfOrder + ":00";
+		this.timeOfOrder = timeOfOrder;
 		this.price = price;
-		this.email=email;
-		this.phone=phone;
+		this.email = email;
+		this.phone = phone;
 	}
 
 	/*
 	 * for validation
 	 */
 	public Order(String id, String parkName, int numOfVisitors, OrderType type, String dateOfOrder, String timeOfOrder,
-			int price,String email,String phone) {
+			int price, String email, String phone) {
 		this.id = id;
 		this.parkName = parkName;
 		this.numOfVisitors = numOfVisitors;
 		this.type = type;
 		this.dateOfOrder = dateOfOrder;
-		String timeOfOrderSplit[] = timeOfOrder.split(":");
-		if(timeOfOrderSplit.length==2)
-			this.timeOfOrder =  timeOfOrder+":00";
-		else
-			this.timeOfOrder =  timeOfOrder;
+		if (timeOfOrder.split(":").length == 2)
+			timeOfOrder = timeOfOrder + ":00";
+		this.timeOfOrder=timeOfOrder;
 		this.price = price;
-		this.email=email;
-		this.phone=phone;
+		this.email = email;
+		this.phone = phone;
 	}
+
 	public void setTimeOfOrder(int hour) {
-		if(hour<10)
-			timeOfOrder="0"+hour+":00:00";
+		if (hour < 10)
+			timeOfOrder = "0" + hour + ":00:00";
 		else
-			timeOfOrder=hour+":00:00";
+			timeOfOrder = hour + ":00:00";
 	}
+
 	public void setOrderCreationDate(String orderCreationDate) {
 		this.orderCreationDate = orderCreationDate;
 	}
@@ -68,10 +72,11 @@ public class Order implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getOrderNum()
-	{
+
+	public String getOrderNum() {
 		return orderNum;
 	}
+
 	public String getId() {
 		return id;
 	}
@@ -91,6 +96,7 @@ public class Order implements Serializable {
 	public int getNumOfVisitors() {
 		return numOfVisitors;
 	}
+
 	public int getPrice() {
 		return price;
 	}
@@ -130,28 +136,29 @@ public class Order implements Serializable {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public String getEmail()
-	{
+
+	public String getEmail() {
 		return email;
 	}
-	public String getPhone()
-	{
+
+	public String getPhone() {
 		return phone;
 	}
+
 	@Override
 	public String toString() {
-		StringBuilder orderDetails=new StringBuilder();
-		orderDetails.append("Order Number:"+orderNum+"\n");
-		orderDetails.append("ID:"+id+"\n");
-		orderDetails.append("Park Name:"+parkName+"\n");
-		orderDetails.append("Number Of Visitors:"+numOfVisitors+"\n");
-		orderDetails.append("Type:"+type.name()+"\n");
-		orderDetails.append("Date:"+dateOfOrder+"\n");
-		orderDetails.append("Creation Date:"+orderCreationDate+"\n");
-		orderDetails.append("Time:"+timeOfOrder+"\n");
-		orderDetails.append("Email:"+email+"\n");
-		orderDetails.append("Phone:"+phone+"\n");
-		orderDetails.append("Total Price:"+price);
+		StringBuilder orderDetails = new StringBuilder();
+		orderDetails.append("Order Number:" + orderNum + "\n");
+		orderDetails.append("ID:" + id + "\n");
+		orderDetails.append("Park Name:" + parkName + "\n");
+		orderDetails.append("Number Of Visitors:" + numOfVisitors + "\n");
+		orderDetails.append("Type:" + type.name() + "\n");
+		orderDetails.append("Date:" + dateOfOrder + "\n");
+		orderDetails.append("Creation Date:" + orderCreationDate + "\n");
+		orderDetails.append("Time:" + timeOfOrder + "\n");
+		orderDetails.append("Email:" + email + "\n");
+		orderDetails.append("Phone:" + phone + "\n");
+		orderDetails.append("Total Price:" + price);
 		return orderDetails.toString();
 	}
 
