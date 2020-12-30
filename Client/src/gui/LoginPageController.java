@@ -24,7 +24,7 @@ import message.ClientMessageType;
 public class LoginPageController {
 	GUIControl guiControl=GUIControl.getInstance();
     @FXML
-    private AnchorPane enableDisablePane;
+    private AnchorPane mainPane;
 
     @FXML
     private RadioButton idBtn;
@@ -46,12 +46,6 @@ public class LoginPageController {
 
     @FXML
     private Button loginBtn;
-
-    @FXML
-    private VBox buttonVBox;
-
-    @FXML
-    private Label mainLabel;
     /*
      * method called upon clicking the login button, calls validateLogin() and incase it's validated opens up the user's main screen to display
      */

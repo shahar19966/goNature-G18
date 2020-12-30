@@ -1,69 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1079.0" stylesheets="@../../../Client/src/gui/application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ServerScreenController">
+<AnchorPane fx:id="fillPane" prefHeight="647.0" prefWidth="910.0" style="-fx-background-color: seagreen;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ServerScreenController">
    <children>
-      <AnchorPane fx:id="enableDisablePane" layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="73.0">
-         <children>
-            <AnchorPane prefHeight="560.0" prefWidth="1260.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TitledPane fx:id="_clientTitledPane" animated="false" layoutX="116.0" layoutY="380.0" prefHeight="220.0" prefWidth="685.0" text="Connected Clients">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="311.0" prefWidth="425.0" style="-fx-background-color: #a0a2aa;">
                <children>
-                  <AnchorPane fx:id="fillPane" prefHeight="647.0" prefWidth="910.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <TitledPane fx:id="_clientTitledPane" animated="false" layoutX="116.0" layoutY="380.0" prefHeight="220.0" prefWidth="685.0" text="Clients">
-                           <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="311.0" prefWidth="425.0" style="-fx-background-color: #a0a2aa;">
-                                 <children>
-                                    <ListView fx:id="clientsConnectedList" prefHeight="200.0" prefWidth="685.0" />
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                           <font>
-                              <Font name="System Bold" size="19.0" />
-                           </font>
-                        </TitledPane>
-                        <Label layoutX="327.0" layoutY="276.0" text="Database" textFill="#a0a2aa" />
-                        <Button fx:id="_startBtn" layoutX="378.0" layoutY="168.0" mnemonicParsing="false" onAction="#startServerClicked" prefHeight="39.0" prefWidth="98.0" styleClass="logInBtn" text="Start">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Button>
-                        <Circle fx:id="_serverLedIndicator" fill="RED" layoutX="280.0" layoutY="317.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Label layoutX="263.0" layoutY="276.0" text="Server" textFill="#a0a2aa" />
-                        <Circle fx:id="_dbLedIndicator" fill="#ff1f1f" layoutX="352.0" layoutY="317.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Label alignment="TOP_CENTER" layoutX="293.0" layoutY="44.0" prefHeight="73.0" prefWidth="268.0" styleClass="seconderyTitleServer" stylesheets="@application.css" text="goNature" textFill="#a0a2aa">
-                           <font>
-                              <Font size="58.0" />
-                           </font>
-                        </Label>
-                     </children></AnchorPane>
+                  <ListView fx:id="clientsConnectedList" prefHeight="200.0" prefWidth="685.0" />
                </children>
             </AnchorPane>
-            <AnchorPane prefWidth="150.0" styleClass="paneTitle" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <VBox fx:id="secondPane" alignment="CENTER" prefWidth="98.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="52.0" AnchorPane.topAnchor="75.0" />
-               </children>
-            </AnchorPane>
-         </children>
-      </AnchorPane>
-      <Label alignment="CENTER" contentDisplay="CENTER" styleClass="homeTitle" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         </content>
          <font>
-            <Font size="40.0" />
+            <Font name="System Bold" size="19.0" />
          </font>
-      </Label>
-      <Label fx:id="mainLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="primaryTitle" textAlignment="CENTER" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      </TitledPane>
+      <Label layoutX="464.0" layoutY="282.0" text="Database" textFill="WHITE" />
+      <Button fx:id="_startBtn" layoutX="391.0" layoutY="172.0" mnemonicParsing="false" onAction="#startServerClicked" prefHeight="39.0" prefWidth="98.0" style="-fx-background-color: linear-gradient(#AAEBBD, #1E903F),radial-gradient(center 50% -40%, radius 200%, #95E6AC 45%, #56D77B 50%);" text="Start" textFill="WHITE">
          <font>
-            <Font size="40.0" />
+            <Font name="System Bold Italic" size="14.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Circle fx:id="_serverLedIndicator" fill="RED" layoutX="391.0" layoutY="320.0" radius="13.0" stroke="BLACK" strokeType="INSIDE">
+         <effect>
+            <DropShadow />
+         </effect></Circle>
+      <Label layoutX="374.0" layoutY="282.0" text="Server" textFill="WHITE" />
+      <Circle fx:id="_dbLedIndicator" fill="#ff1f1f" layoutX="489.0" layoutY="320.0" radius="13.0" stroke="BLACK" strokeType="INSIDE">
+         <effect>
+            <DropShadow />
+         </effect></Circle>
+      <Label alignment="TOP_CENTER" layoutX="171.0" layoutY="49.0" prefHeight="85.0" prefWidth="561.0" stylesheets="@application.css" text="goNature Server" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="58.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
       </Label>
-      <ImageView fx:id="goNatureSymbol" fitHeight="150.0" fitWidth="200.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="goNatureSymbol" fitHeight="150.0" fitWidth="200.0" layoutX="7.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/logo.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
