@@ -37,7 +37,7 @@ public class AvailableDatesPageController implements Initializable {
 	    @FXML
 	    private HBox mainHBox;
     
-    public void setTable(Map<String,List<String>> dateMap,Order order) {
+    public void setTable(Map<String,List<String>> dateMap,List<Object> orderDes) {
     	Set keySet=dateMap.keySet();
     	String[] dates = Arrays.copyOf(keySet.toArray(), keySet.toArray().length, String[].class);
     	int i=0;
@@ -50,9 +50,10 @@ public class AvailableDatesPageController implements Initializable {
 				final String nextDate=dates[i];
 				GuiButton button=new GuiButton(hour,AlertType.Info,Sizes.Medium);
 				button.setOnAction(e->{
+					Order order = (Order) orderDes.get(0);
 					order.setDateOfOrder(nextDate);
 					order.setTimeOfOrder(hour);
-					guiControl.sendToServer(new ClientMessage(ClientMessageType.ORDER,order));
+					guiControl.sendToServer(new ClientMessage(ClientMessageType.ORDER,orderDes));
 					guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Order Succeeded",
 							((Order) guiControl.getServerMsg().getMessage()).toString(), null);
 				});

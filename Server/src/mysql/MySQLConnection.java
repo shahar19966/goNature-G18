@@ -269,6 +269,8 @@ public class MySQLConnection {
 		Map<Integer, Integer> parkCapacity = parkCapacityForDuration(park, orderToValidate.getDateOfOrder(),
 				orderToValidate.getTimeOfOrder(), orderToValidate.getTimeOfOrder());
 		for (int hour : parkCapacity.keySet()) {
+			if (hour < Integer.parseInt(splitTime[0]))
+				continue;
 			if (orderToValidate.getNumOfVisitors() + parkCapacity.get(hour) > park.getParkMaxVisitorsDefault()
 					- park.getParkDiffFromMax())
 				return false;
@@ -327,14 +329,16 @@ public class MySQLConnection {
 		return parkCapacity;
 	}
 
-	private static double calculateOrder(Order orderToRequest, boolean isOccasional) throws SQLException {
+	private static double calculateOrder(Order orderToRequest, boolean isOccasional, Boolean payInAdvance)
+			throws SQLException {
 		double priceForTicket = EntityConstants.TICKET_PRICE;
 
 		double priceForOrder;
 		if (orderToRequest.getType().equals(EntityConstants.OrderType.GUIDE)) {
 			if (!isOccasional) {
 				priceForTicket *= 0.75;
-				priceForTicket *= 0.88;
+				if (payInAdvance.booleanValue())
+					priceForTicket *= 0.88;
 				priceForOrder = (orderToRequest.getNumOfVisitors() - 1) * priceForTicket;
 			} else {
 				priceForTicket *= 0.9;
@@ -377,8 +381,8 @@ public class MySQLConnection {
 
 	}
 
-	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus, boolean isOccasional)
-			throws SQLException {
+	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus, boolean isOccasional,
+			Boolean payInAdvance) throws SQLException {
 		PreparedStatement insertOrderStatement = con.prepareStatement(
 				"INSERT INTO orders (id_fk,parkName_fk,orderCreationDate,numOfVisitors,status,type,dateOfOrder, timeOfOrder, price,email,phone) VALUES (?,?,?,?,?,?,?,?,?,?,?);");
 		Date date = new Date();
@@ -392,7 +396,7 @@ public class MySQLConnection {
 		insertOrderStatement.setString(6, orderToInsert.getType().name());
 		insertOrderStatement.setString(7, orderToInsert.getDateOfOrder());
 		insertOrderStatement.setString(8, orderToInsert.getTimeOfOrder());
-		double price = calculateOrder(orderToInsert, isOccasional);
+		double price = calculateOrder(orderToInsert, isOccasional, payInAdvance);
 		insertOrderStatement.setString(9, String.valueOf((int) price));
 		insertOrderStatement.setString(10, orderToInsert.getEmail());
 		insertOrderStatement.setString(11, orderToInsert.getPhone());
@@ -413,9 +417,10 @@ public class MySQLConnection {
 		throw new SQLException();
 	}
 
-	public static Order createOrder(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
+	public static Order createOrder(Order orderRequest, Boolean payInAdvance)
+			throws SQLException, NumberFormatException, ParseException {
 		if (validateDate(orderRequest)) {
-			return insertNewOrder(orderRequest, OrderStatus.ACTIVE, false);
+			return insertNewOrder(orderRequest, OrderStatus.ACTIVE, false, payInAdvance);
 		}
 		return null;
 	}
@@ -444,8 +449,9 @@ public class MySQLConnection {
 		return parametersUpdateRequestList;
 	}
 
-	public static Order enterWaitingist(Order orderRequest) throws SQLException, NumberFormatException, ParseException {
-		return insertNewOrder(orderRequest, OrderStatus.WAITING, false);
+	public static Order enterWaitingist(Order orderRequest, Boolean payInAdvanceWaitingList)
+			throws SQLException, NumberFormatException, ParseException {
+		return insertNewOrder(orderRequest, OrderStatus.WAITING, false, payInAdvanceWaitingList);
 	}
 
 	public static ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest)
@@ -540,7 +546,7 @@ public class MySQLConnection {
 			order.setId(subscriber.getID());
 		}
 		if (validateDate(order)) {
-			return insertNewOrder(order, OrderStatus.APPROVED, true);
+			return insertNewOrder(order, OrderStatus.APPROVED, true, new Boolean(false));
 		}
 		return null;
 	}
@@ -616,7 +622,7 @@ public class MySQLConnection {
 		Order orderToValidate = getCurrentOrderByIDAndParkName(idVisitorsAndParkName[0], idVisitorsAndParkName[2]);
 		if (orderToValidate == null)
 			return null;
-		if(orderToValidate.getNumOfVisitors()<Integer.parseInt(idVisitorsAndParkName[1]))
+		if (orderToValidate.getNumOfVisitors() < Integer.parseInt(idVisitorsAndParkName[1]))
 			return new Integer(-1);
 		if (!updateOrderToDone(orderToValidate))
 			throw new SQLException("FAILED TO UPDATE ORDER TO DONE");
@@ -627,8 +633,8 @@ public class MySQLConnection {
 		if (!insertFinishedOrder(orderToValidate.getOrderNum(), idVisitorsAndParkName[1], timeNow,
 				String.valueOf(actualPrice)))
 			throw new SQLException("FAILED TO INSERT FINISHED ORDER");
-		if(!addToCurrentParkVisitors(idVisitorsAndParkName[2],Integer.parseInt(idVisitorsAndParkName[1])))
-				throw new SQLException("FAILED TO UPDATE CURRENT PARK VISITORS");
+		if (!addToCurrentParkVisitors(idVisitorsAndParkName[2], Integer.parseInt(idVisitorsAndParkName[1])))
+			throw new SQLException("FAILED TO UPDATE CURRENT PARK VISITORS");
 		return new Integer(actualPrice);
 
 	}
@@ -680,27 +686,31 @@ public class MySQLConnection {
 			return false;
 		}
 	}
-	private static boolean addToCurrentParkVisitors(String parkName,int amount) {
+
+	private static boolean addToCurrentParkVisitors(String parkName, int amount) {
 		try {
 			String query = "Update park SET currentVisitors=currentVisitors+? WHERE parkName=?";
 			PreparedStatement editCurrentVisitors = con.prepareStatement(query);
 			editCurrentVisitors.setInt(1, amount);
 			editCurrentVisitors.setString(2, parkName);
 			editCurrentVisitors.executeUpdate();
-			if(updateParkFull(parkName))
+			if (updateParkFull(parkName))
 				return true;
-			else return false;
+			else
+				return false;
 		} catch (SQLException e) {
 			return false;
 		}
 	}
+
 	public static boolean updateParkFull(String parkName) {
 		try {
-			PreparedStatement checkParkFull=con.prepareStatement("SELECT * from park where parkName=? and maxVisitors<=currentVisitors;");
+			PreparedStatement checkParkFull = con
+					.prepareStatement("SELECT * from park where parkName=? and maxVisitors<=currentVisitors;");
 			checkParkFull.setString(1, parkName);
-			ResultSet rs=checkParkFull.executeQuery();
-			if(rs.next()) {
-				String updateParkFullQuery="INSERT IGNORE INTO parkFull (parkName_fk,dateFull,timeFull) VALUES (?,?,?)";
+			ResultSet rs = checkParkFull.executeQuery();
+			if (rs.next()) {
+				String updateParkFullQuery = "INSERT IGNORE INTO parkFull (parkName_fk,dateFull,timeFull) VALUES (?,?,?)";
 				PreparedStatement updateParkFull = con.prepareStatement(updateParkFullQuery);
 				updateParkFull.setString(1, parkName);
 				updateParkFull.setString(2, LocalDate.now().toString());
@@ -711,14 +721,15 @@ public class MySQLConnection {
 				updateParkFull.executeUpdate();
 			}
 			return true;
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			return false;
 		}
 	}
+
 	public static void main(String[] args) throws ParseException, InstantiationException, IllegalAccessException,
 			ClassNotFoundException, SQLException {
 		connectToDB();
-		addToCurrentParkVisitors("1",-45);
+		addToCurrentParkVisitors("1", -45);
 
 	}
 
@@ -737,7 +748,7 @@ public class MySQLConnection {
 			if (rs.next()) {
 				orderNum = rs.getString(1);
 				timeOfArrival = rs.getString(2);
-				amountOfVisitors=-rs.getInt(3);
+				amountOfVisitors = -rs.getInt(3);
 			} else
 				return null;
 			query = "UPDATE finishedOrders set actualTimeOfLeave=? , visitDuration=? where orderNum_fk=?;";
@@ -746,17 +757,17 @@ public class MySQLConnection {
 			Date date1 = format.parse(timeOfArrival);
 			Date date2 = format.parse(timeNow);
 			long difference = (date2.getTime() - date1.getTime()) / 60000; // in minutes
-			if(difference%60>30)
-				difference=1+difference/60;
+			if (difference % 60 > 30)
+				difference = 1 + difference / 60;
 			else
-				difference=difference/60;
+				difference = difference / 60;
 			String visitDuration = String.valueOf(difference);
 			PreparedStatement updateFinishedOrder = con.prepareStatement(query);
 			updateFinishedOrder.setString(1, timeNow);
 			updateFinishedOrder.setString(2, visitDuration);
 			updateFinishedOrder.setString(3, orderNum);
 			updateFinishedOrder.executeUpdate();
-			if(!addToCurrentParkVisitors(idAndParkName[1],amountOfVisitors))
+			if (!addToCurrentParkVisitors(idAndParkName[1], amountOfVisitors))
 				throw new SQLException("FAILED TO UPDATE CURRENT PARK VISITORS");
 			return new Boolean(true);
 		} catch (Exception e) {
