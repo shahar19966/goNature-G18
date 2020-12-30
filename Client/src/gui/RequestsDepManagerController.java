@@ -74,7 +74,6 @@ public class RequestsDepManagerController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
-		
 		guiControl.sendToServer(new ClientMessage(ClientMessageType.REQUESTS_PARAMETERS, null));
 		List<ParameterUpdate> parameterUpdate = (List<ParameterUpdate>) guiControl.getServerMsg().getMessage();
 		parameters.addAll(parameterUpdate);
@@ -95,6 +94,8 @@ public class RequestsDepManagerController implements Initializable {
 		setDeclineCol1();
 		setApprovedCol();
 		setDeclineCol();
+		
+		
 	}
 	
 	private void setApprovedCol1()
@@ -207,7 +208,7 @@ public class RequestsDepManagerController implements Initializable {
 								GUIControl.popUpMessage("Discount Updated",
 										"discount updated successfully");
 								
-								//discountRequests.remove(getTableView().getItems().get(getIndex()));
+								discountRequests.remove(getTableView().getItems().get(getIndex()));
 							}
 						});
 						setGraphic(btn);
