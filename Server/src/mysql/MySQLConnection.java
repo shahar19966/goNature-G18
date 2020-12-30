@@ -546,12 +546,14 @@ public class MySQLConnection {
 				return "Subscriber Number" + order.getId() + " " + "is not a guide";
 			order.setId(subscriber.getID());
 		}
-		if (validateDate(order)) {
+		Park park=(Park)getCertainPark(order.getParkName());
+		if(park==null)
+			return null;
+		if (park.getParkCurrentVisitors()+order.getNumOfVisitors()<park.getParkMaxVisitorsDefault()) {
 			return insertNewOrder(order, OrderStatus.APPROVED, true, new Boolean(false));
 		}
 		return null;
 	}
-
 	public static List<Order> getUnfinishedOrdersById(String id) throws SQLException {
 		List<Order> orders = new ArrayList<Order>();
 		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL');";
