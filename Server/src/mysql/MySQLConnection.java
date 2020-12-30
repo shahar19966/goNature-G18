@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -566,29 +567,52 @@ public class MySQLConnection {
 		return orders;
 	}
 
-	public static Boolean cancelOrder(String orderNum) throws SQLException {
-		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
-		String query = "Update orders SET status='CANCELLED' WHERE orderNum=?";
-		PreparedStatement cancelOrder = con.prepareStatement(query);
-		cancelOrder.setString(1, orderNum);
-		cancelOrder.executeUpdate();
-		return true;
-	}
-
-	public static Boolean approveOrder(String orderNum) throws SQLException {
-		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
-		String query = "Update orders SET status='APPROVED' WHERE orderNum=?";
+	public static Boolean changeOrderStatus(String orderNum, OrderStatus newStatus) throws SQLException {
+		String query = "Update orders SET status=? WHERE orderNum=?";
+		String queryDelSms = "DELETE FROM smsSend WHERE orderNum_fk=?";
+		PreparedStatement delSms = con.prepareStatement(queryDelSms);
 		PreparedStatement approveOrder = con.prepareStatement(query);
-		approveOrder.setString(1, orderNum);
+		delSms.setString(1, orderNum);
+		approveOrder.setString(1, newStatus.name());
+		approveOrder.setString(2, orderNum);
 		approveOrder.executeUpdate();
+		delSms.executeUpdate();
 		return true;
 	}
 
-	public static Order activateOrderFromWatingList(Order order) {
-		// TODO: CHECK IF OrderNum status is not canceled. if canceled return false
-		// TODO: IF Order Time and date is less than 2 hours then change it to WATING
-		// FOR APPROVAL. Else change it to Active
-		return null;
+	public static Order activateOrderFromWatingList(Order order) throws SQLException {
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime dateTimeOfOrder = LocalDateTime.parse(order.getDateOfOrder() + " " + order.getTimeOfOrder(),
+				formatter);
+		OrderStatus newStatus;
+		boolean res;
+		long diff = ChronoUnit.MINUTES.between(now, dateTimeOfOrder);
+		if (diff < 24 * 60) {
+			if (diff < 2 * 60) {
+				res = changeOrderStatus(order.getOrderNum(), OrderStatus.APPROVED);
+				newStatus = OrderStatus.APPROVED;
+			} else {
+				res = changeOrderStatus(order.getOrderNum(), OrderStatus.PENDING_FINAL_APPROVAL);
+				newStatus = OrderStatus.PENDING_FINAL_APPROVAL;
+				String nowString = now.format(formatter);
+				String querySendSms = "INSERT INTO smsSend (orderNum_fk,smsRecviedDate,smsRecviedTime) VALUES (?,?,?)";
+				PreparedStatement sendSmStatement = con.prepareStatement(querySendSms);
+				sendSmStatement.setString(1, order.getOrderNum());
+				sendSmStatement.setString(2, nowString.split(" ")[0]);
+				sendSmStatement.setString(3, nowString.split(" ")[1]);
+				sendSmStatement.executeUpdate();
+			}
+		} else {
+			res = changeOrderStatus(order.getOrderNum(), OrderStatus.ACTIVE);
+			newStatus = OrderStatus.ACTIVE;
+		}
+		if (!res)
+			return null;
+		else {
+			order.setStatus(newStatus);
+			return order;
+		}
 	}
 
 	public static List<ParkDiscount> getDiscountRequests(String employeeId) throws SQLException {

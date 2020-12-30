@@ -9,6 +9,7 @@ import java.util.List;
 
 import application.ServerMain;
 import entity.Employee;
+import entity.EntityConstants.OrderStatus;
 import entity.Order;
 import entity.ParameterUpdate;
 import entity.Subscriber;
@@ -116,7 +117,7 @@ public class GoNatureServer extends AbstractServer {
 					List<Object> orderDes = (List<Object>) clientMsg.getMessage();
 					Order order = (Order) orderDes.get(0);
 					Boolean payInAdvance = (Boolean) orderDes.get(1);
-					returnVal = MySQLConnection.createOrder(order,payInAdvance);
+					returnVal = MySQLConnection.createOrder(order, payInAdvance);
 					if (returnVal == null)
 						type = ServerMessageType.ORDER_FAILURE;
 					else
@@ -126,7 +127,7 @@ public class GoNatureServer extends AbstractServer {
 					List<Object> orderDesWaitingList = (List<Object>) clientMsg.getMessage();
 					Order orderWaitingList = (Order) orderDesWaitingList.get(0);
 					Boolean payInAdvanceWaitingList = (Boolean) orderDesWaitingList.get(1);
-					returnVal = MySQLConnection.enterWaitingist(orderWaitingList,payInAdvanceWaitingList);
+					returnVal = MySQLConnection.enterWaitingist(orderWaitingList, payInAdvanceWaitingList);
 					type = ServerMessageType.WAITING_LIST;
 					break;
 				case INCOME_REPORT:
@@ -151,70 +152,72 @@ public class GoNatureServer extends AbstractServer {
 					break;
 				case PARK_MNG_CAPACITY_REPORT:
 					returnVal = MySQLConnection.getParkCapacityReport((String) (clientMsg.getMessage()));
-					type=ServerMessageType.PARK_CAPACITY_REPORT;
+					type = ServerMessageType.PARK_CAPACITY_REPORT;
 					break;
 				case GET_ORDERS_BY_ID:
 					returnVal = MySQLConnection.getUnfinishedOrdersById((String) (clientMsg.getMessage()));
 					type = ServerMessageType.GET_ORDERS_BY_ID;
 					break;
 				case CANCEL_ORDER:
-					returnVal = MySQLConnection.cancelOrder((String) (clientMsg.getMessage()));
+					returnVal = MySQLConnection.changeOrderStatus((String) (clientMsg.getMessage()),
+							OrderStatus.CANCELLED);
 					type = ServerMessageType.CANCEL_ORDER;
 					break;
 				case APPROVE_ORDER:
-					returnVal = MySQLConnection.approveOrder((String) (clientMsg.getMessage()));
+					returnVal = MySQLConnection.changeOrderStatus((String) (clientMsg.getMessage()),
+							OrderStatus.APPROVED);
 					type = ServerMessageType.APPROVE_ORDER;
 					break;
 				case ACTIVATE_ORDER_FROM_WATING_LIST:
 					returnVal = MySQLConnection.activateOrderFromWatingList((Order) (clientMsg.getMessage()));
-					type = ServerMessageType.APPROVE_ORDER;
+					type = ServerMessageType.ACTIVATE_ORDER_FROM_WATING_LIST;
 					break;
 				case DEP_MNG_CANCELLATION_REPORT:
 					returnVal = MySQLConnection.getCancellationReport();
-					type=ServerMessageType.DEPARTMENT_CANCELLATION_REPORT;
+					type = ServerMessageType.DEPARTMENT_CANCELLATION_REPORT;
 					break;
 
 				case DEP_MNG_VISITION_REPORT:
 					returnVal = MySQLConnection.getVisitionReport((String) (clientMsg.getMessage()));
-					type=ServerMessageType.DEPARTMENT_VISITATION_REPORT;
+					type = ServerMessageType.DEPARTMENT_VISITATION_REPORT;
 					break;
 				case GET_DISCOUNT_REQUESTS_FROM_DB:
 					returnVal = MySQLConnection.getDiscountRequests((String) (clientMsg.getMessage()));
 					type = ServerMessageType.GET_DISCOUNT_REQUESTS_FROM_DB;
 					break;
 				case VALIDATE_ORDER_ENTRY:
-					returnVal=MySQLConnection.validateOrderAndReturnPrice((String[])clientMsg.getMessage());
-					type=ServerMessageType.VALIDATE_ORDER_ENTRY;
+					returnVal = MySQLConnection.validateOrderAndReturnPrice((String[]) clientMsg.getMessage());
+					type = ServerMessageType.VALIDATE_ORDER_ENTRY;
 					break;
 				case VALIDATE_ORDER_EXIT:
-					returnVal=MySQLConnection.validateOrderAndRegisterExit((String[])clientMsg.getMessage());
-					type=ServerMessageType.VALIDATE_ORDER_EXIT;
+					returnVal = MySQLConnection.validateOrderAndRegisterExit((String[]) clientMsg.getMessage());
+					type = ServerMessageType.VALIDATE_ORDER_EXIT;
 					break;
 
 				case REQUESTS_PARAMETERS:
-					returnVal=MySQLConnection.getParameterRequests();
-					type=ServerMessageType.REQUESTS_PARAMETERS;
+					returnVal = MySQLConnection.getParameterRequests();
+					type = ServerMessageType.REQUESTS_PARAMETERS;
 					break;
 				case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
-					returnVal=MySQLConnection.getDepManagerDiscountRequests();
-					type=ServerMessageType.REQUESTS_PARAMETERS;
+					returnVal = MySQLConnection.getDepManagerDiscountRequests();
+					type = ServerMessageType.REQUESTS_PARAMETERS;
 					break;
 
 				case APPROVE_PARAMETER:
-					returnVal=MySQLConnection.approveParameterUpdate((ParameterUpdate)(clientMsg.getMessage()));
-					type=ServerMessageType.APPROVE_PARAMETER;
-					break;	
+					returnVal = MySQLConnection.approveParameterUpdate((ParameterUpdate) (clientMsg.getMessage()));
+					type = ServerMessageType.APPROVE_PARAMETER;
+					break;
 				case DECLINE_PARAMETER:
-					returnVal=MySQLConnection.declineParameterUpdate((ParameterUpdate)(clientMsg.getMessage()));
-					type=ServerMessageType.DECLINE_PARAMETER;
-					break;	
+					returnVal = MySQLConnection.declineParameterUpdate((ParameterUpdate) (clientMsg.getMessage()));
+					type = ServerMessageType.DECLINE_PARAMETER;
+					break;
 				case APPROVE_DISCOUNT:
-					returnVal=MySQLConnection.approveDiscountUpdate((ParkDiscount)(clientMsg.getMessage()));
-					type=ServerMessageType.APPROVE_DISCOUNT;	
+					returnVal = MySQLConnection.approveDiscountUpdate((ParkDiscount) (clientMsg.getMessage()));
+					type = ServerMessageType.APPROVE_DISCOUNT;
 					break;
 				case DECLINE_DISCOUNT:
-					returnVal=MySQLConnection.declineDiscountUpdate((ParkDiscount)(clientMsg.getMessage()));
-					type=ServerMessageType.DECLINE_DISCOUNT;	
+					returnVal = MySQLConnection.declineDiscountUpdate((ParkDiscount) (clientMsg.getMessage()));
+					type = ServerMessageType.DECLINE_DISCOUNT;
 					break;
 
 				case REGISTRATION:
