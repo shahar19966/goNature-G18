@@ -134,41 +134,39 @@ public class MySQLConnection {
 		return null;
 	}
 
-	public static 	Map<Integer, VisitorReport>getVisitorReport(String namePark) throws SQLException {
+	public static Map<Integer, VisitorReport> getVisitorReport(String namePark) throws SQLException {
 		PreparedStatement getVisitorReport;
-		Map<Integer, VisitorReport> reportVisitorMap =  new LinkedHashMap<Integer, VisitorReport>();
-		Calendar c=Calendar.getInstance();
-		getVisitorReport = con.prepareStatement(
-				"SELECT  orders.type ,orders.dateOfOrder ,sum(finishedOrders.actualNumOfVisitors ) "
+		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
+		Calendar c = Calendar.getInstance();
+		getVisitorReport = con
+				.prepareStatement("SELECT  orders.type ,orders.dateOfOrder ,sum(finishedOrders.actualNumOfVisitors ) "
 						+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
 						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND orders.parkName_fk=?  "
 						+ "GROUP by orders.type, orders.dateOfOrder");
 		getVisitorReport.setString(1, namePark);
 		ResultSet rs = getVisitorReport.executeQuery();
-		int daysInMonth  =c.getActualMaximum(Calendar.DAY_OF_MONTH);
-		
-		for(int i=1;i<=daysInMonth;i++)
+		int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+		for (int i = 1; i <= daysInMonth; i++)
 			reportVisitorMap.put(i, new VisitorReport(namePark));
-			
 
 		if (!rs.next()) {
 			return reportVisitorMap;
 		}
 
 		do {
-			String temp=rs.getString(2);
-			temp=temp.substring(8, 9);
+			String temp = rs.getString(2);
+			temp = temp.substring(8, 9);
 			if (rs.getString(1).equals("GUIDE"))
 				reportVisitorMap.get(Integer.parseInt(temp)).setCountGuid(Integer.parseInt((rs.getString(3))));
 			if (rs.getString(1).equals("SUBSCRIBER"))
 				reportVisitorMap.get(Integer.parseInt(temp)).setCountSubscriber(Integer.parseInt((rs.getString(3))));
 			if (rs.getString(1).equals("REGULAR"))
 				reportVisitorMap.get(Integer.parseInt(temp)).setCountRegular(Integer.parseInt((rs.getString(3))));
-				
-			
+
 		} while (rs.next());
 		return reportVisitorMap;
-		
+
 	}
 
 	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
@@ -251,33 +249,30 @@ public class MySQLConnection {
 
 	}
 
-	public static Map<Integer, VisitorReport>  getIncomeReport(String namePark) throws SQLException {
+	public static Map<Integer, VisitorReport> getIncomeReport(String namePark) throws SQLException {
 		PreparedStatement GetIncomeReport;
-		Map<Integer, VisitorReport> reportVisitorMap =  new LinkedHashMap<Integer, VisitorReport>();
-		Calendar c=Calendar.getInstance();
-		GetIncomeReport = con.prepareStatement("SELECT sum(finishedOrders.actualPrice ) ,"
-				+ "orders.dateOfOrder "
-				+ "FROM finishedOrders "
-				+ "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
+		Calendar c = Calendar.getInstance();
+		GetIncomeReport = con.prepareStatement("SELECT sum(finishedOrders.actualPrice ) ," + "orders.dateOfOrder "
+				+ "FROM finishedOrders " + "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
 				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND orders.parkName_fk=? "
 				+ "GROUP by orders.parkName_fk,orders.dateOfOrder");
 		GetIncomeReport.setString(1, namePark);
 		ResultSet rs = GetIncomeReport.executeQuery();
-		int daysInMonth  =c.getActualMaximum(Calendar.DAY_OF_MONTH);
-		
-		for(int i=1;i<=daysInMonth;i++)
+		int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+		for (int i = 1; i <= daysInMonth; i++)
 			reportVisitorMap.put(i, new VisitorReport(namePark));
-			
 
 		if (!rs.next()) {
 			return reportVisitorMap;
 		}
 
 		do {
-			String temp=rs.getString(2);
-			temp=temp.substring(8, 9);
-				reportVisitorMap.get(Integer.parseInt(temp)).setPrice(Integer.parseInt((rs.getString(1))));
-			
+			String temp = rs.getString(2);
+			temp = temp.substring(8, 9);
+			reportVisitorMap.get(Integer.parseInt(temp)).setPrice(Integer.parseInt((rs.getString(1))));
+
 		} while (rs.next());
 		return reportVisitorMap;
 
@@ -478,23 +473,22 @@ public class MySQLConnection {
 	}
 
 	public static ServerMessage discountValidation(ParkDiscount newDiscountRequest) throws SQLException {
-		String query="SELECT * FROM discounts WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
+		String query = "SELECT * FROM discounts WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
 		PreparedStatement checkDiscountRequestStatement = con.prepareStatement(query);
 		checkDiscountRequestStatement.setString(1, newDiscountRequest.getParkName());
 		checkDiscountRequestStatement.setString(2, newDiscountRequest.getStartDate());
 		checkDiscountRequestStatement.setString(3, newDiscountRequest.getFinishDate());
 		checkDiscountRequestStatement.setInt(4, newDiscountRequest.getDiscountAmount());
 		ResultSet rs = checkDiscountRequestStatement.executeQuery();
-		if(rs.next()) {
-			ParkDiscount existDiscount= new ParkDiscount(
-					rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4),
-					EntityConstants.RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+		if (rs.next()) {
+			ParkDiscount existDiscount = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3),
+					rs.getInt(4), EntityConstants.RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
 			return new ServerMessage(ServerMessageType.DISCOUNT_IS_ALREADY_EXIST, existDiscount);
-			
+
 		}
 		return new ServerMessage(ServerMessageType.CAN_INSERT_NEW_DISCOUNT, null);
 	}
-	
+
 	public static ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest)
 			throws SQLException, ParseException {
 		PreparedStatement insertDiscountRequestStatement = con.prepareStatement(
@@ -699,7 +693,7 @@ public class MySQLConnection {
 		LocalDate today = LocalDate.now();
 		String query = "Select * From discounts where finishDate>=? And employeeId=? ;";
 		PreparedStatement discountsRequestsForId = con.prepareStatement(query);
-		discountsRequestsForId.setString(1,today.toString() );
+		discountsRequestsForId.setString(1, today.toString());
 		discountsRequestsForId.setString(2, employeeId);
 		ResultSet rs = discountsRequestsForId.executeQuery();
 		while (rs.next()) {
@@ -835,10 +829,9 @@ public class MySQLConnection {
 	public static void main(String[] args) throws ParseException, InstantiationException, IllegalAccessException,
 			ClassNotFoundException, SQLException {
 		connectToDB();
-		//sendSmsToActiveOrders();
-		//expiredApprovedOrders();
+		// sendSmsToActiveOrders();
+		// expiredApprovedOrders();
 		sendSmsToCancelOrders();
-		
 
 	}
 
@@ -1104,7 +1097,6 @@ public class MySQLConnection {
 		expirePreparedStatement.executeUpdate();
 	}
 
-
 	private static void sendSms(Order order) {
 		try {
 			LocalDateTime now = LocalDateTime.now();
@@ -1125,6 +1117,8 @@ public class MySQLConnection {
 
 	private static List<Order> getWatingOrdersForParkInDateAndTime(Park park, String date, String time)
 			throws NumberFormatException, SQLException {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime nowPlus2Hours = LocalDateTime.now().plusHours(2);
 		List<Order> ordersInTimeIntervalForDateInPark = new ArrayList<Order>();
 		if (park == null)
 			return null;
@@ -1143,8 +1137,11 @@ public class MySQLConnection {
 			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
 					OrderStatus.valueOf(rs.getString(6)), OrderType.valueOf(rs.getString(7)), rs.getString(8),
 					rs.getString(9), rs.getInt(10), rs.getString(11), rs.getString(12));
+			LocalDateTime dateTimeOfOrder = LocalDateTime
+					.parse(tmpOrder.getDateOfOrder() + " " + tmpOrder.getTimeOfOrder(), formatter);
+			if (dateTimeOfOrder.isBefore(nowPlus2Hours))
+				continue;
 			ordersInTimeIntervalForDateInPark.add(tmpOrder);
-			System.out.println(tmpOrder);
 		}
 
 		return ordersInTimeIntervalForDateInPark;
@@ -1152,6 +1149,8 @@ public class MySQLConnection {
 
 	private static List<Order> checkWatingList(Map<String, Map<String, List<String>>> dateAndTimesToCheckForParks)
 			throws NumberFormatException, SQLException, ParseException {
+		
+		
 		List<Order> ordersToSendSms = new ArrayList<Order>();
 		for (String parkName : dateAndTimesToCheckForParks.keySet()) {
 			Park park = getCertainPark(parkName);
@@ -1164,6 +1163,7 @@ public class MySQLConnection {
 					System.out.println(parkName + " " + date + " " + time);
 					List<Order> ordersInWait = getWatingOrdersForParkInDateAndTime(park, date, time);
 					for (Order order : ordersInWait) {
+
 						if (validateDate(order)) {
 							changeOrderStatus(order.getOrderNum(), OrderStatus.PENDING_APPROVAL_FROM_WAITING_LIST);
 							sendSms(order);
