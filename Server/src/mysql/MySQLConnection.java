@@ -1208,5 +1208,18 @@ public class MySQLConnection {
 		}
 		return ordersToSendSms;
 	}
+	public static Park getPark(String parkname) throws SQLException
+	{
+		Park parktoreturn=null;
+		PreparedStatement getParkdetails;
+		getParkdetails = con
+				.prepareStatement("SELECT * FROM park WHERE parkName=?;");
+		getParkdetails.setString(1, parkname);
+		
+		ResultSet rs = getParkdetails.executeQuery();
+		if(rs.next())
+		 parktoreturn=new Park (rs.getString(1),rs.getInt(2),rs.getInt(3),rs.getInt(4),rs.getInt(5));
+		return parktoreturn;
+	}
 
 }
