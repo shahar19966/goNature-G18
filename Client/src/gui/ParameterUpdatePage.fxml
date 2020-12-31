@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerParametersUpdateController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerParametersUpdateController">
    <children>
-      <Label prefHeight="17.0" prefWidth="331.0" text="Current Park Capacity:">
+      <Label fx:id="labelCapacity" prefHeight="17.0" prefWidth="331.0" text="Current Park Capacity:">
          <font>
             <Font name="System Bold Italic" size="14.0" />
          </font>
@@ -18,7 +18,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <Label prefHeight="17.0" prefWidth="331.0" text="Current Difference Parameter:">
+      <Label fx:id="labelDifference" prefHeight="17.0" prefWidth="331.0" text="Current Difference Parameter:">
          <font>
             <Font name="System Bold Italic" size="14.0" />
          </font>
@@ -28,7 +28,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <Label prefHeight="17.0" prefWidth="331.0" text="Current Visitation Time:">
+      <Label fx:id="labelVisitationTime" prefHeight="17.0" prefWidth="331.0" text="Current Visitation Time:">
          <font>
             <Font name="System Bold Italic" size="14.0" />
          </font>

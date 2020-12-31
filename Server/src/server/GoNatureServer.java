@@ -229,6 +229,11 @@ public class GoNatureServer extends AbstractServer {
 					ServerMessage discountValidationMessage = MySQLConnection.discountValidation((ParkDiscount) (clientMsg.getMessage()));
 					returnVal = discountValidationMessage.getMessage();
 					type = discountValidationMessage.getType();
+					break;
+				case GET_PARK:
+					returnVal=MySQLConnection.getPark((String) (clientMsg.getMessage()));
+					type = ServerMessageType.GET_PARK;
+					break;
 
 				}
 			}
