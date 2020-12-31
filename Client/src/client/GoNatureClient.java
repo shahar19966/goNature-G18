@@ -56,9 +56,10 @@ public class GoNatureClient extends AbstractClient {
 	 * @throws Exception
 	 */
 	public void handleMessageFromServer(Object msg) {
-		System.out.println("--> handleMessageFromServer");
+		System.out.print("--> handleMessageFromServer : ");
 		if (msg instanceof ServerMessage) {
 			ServerMessage serverMsg = (ServerMessage) msg;
+			System.out.println(serverMsg.getType());
 			switch (serverMsg.getType()) {
 			case LOGIN:
 				guiControl.setServerMsg(serverMsg);
@@ -149,7 +150,7 @@ public class GoNatureClient extends AbstractClient {
 			case DECLINE_DISCOUNT:
 				guiControl.setServerMsg(serverMsg);
 				break;
-			case TO_APPROVE_EMAIL_AND_SMS:
+			case FINAL_APPROVAL_EMAIL_AND_SMS:
 				List<Order> orderToApproveList  = (List<Order>) serverMsg.getMessage();
 				if (guiControl.getUser() instanceof Subscriber) {
 					Subscriber sub = (Subscriber) guiControl.getUser();
@@ -158,7 +159,7 @@ public class GoNatureClient extends AbstractClient {
 						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Waiting Approval",
 								"Your order is waiting for approval,please go "
 										+ "to Order Tracking and approve your order\n Order details:\n"
-										+ order.toString()+"Sent to email: "+order.getEmail()+"\n Sent to Phone number: "+order.getPhone());
+										+ order.toString()+"\nSent to email: "+order.getEmail()+"\nSent to Phone number: "+order.getPhone());
 				} else if (guiControl.getUser() instanceof Visitor) {
 					Visitor visitor = (Visitor) guiControl.getUser();
 					for(Order order:orderToApproveList)
@@ -166,10 +167,30 @@ public class GoNatureClient extends AbstractClient {
 						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Waiting Approval",
 								"Your order is waiting for approval,please go "
 										+ "to Order Tracking and approve your order\n Order details:\n"
-										+ order.toString()+"Sent to email: "+order.getEmail()+"\n Sent to Phone number: "+order.getPhone());
+										+ order.toString()+"\nSent to email: "+order.getEmail()+"\nSent to Phone number: "+order.getPhone());
 				}
 				return; // this message should not interfere with the client in case he's waiting for
 						// server's response
+			case WAITING_LIST_APPROVAL_EMAIL_AND_SMS:
+				List<Order> orderToApproveFromWaitingList  = (List<Order>) serverMsg.getMessage();
+				if (guiControl.getUser() instanceof Subscriber) {
+					Subscriber sub = (Subscriber) guiControl.getUser();
+					for(Order order:orderToApproveFromWaitingList)
+						if(sub.getID().equals(order.getId()))
+						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Waiting Approval From Waiting List",
+								"Your order is waiting for approval from waiting list,please go "
+										+ "to Order Tracking and approve your order\n Order details:\n"
+										+ order.toString()+"\nSent to email: "+order.getEmail()+"\nSent to Phone number: "+order.getPhone());
+				} else if (guiControl.getUser() instanceof Visitor) {
+					Visitor visitor = (Visitor) guiControl.getUser();
+					for(Order order:orderToApproveFromWaitingList)
+						if(visitor.getId().equals(order.getId()))
+						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Waiting Approval From Waiting List",
+								"Your order is waiting for approval from waiting list,please go "
+										+ "to Order Tracking and approve your order\n Order details:\n"
+										+ order.toString()+"\nSent to email: "+order.getEmail()+"\nSent to Phone number: "+order.getPhone());
+				}
+				return;
 			case CANCEL_EMAIL_AND_SMS:
 				List<Order> orderList = (List<Order>) serverMsg.getMessage();
 				if (guiControl.getUser() instanceof Subscriber) {
@@ -179,7 +200,7 @@ public class GoNatureClient extends AbstractClient {
 						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Cancelled Order",
 								"You haven't approved your order in the given time space, "
 										+ "therefore it was cancelled.\n Order details:\n" +order.toString()
-										+"\nSent to email: "+order.getEmail()+"\n Sent to Phone number: "+order.getPhone());
+										+"\nSent to email: "+order.getEmail()+"\nSent to Phone number: "+order.getPhone());
 				} else if (guiControl.getUser() instanceof Visitor) {
 					Visitor visitor = (Visitor) guiControl.getUser();
 					for(Order order:orderList)
@@ -187,7 +208,7 @@ public class GoNatureClient extends AbstractClient {
 						GUIControl.popUpMessage("SMS AND EMAIL SIMULATION-Cancelled Order",
 								"You haven't approved your order in the given time space, "
 										+ "therefore it was cancelled.\n Order details:\n" + order.toString()
-										+"\nSent to email: "+order.getEmail()+"\n Sent to Phone number: "+order.getPhone());
+										+"\nSent to email: "+order.getEmail()+"\nSent to Phone number: "+order.getPhone());
 				}
 				return; // this message should not interfere with the client in case he's waiting for
 						// server's response

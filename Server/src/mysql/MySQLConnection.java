@@ -45,6 +45,7 @@ import entity.VisitorReport;
 import message.ClientMessageType;
 import message.ServerMessage;
 import message.ServerMessageType;
+import server.GoNatureServer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import entity.EntityConstants.OrderStatus;
@@ -57,7 +58,6 @@ import entity.EntityConstants.RequestStatus;
  */
 public class MySQLConnection {
 	private static Connection con;
-
 	public static void connectToDB()
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -65,20 +65,6 @@ public class MySQLConnection {
 		con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/S7BzDq6Xs6?serverTimezone=IST",
 				"S7BzDq6Xs6", "puC0UgMgeM");
 		System.out.println("SQL connection succeed");
-		ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
-
-		scheduledThreadPool.scheduleAtFixedRate(() -> {
-			try {
-				sendSmsToActiveOrders();
-			} catch (SQLException e) {
-			}
-		}, 0, 50, TimeUnit.MINUTES);
-		scheduledThreadPool.scheduleAtFixedRate(() -> {
-			try {
-				sendSmsToCancelOrders();
-			} catch (NumberFormatException | SQLException | ParseException e) {
-			}
-		}, 0, 15, TimeUnit.MINUTES);
 	}
 
 	/*
@@ -654,24 +640,10 @@ public class MySQLConnection {
 		approveOrder.setString(2, orderNum);
 		approveOrder.executeUpdate();
 		delSms.executeUpdate();
-		if (newStatus.equals(OrderStatus.CANCELLED) && !order.getStatus().equals(OrderStatus.WAITING)) {
-
-			String parkName = order.getParkName();
-			String dateOfOrder = order.getDateOfOrder();
-			String timeOfOrder = order.getTimeOfOrder();
-			Map<String, Map<String, List<String>>> checkWating = new LinkedHashMap<String, Map<String, List<String>>>();
-			Map<String, List<String>> dateAndTime = new LinkedHashMap<String, List<String>>();
-			List<String> times = new ArrayList<String>();
-			times.add(timeOfOrder);
-			dateAndTime.put(dateOfOrder, times);
-			checkWating.put(parkName, dateAndTime);
-			checkWatingList(checkWating);
-
-		}
 		return true;
 	}
 
-	private static Order getCertainOrder(String orderNum) throws SQLException {
+	public static Order getCertainOrder(String orderNum) throws SQLException {
 		String query = "Select * From orders where orderNum=?";
 		PreparedStatement getPark = con.prepareStatement(query);
 		getPark.setString(1, orderNum);
@@ -835,7 +807,6 @@ public class MySQLConnection {
 			return false;
 		}
 	}
-
 	public static boolean updateParkFull(String parkName) {
 		try {
 			PreparedStatement checkParkFull = con
@@ -1056,9 +1027,10 @@ public class MySQLConnection {
 		return orders;
 	}
 
-	public static List<Order> sendSmsToCancelOrders() throws SQLException, NumberFormatException, ParseException {
+	public static List<List<Order>> sendSmsToCancelOrders() throws SQLException, NumberFormatException, ParseException {
 		System.out.println("Cancel Orders");
 		List<Order> orders = new ArrayList<>();
+		List<Order> ordersFromWaitingList=null;
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String nowString = now.format(formatter);
@@ -1112,9 +1084,12 @@ public class MySQLConnection {
 			}
 			con.prepareStatement(queryCancelOrders).executeUpdate();
 			con.prepareStatement(queryDelSms).executeUpdate();
-			checkWatingList(checkWating);
+			ordersFromWaitingList=checkWatingList(checkWating);
 		}
-		return orders;
+		List<List<Order>> ordersToSendSMS=new ArrayList<>();
+		ordersToSendSMS.add(orders);
+		ordersToSendSMS.add(ordersFromWaitingList);
+		return ordersToSendSMS;
 	}
 
 	public static void expiredApprovedOrders() throws SQLException {
@@ -1182,7 +1157,7 @@ public class MySQLConnection {
 		return ordersInTimeIntervalForDateInPark;
 	}
 
-	private static List<Order> checkWatingList(Map<String, Map<String, List<String>>> dateAndTimesToCheckForParks)
+	public static List<Order> checkWatingList(Map<String, Map<String, List<String>>> dateAndTimesToCheckForParks)
 			throws NumberFormatException, SQLException, ParseException {
 		List<Order> ordersToSendSms = new ArrayList<Order>();
 		for (String parkName : dateAndTimesToCheckForParks.keySet()) {
@@ -1207,6 +1182,22 @@ public class MySQLConnection {
 			}
 		}
 		return ordersToSendSms;
+	}
+	public static void checkIfParksFull() throws SQLException {
+		List<Park> parkList=getParks();
+		for(Park park:parkList) {
+			if(park.getParkCurrentVisitors()>park.getParkMaxVisitorsDefault()) {
+				String updateParkFullQuery = "INSERT IGNORE INTO parkFull (parkName_fk,dateFull,timeFull) VALUES (?,?,?)";
+				PreparedStatement updateParkFull = con.prepareStatement(updateParkFullQuery);
+				updateParkFull.setString(1, park.getParkName());
+				updateParkFull.setString(2, LocalDate.now().toString());
+				Date dateNow = new Date();
+				SimpleDateFormat formatter = new SimpleDateFormat("HH:00:00");
+				String timeNow = formatter.format(new Date());
+				updateParkFull.setString(3, timeNow);
+				updateParkFull.executeUpdate();
+			}
+    }	
 	}
 	public static Park getPark(String parkname) throws SQLException
 	{

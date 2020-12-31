@@ -1,9 +1,7 @@
 package gui;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -12,13 +10,10 @@ import java.util.Set;
 import entity.Order;
 import gui.ClientConstants.AlertType;
 import gui.ClientConstants.Sizes;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -48,7 +43,8 @@ public class AvailableDatesPageController implements Initializable {
 			VBox secondaryVBox=(VBox)mainVBox.getChildren().get(1);
 			for(String hour:dateMap.get(dates[i])) {
 				final String nextDate=dates[i];
-				GuiButton button=new GuiButton(hour,AlertType.Info,Sizes.Medium);
+				String niceHour=hour.substring(0, 5);
+				GuiButton button=new GuiButton(niceHour,AlertType.Info,Sizes.Medium);
 				button.setOnAction(e->{
 					Order order = (Order) orderDes.get(0);
 					order.setDateOfOrder(nextDate);

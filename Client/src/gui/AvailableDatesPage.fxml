@@ -17,7 +17,7 @@
   </rowConstraints>
    <children>
       <Label fx:id="titleLabel" text="Available Dates" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-      <HBox fx:id="mainHBox" prefHeight="100.0" prefWidth="200.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <HBox fx:id="mainHBox" prefHeight="100.0" prefWidth="200.0" spacing="3.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>

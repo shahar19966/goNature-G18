@@ -4,8 +4,12 @@
 package server;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import application.ServerMain;
 import entity.Employee;
@@ -159,8 +163,11 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.GET_ORDERS_BY_ID;
 					break;
 				case CANCEL_ORDER:
+					Order cancelledOrder=MySQLConnection.getCertainOrder((String) (clientMsg.getMessage()));
 					returnVal = MySQLConnection.changeOrderStatus((String) (clientMsg.getMessage()),
 							OrderStatus.CANCELLED);
+					if(((Boolean)returnVal).booleanValue())
+						notifyFromWaitingList(cancelledOrder);
 					type = ServerMessageType.CANCEL_ORDER;
 					break;
 				case APPROVE_ORDER:
@@ -252,6 +259,21 @@ public class GoNatureServer extends AbstractServer {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	private void notifyFromWaitingList(Order order) throws NumberFormatException, SQLException, ParseException {
+		if (order!=null && !order.getStatus().equals(OrderStatus.WAITING)) {
+			String parkName = order.getParkName();
+			String dateOfOrder = order.getDateOfOrder();
+			String timeOfOrder = order.getTimeOfOrder();
+			Map<String, Map<String, List<String>>> checkWating = new LinkedHashMap<String, Map<String, List<String>>>();
+			Map<String, List<String>> dateAndTime = new LinkedHashMap<String, List<String>>();
+			List<String> times = new ArrayList<String>();
+			times.add(timeOfOrder);
+			dateAndTime.put(dateOfOrder, times);
+			checkWating.put(parkName, dateAndTime);
+			List<Order> orderList=MySQLConnection.checkWatingList(checkWating);
+			sendToAllClients(new ServerMessage(ServerMessageType.WAITING_LIST_APPROVAL_EMAIL_AND_SMS,orderList));
 		}
 	}
 

@@ -47,6 +47,8 @@ public class MyOrdersController implements Initializable {
 
 	@FXML
 	private TableColumn<Order, EntityConstants.OrderType> typeCol;
+    @FXML
+    private TableColumn<Order, EntityConstants.OrderStatus> statusCol;
 
 	@FXML
 	private TableColumn action1Col;
@@ -84,6 +86,7 @@ public class MyOrdersController implements Initializable {
 		setTimeCol();
 		setPeopleAmountCol();
 		setTypeCol();
+		setStatusCol();
 		setAction1Col();
 		setAction2Col();
 	}
@@ -110,6 +113,9 @@ public class MyOrdersController implements Initializable {
 
 	private void setTypeCol() {
 		typeCol.setCellValueFactory(new PropertyValueFactory<Order, EntityConstants.OrderType>("type"));
+	}
+	private void setStatusCol() {
+		statusCol.setCellValueFactory(new PropertyValueFactory<Order, EntityConstants.OrderStatus>("status"));
 	}
 
 	private void setAction1Col() {
