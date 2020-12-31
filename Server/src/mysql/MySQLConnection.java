@@ -813,8 +813,8 @@ public class MySQLConnection {
 	public static void main(String[] args) throws ParseException, InstantiationException, IllegalAccessException,
 			ClassNotFoundException, SQLException {
 		connectToDB();
-		sendSmsToActiveOrders();
-		expiredApprovedOrders();
+		//sendSmsToActiveOrders();
+		//expiredApprovedOrders();
 		sendSmsToCancelOrders();
 		
 
@@ -1032,6 +1032,7 @@ public class MySQLConnection {
 			String queryDelSms = "DELETE FROM smsSend WHERE ";
 			Map<String, Map<String, List<String>>> checkWating = new LinkedHashMap<String, Map<String, List<String>>>();
 			for (int i = 0; i < orders.size(); i++) {
+				System.out.println(orders.get(i));
 				if (checkWating.containsKey(orders.get(i).getParkName())) {
 					Map<String, List<String>> dateAndTimesForPark = checkWating.get(orders.get(i).getParkName());
 					if (dateAndTimesForPark.containsKey(orders.get(i).getDateOfOrder())) {
