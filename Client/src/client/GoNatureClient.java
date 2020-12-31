@@ -215,6 +215,9 @@ public class GoNatureClient extends AbstractClient {
 			case ACTIVATE_ORDER_FROM_WATING_LIST:
 				guiControl.setServerMsg(serverMsg);
 				break;
+			case GET_PARK:
+				guiControl.setServerMsg(serverMsg);
+				break;
 			default:
 				guiControl.setServerMsg(serverMsg);
 				break;
