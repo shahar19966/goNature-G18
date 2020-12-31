@@ -25,6 +25,7 @@
             <TableColumn fx:id="timeCol" prefWidth="75.0" text="Time" />
             <TableColumn fx:id="amountCol" prefWidth="75.0" text="People Amount" />
             <TableColumn fx:id="typeCol" prefWidth="75.0" text="Type" />
+            <TableColumn fx:id="statusCol" prefWidth="75.0" text="Status" />
             <TableColumn fx:id="action1Col" prefWidth="75.0" />
             <TableColumn fx:id="action2Col" prefWidth="75.0" />
         </columns>

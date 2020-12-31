@@ -1,5 +1,13 @@
 package application;
 	
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import entity.Order;
 import gui.ServerScreenController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -43,7 +51,6 @@ public class ServerMain extends Application {
 	public static boolean runServer(){
 	    	if(server==null)
 	    		server = new GoNatureServer(DEFAULT_PORT);
-	        
 	        try 
 	        {
 	        	server.listen(); //Start listening for connections
@@ -63,6 +70,7 @@ public class ServerMain extends Application {
 	        	server.stopListening();
 	        	return false;
 	        }
+	        runThreads();
 	        return true;
 	       
 	       
@@ -75,6 +83,35 @@ public class ServerMain extends Application {
 			server.sendToAllClients(new ServerMessage(ServerMessageType.SERVER_ERROR,"Server crashed!\nSorry for the inconvenience\nClick 'OK' to exit..."));
 		System.exit(0);
 		
+	}
+	private static void runThreads() {
+		ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
+
+		scheduledThreadPool.scheduleAtFixedRate(() -> {
+			try {
+				List<Order> orderList=MySQLConnection.sendSmsToActiveOrders();
+				server.sendToAllClients(new ServerMessage(ServerMessageType.FINAL_APPROVAL_EMAIL_AND_SMS,orderList));
+			} catch (SQLException e) {
+				showError("FAILED TO SEND CLIENTS SMS AND EMAILS");
+			}
+		}, 0, 1, TimeUnit.HOURS);
+		scheduledThreadPool.scheduleAtFixedRate(() -> {
+			try {
+				List<List<Order>> twoOrderList=MySQLConnection.sendSmsToCancelOrders();
+				server.sendToAllClients(new ServerMessage(ServerMessageType.CANCEL_EMAIL_AND_SMS,twoOrderList.get(0)));
+				if(twoOrderList.get(1)!=null)
+					server.sendToAllClients(new ServerMessage(ServerMessageType.WAITING_LIST_APPROVAL_EMAIL_AND_SMS,twoOrderList.get(1)));
+			} catch (NumberFormatException | SQLException | ParseException e) {
+				showError("FAILED TO SEND CLIENTS SMS AND EMAILS");
+			}
+		}, 0, 30, TimeUnit.MINUTES);
+		scheduledThreadPool.scheduleAtFixedRate(() -> {
+			try {
+				MySQLConnection.checkIfParksFull();
+			} catch ( SQLException e) {
+				showError("FAILED TO CHECK IF PARKS FULL");
+			}
+		}, 0, 1, TimeUnit.HOURS);
 	}
 	private static void showError(String msg) {
 			Platform.runLater(() -> {
