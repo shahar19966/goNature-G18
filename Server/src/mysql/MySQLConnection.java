@@ -39,6 +39,7 @@ import entity.ParkCapacityReport;
 import entity.Subscriber;
 import entity.Visitor;
 import entity.VisitorReport;
+import message.ClientMessageType;
 import message.ServerMessage;
 import message.ServerMessageType;
 import javafx.collections.FXCollections;
@@ -476,6 +477,24 @@ public class MySQLConnection {
 		return insertNewOrder(orderRequest, OrderStatus.WAITING, false, payInAdvanceWaitingList);
 	}
 
+	public static ServerMessage discountValidation(ParkDiscount newDiscountRequest) throws SQLException {
+		String query="SELECT * FROM discounts WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
+		PreparedStatement checkDiscountRequestStatement = con.prepareStatement(query);
+		checkDiscountRequestStatement.setString(1, newDiscountRequest.getParkName());
+		checkDiscountRequestStatement.setString(2, newDiscountRequest.getStartDate());
+		checkDiscountRequestStatement.setString(3, newDiscountRequest.getFinishDate());
+		checkDiscountRequestStatement.setInt(4, newDiscountRequest.getDiscountAmount());
+		ResultSet rs = checkDiscountRequestStatement.executeQuery();
+		if(rs.next()) {
+			ParkDiscount existDiscount= new ParkDiscount(
+					rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4),
+					EntityConstants.RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			return new ServerMessage(ServerMessageType.DISCOUNT_IS_ALREADY_EXIST, existDiscount);
+			
+		}
+		return new ServerMessage(ServerMessageType.CAN_INSERT_NEW_DISCOUNT, null);
+	}
+	
 	public static ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest)
 			throws SQLException, ParseException {
 		PreparedStatement insertDiscountRequestStatement = con.prepareStatement(
@@ -677,9 +696,11 @@ public class MySQLConnection {
 
 	public static List<ParkDiscount> getDiscountRequests(String employeeId) throws SQLException {
 		List<ParkDiscount> parkDiscountRequestList = new ArrayList<>();
-		String query = "Select * From discounts where employeeId=? ;";
+		LocalDate today = LocalDate.now();
+		String query = "Select * From discounts where finishDate>=? And employeeId=? ;";
 		PreparedStatement discountsRequestsForId = con.prepareStatement(query);
-		discountsRequestsForId.setString(1, employeeId);
+		discountsRequestsForId.setString(1,today.toString() );
+		discountsRequestsForId.setString(2, employeeId);
 		ResultSet rs = discountsRequestsForId.executeQuery();
 		while (rs.next()) {
 			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4),
@@ -691,8 +712,9 @@ public class MySQLConnection {
 
 	public static List<ParkDiscount> getDepManagerDiscountRequests() throws SQLException {
 		List<ParkDiscount> parkDiscountRequestList = new ArrayList<>();
-		String query = "Select * from discounts;";
+		String query = "Select * from discounts Where status=?;";
 		PreparedStatement discountRequests = con.prepareStatement(query);
+		discountRequests.setString(1, EntityConstants.RequestStatus.WAITING.toString());
 		ResultSet rs = discountRequests.executeQuery();
 		while (rs.next()) {
 			ParkDiscount tmp = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4),
@@ -903,7 +925,7 @@ public class MySQLConnection {
 	}
 
 	public static boolean approveDiscountUpdate(ParkDiscount discountToApprove) throws SQLException {
-		String query1 = "UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
+		String query1 = "UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=? ;";
 		PreparedStatement approveDiscount = con.prepareStatement(query1);
 		approveDiscount.setString(1, entity.EntityConstants.RequestStatus.APPROVED.name());
 		approveDiscount.setString(2, discountToApprove.getParkName());
@@ -1082,6 +1104,7 @@ public class MySQLConnection {
 		expirePreparedStatement.executeUpdate();
 	}
 
+
 	private static void sendSms(Order order) {
 		try {
 			LocalDateTime now = LocalDateTime.now();
@@ -1152,4 +1175,5 @@ public class MySQLConnection {
 		}
 		return ordersToSendSms;
 	}
+
 }
