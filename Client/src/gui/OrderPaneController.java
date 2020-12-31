@@ -199,7 +199,7 @@ public class OrderPaneController implements Initializable {
 		parkNameComboBox.setItems(parkNameObservableList);
 		DatePicker minDate = new DatePicker();
 		Date today = new Date();
-		LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1);
 		minDate.setValue(LocalDate.of(localDate.getYear(), localDate.getMonth(), localDate.getDayOfMonth()));
 		final Callback<DatePicker, DateCell> dayCellFactory;
 		dayCellFactory = (final DatePicker datePicker) -> new DateCell() {
@@ -318,7 +318,7 @@ public class OrderPaneController implements Initializable {
 		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ClientConstants.MAX_PEOPLE));
 		peopleAmount.getValueFactory().setValue(1);
 		Date today = new Date();
-		LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1);
 		date.setValue(localDate);
 	}
 }

@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 //import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
@@ -62,6 +65,20 @@ public class MySQLConnection {
 		con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/S7BzDq6Xs6?serverTimezone=IST",
 				"S7BzDq6Xs6", "puC0UgMgeM");
 		System.out.println("SQL connection succeed");
+		ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
+
+		scheduledThreadPool.scheduleAtFixedRate(() -> {
+			try {
+				sendSmsToActiveOrders();
+			} catch (SQLException e) {
+			}
+		}, 0, 50, TimeUnit.MINUTES);
+		scheduledThreadPool.scheduleAtFixedRate(() -> {
+			try {
+				sendSmsToCancelOrders();
+			} catch (NumberFormatException | SQLException | ParseException e) {
+			}
+		}, 0, 15, TimeUnit.MINUTES);
 	}
 
 	/*
@@ -430,6 +447,9 @@ public class MySQLConnection {
 			orderToInsert.setOrderCreationDate(dateNow);
 			orderToInsert.setPrice((int) price);
 			orderToInsert.setStatus(orderStatus);
+			if (orderStatus.equals(OrderStatus.PENDING_FINAL_APPROVAL)) {
+				sendSms(orderToInsert);
+			}
 			return orderToInsert;
 		}
 		throw new SQLException();
@@ -438,7 +458,16 @@ public class MySQLConnection {
 	public static Order createOrder(Order orderRequest, Boolean payInAdvance)
 			throws SQLException, NumberFormatException, ParseException {
 		if (validateDate(orderRequest)) {
-			return insertNewOrder(orderRequest, OrderStatus.ACTIVE, false, payInAdvance);
+			LocalDateTime now = LocalDateTime.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime dateTimeOfOrder = LocalDateTime
+					.parse(orderRequest.getDateOfOrder() + " " + orderRequest.getTimeOfOrder(), formatter);
+			boolean res;
+			long diff = ChronoUnit.MINUTES.between(now, dateTimeOfOrder);
+			if (diff > 24 * 60)
+				return insertNewOrder(orderRequest, OrderStatus.ACTIVE, false, payInAdvance);
+			else
+				return insertNewOrder(orderRequest, OrderStatus.PENDING_FINAL_APPROVAL, false, payInAdvance);
 		}
 		return null;
 	}
@@ -591,9 +620,13 @@ public class MySQLConnection {
 
 	public static List<Order> getUnfinishedOrdersById(String id) throws SQLException {
 		List<Order> orders = new ArrayList<Order>();
-		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL');";
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String nowString = now.format(formatter);
+		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL') AND dateOfOrder>=?;";
 		PreparedStatement getOrdersForId = con.prepareStatement(query);
 		getOrdersForId.setString(1, id);
+		getOrdersForId.setString(2, nowString.split(" ")[0]);
 		ResultSet rs = getOrdersForId.executeQuery();
 		while (rs.next()) {
 			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
@@ -982,6 +1015,7 @@ public class MySQLConnection {
 	}
 
 	public static List<Order> sendSmsToActiveOrders() throws SQLException {
+		System.out.println("Activate Orders");
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime tommorow = now.plusDays(1);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -1023,6 +1057,7 @@ public class MySQLConnection {
 	}
 
 	public static List<Order> sendSmsToCancelOrders() throws SQLException, NumberFormatException, ParseException {
+		System.out.println("Cancel Orders");
 		List<Order> orders = new ArrayList<>();
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -1030,7 +1065,7 @@ public class MySQLConnection {
 		String dateNow = nowString.split(" ")[0];
 		String timeNow = nowString.split(" ")[1];
 		String query = "SELECT orders.* FROM orders JOIN smsSend on orders.orderNum=smsSend.orderNum_fk WHERE "
-				+ "smsSend.smsRecviedDate=? AND ((orders.status='PENDING_FINAL_APPROVAL' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=2) OR ((orders.status='PENDING_APPROVAL_FROM_WAITING_LIST' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=1)))";
+				+ "smsSend.smsRecviedDate<=? AND ((orders.status='PENDING_FINAL_APPROVAL' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=2) OR ((orders.status='PENDING_APPROVAL_FROM_WAITING_LIST' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=1)))";
 		PreparedStatement getOrdersToSendSms = con.prepareStatement(query);
 		getOrdersToSendSms.setString(1, dateNow);
 		getOrdersToSendSms.setString(2, timeNow);
@@ -1149,8 +1184,6 @@ public class MySQLConnection {
 
 	private static List<Order> checkWatingList(Map<String, Map<String, List<String>>> dateAndTimesToCheckForParks)
 			throws NumberFormatException, SQLException, ParseException {
-		
-		
 		List<Order> ordersToSendSms = new ArrayList<Order>();
 		for (String parkName : dateAndTimesToCheckForParks.keySet()) {
 			Park park = getCertainPark(parkName);
