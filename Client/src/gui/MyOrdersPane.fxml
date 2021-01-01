@@ -16,7 +16,7 @@
     <RowConstraints maxHeight="160.0" minHeight="10.0" percentHeight="88.0" prefHeight="142.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" styleClass="seconderyTitle" text="My Orders" />
+      <Label alignment="CENTER" contentDisplay="CENTER" styleClass="titelHome" text="My Orders" />
       <TableView fx:id="orderTable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
         <columns>
           <TableColumn fx:id="orderNumberCol" prefWidth="97.0" text="Order Number" />

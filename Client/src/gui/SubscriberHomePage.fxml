@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SubscriberHomePageController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SubscriberHomePageController">
    <children>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="434.0">
          <children>
@@ -23,7 +23,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="135.0" layoutY="14.0" prefHeight="21.0" prefWidth="158.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 40;" text="Hello ," textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="135.0" layoutY="14.0" prefHeight="21.0" prefWidth="158.0" styleClass="titelHome" text="Hello ," textAlignment="CENTER">
                <font>
                   <Font size="40.0" />
                </font>
