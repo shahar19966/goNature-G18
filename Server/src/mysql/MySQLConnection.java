@@ -158,8 +158,9 @@ public class MySQLConnection {
 		}
 
 		do {
+			
 			String temp = rs.getString(2);
-			temp = temp.substring(8, 9);
+			temp = temp.substring(8, 10);
 			if (rs.getString(1).equals("GUIDE"))
 				reportVisitorMap.get(Integer.parseInt(temp)).setCountGuid(Integer.parseInt((rs.getString(3))));
 			if (rs.getString(1).equals("SUBSCRIBER"))
