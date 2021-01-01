@@ -88,6 +88,14 @@
 -fx-background-color: seagreen;
 
 }
+.titelHome
+{
+	-fx-font-weight: bold;
+	-fx-text-fill: DARKSEAGREEN;
+	-fx-font-family:System;
+	-fx-font-style:Bold Italic;
+	-fx-font-size:40;
+}
 .alertPane
 {
 -fx-effect:dropshadow(gaussian,black,15,0.1,0,6) ;

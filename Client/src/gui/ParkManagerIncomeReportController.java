@@ -27,22 +27,16 @@ public class ParkManagerIncomeReportController  implements Initializable{
     private LineChart<String, Integer> lineChar;
     @FXML
     private Label year;
-
     @FXML
     private Label parkName;
-
     @FXML
     private Label total;
-
     @FXML
     private Label month;
     @FXML
     private CategoryAxis x;
-
     @FXML
     private NumberAxis y;
-    
-    
     @Override
 	public void initialize(URL location, ResourceBundle resources) 
     {  Calendar c=Calendar.getInstance();
