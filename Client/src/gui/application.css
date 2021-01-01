@@ -39,6 +39,14 @@
 -fx-text-fill: #333333;
 -fx-font-size:20px;
 }
+.clearBtn
+{
+-fx-background-color:linear-gradient(#ee2525, #8f0000),radial-gradient(center 50% -40%, radius 200%, #fa3030 45%, #d40909 50%);
+-fx-background-radius: 6, 5;
+-fx-background-insets: 0, 3;
+-fx-text-fill: #333333;
+-fx-font-size:20px;
+}
 .logInBtn:hover
 {
 	-fx-background-color:linear-gradient(#80E19C, #16672D),radial-gradient(center 50% -40%, radius 200%, #95E6AC 40%, #6BDC8B 50%);
