@@ -81,7 +81,7 @@
       </RadioButton>
       <TextField fx:id="idTextField" layoutX="74.0" layoutY="246.0" promptText="Enter ID Number" style="-fx-font-size: 20px; -fx-border-color: #83A48C; -fx-border-width: 3px;" />
       <PasswordField fx:id="passwordTextField" layoutX="362.0" layoutY="246.0" promptText="Password" style="-fx-font-size: 20px;" visible="false" />
-      <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="74.0" layoutY="330.0" mnemonicParsing="false" onAction="#loginFunc" prefHeight="44.0" prefWidth="107.0" text="Log In">
+      <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" defaultButton="true" layoutX="74.0" layoutY="330.0" mnemonicParsing="false" onAction="#loginFunc" prefHeight="44.0" prefWidth="107.0" text="Log In">
          <styleClass>
             <String fx:value="btn" />
             <String fx:value="logInBtn" />

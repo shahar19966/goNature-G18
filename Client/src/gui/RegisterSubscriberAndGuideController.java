@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import entity.Subscriber;
 import gui.ClientConstants.AlertType;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -94,6 +95,19 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		registerBtn.disableProperty().bind(Bindings.createBooleanBinding(
+				() -> idTextFiled.getText().isEmpty() || emailTextField.getText().isEmpty()
+						|| fNameTextFiled.getText().isEmpty() || lNameTextFiled.getText().isEmpty()
+						|| finishPhone.getText().isEmpty()
+						|| (isCard.isSelected() && (csvTextField.getText().isEmpty() || cardNumber.getText().isEmpty()
+								|| yearComboBox.getValue() ==null || monthComboBox.getValue() ==null)),
+				idTextFiled.textProperty(), emailTextField.textProperty(),
+				fNameTextFiled.textProperty(), lNameTextFiled.textProperty(),
+				finishPhone.textProperty(), csvTextField.textProperty(),
+				cardNumber.textProperty(), monthComboBox.valueProperty(),
+				isCard.selectedProperty(),yearComboBox.valueProperty()));
+
 		yearComboBox.visibleProperty().bind(isCard.selectedProperty());
 		monthComboBox.visibleProperty().bind(isCard.selectedProperty());
 		csvTextField.visibleProperty().bind(isCard.selectedProperty());
@@ -109,7 +123,7 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		yearComboBox.setItems(yearObsList);
 		monthComboBox.setPrefWidth(105);
 		monthComboBox.setItems(monthObsList);
-		familiyCount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 15));
+		familiyCount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15));
 	}
 
 	@FXML
