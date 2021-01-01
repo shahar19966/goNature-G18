@@ -153,7 +153,7 @@
             <Label text="TODO: ADD PICTURE CSV " GridPane.columnIndex="2" GridPane.rowIndex="7" />
             <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearBtnClick" text="Clear" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="TOP">
                <styleClass>
-                  <String fx:value="logInBtn" />
+                  <String fx:value="clearBtn" />
                   <String fx:value="btn" />
                </styleClass>
             </Button>
