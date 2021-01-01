@@ -7,19 +7,22 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import entity.Employee;
-
-import entity.VisitorReport;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import entity.VisitorReport;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
+
+import javafx.scene.chart.XYChart;
+
 import message.ClientMessage;
 import message.ClientMessageType;
 
@@ -39,13 +42,28 @@ public class ParkManagerVisitationReportController implements Initializable {
     @FXML
     private Label month;
 
+  
     @FXML
-    private Label totalGroups;
+    private AnchorPane lastMAncchorPane;
 
     @FXML
-    private Label totalSubscribers;
+    private LineChart<?, ?> lineCharLastM;
+
     @FXML
-    private Label totalIndividuals;
+    private CategoryAxis x11;
+
+    @FXML
+    private NumberAxis y11;
+
+    @FXML
+    private PieChart pieChartLastM;
+
+    @FXML
+    private Label lastM;
+
+    @FXML
+    private Label totalM;
+
 
     @FXML
     private LineChart<String, Integer> lineChar;
@@ -95,7 +113,14 @@ public class ParkManagerVisitationReportController implements Initializable {
 			pieChart.setData(pieCharData);
 			
 		}
-	
+	   @FXML
+	    void yesBtnClick(ActionEvent event) {
+		   
+		   lastMAncchorPane.setVisible(true);
+		   
+
+	    }
+	 
 	
 	
 
