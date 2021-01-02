@@ -809,6 +809,10 @@ public class MySQLConnection {
 		}
 	}
 	public static boolean updateParkFull(String parkName) {
+		LocalTime opening=LocalTime.of(EntityConstants.PARK_OPEN, 0);
+		LocalTime closing=LocalTime.of(EntityConstants.PARK_CLOSED+4, 0);
+		if(LocalTime.now().isBefore(opening) || LocalTime.now().isAfter(closing))
+			return true;
 		try {
 			PreparedStatement checkParkFull = con
 					.prepareStatement("SELECT * from park where parkName=? and maxVisitors<=currentVisitors;");
@@ -1185,6 +1189,10 @@ public class MySQLConnection {
 		return ordersToSendSms;
 	}
 	public static void checkIfParksFull() throws SQLException {
+		LocalTime opening=LocalTime.of(EntityConstants.PARK_OPEN, 0);
+		LocalTime closing=LocalTime.of(EntityConstants.PARK_CLOSED+4, 0);
+		if(LocalTime.now().isBefore(opening) || LocalTime.now().isAfter(closing))
+			return;
 		List<Park> parkList=getParks();
 		for(Park park:parkList) {
 			if(park.getParkCurrentVisitors()>park.getParkMaxVisitorsDefault()) {

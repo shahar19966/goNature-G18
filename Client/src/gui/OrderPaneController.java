@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.TexturePaint;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -8,26 +7,22 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.sun.media.jfxmedia.events.NewFrameEvent;
-
 import entity.EntityConstants;
+import entity.EntityConstants.OrderType;
 import entity.Order;
 import entity.Park;
 import entity.Subscriber;
 import entity.Visitor;
-import entity.EntityConstants.OrderType;
 import gui.ClientConstants.AlertType;
 import gui.ClientConstants.Sizes;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,59 +37,58 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import message.ClientMessage;
 import message.ClientMessageType;
 
 public class OrderPaneController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
-	@FXML
-	private Label orderTripLabel;
 
-	@FXML
-	private ComboBox<String> parkNameComboBox;
+    @FXML
+    private ComboBox<String> parkNameComboBox;
 
-	@FXML
-	private Spinner<Integer> peopleAmount;
+    @FXML
+    private Spinner<Integer> peopleAmount;
 
-	@FXML
-	private GridPane mailGrid;
+    @FXML
+    private DatePicker date;
 
-	@FXML
-	private TextField emailText;
-
-	@FXML
-	private DatePicker date;
-
-	@FXML
+    @FXML
 	private ComboBox<String> timeComboBox;
 
-	@FXML
-	private CheckBox guideGroupCheckBox;
+    @FXML
+    private TextField emailText;
 
-	@FXML
-	private GridPane guideGroupGridPane;
-	@FXML
-	private Button orderButton;
-	@FXML
-	private ComboBox<String> startPhone;
-	@FXML
-	private Label payInAdvanceLabel;
-	@FXML
-	private CheckBox payInAdvanceCheckBox;
-	@FXML
-	private GridPane mainPane;
-	@FXML
-	private TextField finishPhone;
-	@FXML
-	private Button clearButton;
+    @FXML
+    private ComboBox<String> startPhone;
+
+    @FXML
+    private TextField finishPhone;
+
+    @FXML
+    private CheckBox guideGroupCheckBox;
+
+    @FXML
+    private Label payInAdvanceLabel;
+
+    @FXML
+    private CheckBox payInAdvanceCheckBox;
+
+    @FXML
+    private Button orderButton;
+    @FXML
+    private HBox payInAdvanceHBox;
+    @FXML
+    private HBox guideGroupHBox;
+
+    @FXML
+    private Button clearButton;
 	private Tooltip tooltip = new Tooltip();
 	private boolean orderButtonAble = false;
 	private ObservableList<String> parkNameObservableList = FXCollections.observableArrayList();
 
-	@FXML
+  	@FXML
 	void changePeopleAmount(ActionEvent event) {
 		int tmp = peopleAmount.getValue();
 		if (guideGroupCheckBox.isSelected()) {
@@ -148,7 +142,6 @@ public class OrderPaneController implements Initializable {
 		clearFunc(null);
 
 	}
-
 	private void displayAvailableDates(Map<String, List<String>> map, List<Object> orderDes) {
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.AVAILABLE_DATES_PAGE.toString()));
@@ -172,17 +165,13 @@ public class OrderPaneController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		parkNameComboBox.minWidthProperty().bind(mainPane.widthProperty().multiply(0.25).subtract(40));
-		date.minWidthProperty().bind(mainPane.widthProperty().multiply(0.3).subtract(40));
-		peopleAmount.minWidthProperty().bind(mainPane.widthProperty().multiply(1.0 / 3).subtract(60));
-		timeComboBox.minWidthProperty().bind(mainPane.widthProperty().multiply(1.0 / 3).subtract(60));
-		emailText.minWidthProperty().bind(mainPane.widthProperty().multiply(0.43 * 0.5).subtract(40));
-		startPhone.minWidthProperty().bind(mainPane.widthProperty().multiply(0.43 * 0.5 * 0.4).subtract(40));
-		finishPhone.minWidthProperty().bind(mainPane.widthProperty().multiply(0.43 * 0.5 * 0.4).subtract(60));
-		if (guiControl.getUser() instanceof Subscriber && ((Subscriber) guiControl.getUser()).getIsGuide())
-			guideGroupGridPane.setVisible(true);
-		else
-			guideGroupGridPane.setVisible(false);
+
+		if (!(guiControl.getUser() instanceof Subscriber && ((Subscriber) guiControl.getUser()).getIsGuide())) {
+			guideGroupHBox.setVisible(false);
+			payInAdvanceHBox.setVisible(false);
+			guideGroupHBox.setManaged(false);
+			payInAdvanceHBox.setManaged(false);
+		}
 		payInAdvanceLabel.visibleProperty().bind(guideGroupCheckBox.selectedProperty());
 		payInAdvanceCheckBox.visibleProperty().bind(guideGroupCheckBox.selectedProperty());
 		startPhone.getItems().addAll("050", "052", "053", "054", "055", "058");
@@ -252,6 +241,7 @@ public class OrderPaneController implements Initializable {
 					if (!orderButtonAble)
 						toolTipText.append("\n");
 					toolTipText.append("Phone Number is only digits");
+					orderButtonAble = false;
 				}
 				if (finishPhone.getText().length() != 7) {
 					if (!orderButtonAble)
@@ -282,7 +272,24 @@ public class OrderPaneController implements Initializable {
 
 	}
 
-	private List<Object> createOrderFromForm() {
+	
+
+    @FXML
+	private void clearFunc(ActionEvent event) {
+		emailText.setText("");
+		parkNameComboBox.getSelectionModel().selectFirst();
+		timeComboBox.getSelectionModel().selectFirst();
+		startPhone.getSelectionModel().selectFirst();
+		finishPhone.setText("");
+		guideGroupCheckBox.setSelected(false);
+		payInAdvanceCheckBox.setSelected(false);
+		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ClientConstants.MAX_PEOPLE));
+		peopleAmount.getValueFactory().setValue(1);
+		Date today = new Date();
+		LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1);
+		date.setValue(localDate);
+	}
+    private List<Object> createOrderFromForm() {
 		List<Object> orderDesList = new ArrayList<Object>();
 		Order order = new Order(null, parkNameComboBox.getValue(), peopleAmount.getValue(), null,
 				date.getValue().toString(), timeComboBox.getValue(), -1, emailText.getText(),
@@ -306,19 +313,4 @@ public class OrderPaneController implements Initializable {
 		return orderDesList;
 	}
 
-	@FXML
-	private void clearFunc(ActionEvent event) {
-		emailText.setText("");
-		parkNameComboBox.getSelectionModel().selectFirst();
-		timeComboBox.getSelectionModel().selectFirst();
-		startPhone.getSelectionModel().selectFirst();
-		finishPhone.setText("");
-		guideGroupCheckBox.setSelected(false);
-		payInAdvanceCheckBox.setSelected(false);
-		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ClientConstants.MAX_PEOPLE));
-		peopleAmount.getValueFactory().setValue(1);
-		Date today = new Date();
-		LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1);
-		date.setValue(localDate);
-	}
 }

@@ -25,7 +25,7 @@
       <RowConstraints percentHeight="30.0" />
   </rowConstraints>
    <children>
-      <Label styleClass="seconderyTitle" text="Occasional Order" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <Label styleClass="titelHome" text="Occasional Order" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
       <HBox spacing="40.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
          <children>
             <VBox>
