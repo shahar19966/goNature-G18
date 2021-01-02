@@ -47,8 +47,8 @@ public class MyOrdersController implements Initializable {
 
 	@FXML
 	private TableColumn<Order, EntityConstants.OrderType> typeCol;
-    @FXML
-    private TableColumn<Order, EntityConstants.OrderStatus> statusCol;
+	@FXML
+	private TableColumn<Order, EntityConstants.OrderStatus> statusCol;
 
 	@FXML
 	private TableColumn action1Col;
@@ -93,29 +93,90 @@ public class MyOrdersController implements Initializable {
 
 	private void setOrderNumberCol() {
 		orderNumberCol.setCellValueFactory(new PropertyValueFactory<Order, String>("orderNum"));
+		orderNumberCol.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.1));
 	}
 
 	private void setParkNameCol() {
 		parkNameCol.setCellValueFactory(new PropertyValueFactory<Order, String>("parkName"));
+		parkNameCol.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.1));
 	}
 
 	private void setDateCol() {
-		dateCol.setCellValueFactory(new PropertyValueFactory<Order, String>("dateOfOrder"));
+
+		dateCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+		Callback<TableColumn<Order, String>, TableCell<Order, String>> cellFactory = //
+				new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
+
+					@Override
+					public TableCell<Order, String> call(TableColumn<Order, String> param) {
+						final TableCell<Order, String> cell = new TableCell<Order, String>() {
+							@Override
+							public void updateItem(String item, boolean empty) {
+								super.updateItem(item, empty);
+								if (empty) {
+									setGraphic(null);
+									setText(null);
+								} else {
+									String[] orderDateSplit = getTableView().getItems().get(getIndex()).getDateOfOrder()
+											.split("-");
+									setText(orderDateSplit[2] + "-" + orderDateSplit[1] + "-" + orderDateSplit[0]);
+								}
+
+							}
+						};
+						return cell;
+
+					}
+
+				};
+
+		dateCol.setCellFactory(cellFactory);
+		dateCol.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.1));
 	}
 
 	private void setTimeCol() {
-		timeCol.setCellValueFactory(new PropertyValueFactory<Order, String>("timeOfOrder"));
+		timeCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+		Callback<TableColumn<Order, String>, TableCell<Order, String>> cellFactory = //
+				new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
+
+					@Override
+					public TableCell<Order, String> call(TableColumn<Order, String> param) {
+						final TableCell<Order, String> cell = new TableCell<Order, String>() {
+							@Override
+							public void updateItem(String item, boolean empty) {
+								super.updateItem(item, empty);
+								if (empty) {
+									setGraphic(null);
+									setText(null);
+								} else {
+									setText(getTableView().getItems().get(getIndex()).getTimeOfOrder().substring(0, 5));
+								}
+
+							}
+						};
+						return cell;
+
+					}
+
+				};
+
+		timeCol.setCellFactory(cellFactory);
+		timeCol.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.05));
 	}
 
 	private void setPeopleAmountCol() {
 		amountCol.setCellValueFactory(new PropertyValueFactory<Order, Integer>("numOfVisitors"));
+		amountCol.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.1));
 	}
 
 	private void setTypeCol() {
 		typeCol.setCellValueFactory(new PropertyValueFactory<Order, EntityConstants.OrderType>("type"));
+		typeCol.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.1));
 	}
+
 	private void setStatusCol() {
 		statusCol.setCellValueFactory(new PropertyValueFactory<Order, EntityConstants.OrderStatus>("status"));
+		statusCol.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.24));
 	}
 
 	private void setAction1Col() {
@@ -159,6 +220,7 @@ public class MyOrdersController implements Initializable {
 				};
 
 		action1Col.setCellFactory(cellFactory);
+		action1Col.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.1));
 	}
 
 	private void setAction2Col() {
@@ -254,6 +316,7 @@ public class MyOrdersController implements Initializable {
 				};
 
 		action2Col.setCellFactory(cellFactory);
+		action2Col.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.1));
 	}
 
 }

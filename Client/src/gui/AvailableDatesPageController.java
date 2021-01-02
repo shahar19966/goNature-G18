@@ -39,7 +39,8 @@ public class AvailableDatesPageController implements Initializable {
     	for(Node node:mainHBox.getChildren()) {
     		VBox mainVBox=(VBox)node;
     		Label title=(Label)mainVBox.getChildren().get(0);
-    		title.setText(dates[i]);
+    		String[] datearr = dates[i].split("-");
+    		title.setText(datearr[2]+"-"+datearr[1]+"-"+datearr[0]);
 			VBox secondaryVBox=(VBox)mainVBox.getChildren().get(1);
 			for(String hour:dateMap.get(dates[i])) {
 				final String nextDate=dates[i];
