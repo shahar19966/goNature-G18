@@ -1,6 +1,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import entity.EntityConstants.OrderStatus;
 import entity.EntityConstants.OrderType;
@@ -52,10 +54,11 @@ public class Order implements Serializable {
 		this.dateOfOrder = dateOfOrder;
 		if (timeOfOrder.split(":").length == 2)
 			timeOfOrder = timeOfOrder + ":00";
-		this.timeOfOrder=timeOfOrder;
+		this.timeOfOrder = timeOfOrder;
 		this.price = price;
 		this.email = email;
 		this.phone = phone;
+		this.orderCreationDate = null;
 	}
 
 	public void setTimeOfOrder(int hour) {
@@ -148,14 +151,20 @@ public class Order implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder orderDetails = new StringBuilder();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+
 		orderDetails.append("Order Number:" + orderNum + "\n");
 		orderDetails.append("ID:" + id + "\n");
 		orderDetails.append("Park Name:" + parkName + "\n");
 		orderDetails.append("Number Of Visitors:" + numOfVisitors + "\n");
 		orderDetails.append("Type:" + type.name() + "\n");
-		orderDetails.append("Date:" + dateOfOrder + "\n");
-		orderDetails.append("Creation Date:" + orderCreationDate + "\n");
+		String[] datearr = dateOfOrder.split("-");
+		orderDetails.append("Date:" + datearr[2] + "-" + datearr[1] + "-" + datearr[0] + "\n");
 		orderDetails.append("Time:" + timeOfOrder + "\n");
+		if (orderCreationDate != null)
+			orderDetails.append(
+					"Creation Date:" + LocalDateTime.parse(orderCreationDate, formatter).format(formatter2) + "\n");
 		orderDetails.append("Email:" + email + "\n");
 		orderDetails.append("Phone:" + phone + "\n");
 		orderDetails.append("Total Price:" + price);
