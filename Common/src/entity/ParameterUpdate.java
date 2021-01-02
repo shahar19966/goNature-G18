@@ -35,7 +35,7 @@ public class ParameterUpdate implements Serializable {
 		return parkName;
 	}
 	@Override
-	public String toString() {//liron
-		return parameter + " " + newValue + " " + parkName;
+	public String toString() {
+		return "update request sent to department manager "+parameter+" ="+newValue;
 	}
 }
