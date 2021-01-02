@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RequestsDepManagerController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RequestsDepManagerController">
    <children>
       <GridPane prefHeight="400.0" prefWidth="600.0">
          <columnConstraints>
@@ -21,7 +21,7 @@
             <RowConstraints percentHeight="60.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="seconderyTitle" text="Discount Requests" />
+            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="titelHome" text="Discount Requests" />
             <TableView fx:id="discountTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                <columns>
                   <TableColumn fx:id="parkNameCol" prefWidth="75.0" text="Park Name" />
@@ -36,7 +36,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="seconderyTitle" text="Parameter Update Requests" GridPane.rowIndex="2" />
+            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="titelHome" text="Parameter Update Requests" GridPane.rowIndex="2" />
             <TableView fx:id="parametersTable" prefHeight="276.0" prefWidth="600.0" GridPane.rowIndex="3">
                <columns>
                   <TableColumn fx:id="parkname" prefWidth="75.0" text="Park Name" />
