@@ -390,14 +390,13 @@ public class ClientMainPageController implements Initializable {
 	private void loadSubAndVisitorOrder() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.SUB_AND_VISITOR_ORDER_PAGE.toString()));
-		GridPane root = null;
+		AnchorPane root = null;
 		try {
 			root = fxmlLoader1.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// DepartmentManagerReportsController dmrc=fxmlLoader1.getController();
 		panesMap.put("orderSubAndVisitor", root);
 	}
 	private void loadRegularEmployeeOrder()
