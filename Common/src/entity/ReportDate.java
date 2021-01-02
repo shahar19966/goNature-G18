@@ -8,15 +8,14 @@ public class ReportDate implements Serializable{
 	
 	
 	private String month;
+	private String year;
 	private String namePark;
-	public ReportDate()
-	{
-		
-	}
+	
 	public ReportDate(String namePark)
 	{
 		this.namePark=namePark;
 	}
+	
 	public String getNamePark()
 	{
 	return namePark;
@@ -25,10 +24,17 @@ public class ReportDate implements Serializable{
 	{
 		return month;
 	}
+	public String getYear()
+	{
+		return year;
+	}
 	
-	
+	public void setYear(String year)
+	{
+		this.year=year;
+	}
 
-	public void setEndDate(String month)
+	public void setMonth(String month)
 	{
 		this.month=month;
 	}

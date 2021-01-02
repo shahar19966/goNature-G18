@@ -38,6 +38,7 @@ import entity.Order;
 import entity.ParameterUpdate;
 import entity.Park;
 import entity.ParkDiscount;
+import entity.ReportDate;
 import entity.ParkCapacityReport;
 import entity.Subscriber;
 import entity.Visitor;
@@ -138,21 +139,26 @@ public class MySQLConnection {
 		return null;
 	}
 
-	public static Map<Integer, VisitorReport> getVisitorReport(String namePark) throws SQLException {
-		PreparedStatement getVisitorReport;
+	public static Map<Integer, VisitorReport> getVisitorReport(ReportDate reportDate) throws SQLException {
+		
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 		Calendar c = Calendar.getInstance();
-		getVisitorReport = con
-				.prepareStatement("SELECT  orders.type ,orders.dateOfOrder ,sum(finishedOrders.actualNumOfVisitors ) "
-						+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
-						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND orders.parkName_fk=?  "
-						+ "GROUP by orders.type, orders.dateOfOrder");
-		getVisitorReport.setString(1, namePark);
-		ResultSet rs = getVisitorReport.executeQuery();
+		
+		String query=
+				"SELECT  orders.type ,orders.dateOfOrder ,sum(finishedOrders.actualNumOfVisitors ) " 
+			+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk)" 
+				+ "WHERE MONTH(orders.dateOfOrder)=? AND YEAR(orders.dateOfOrder)=? AND orders.parkName_fk=?  " 
+				+ "GROUP by orders.type, orders.dateOfOrder;";
+						PreparedStatement getVisitionReport = con.prepareStatement(query);
+		getVisitionReport.setInt(1, Integer.parseInt(reportDate.getMonth()));
+		getVisitionReport.setInt(2,Integer.parseInt( reportDate.getYear()));
+		getVisitionReport.setString(3, reportDate.getNamePark());
+		ResultSet rs = getVisitionReport.executeQuery();
+	
 		int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
 		for (int i = 1; i <= daysInMonth; i++)
-			reportVisitorMap.put(i, new VisitorReport(namePark));
+			reportVisitorMap.put(i, new VisitorReport(reportDate.getNamePark()));
 
 		if (!rs.next()) {
 			return reportVisitorMap;
@@ -239,19 +245,7 @@ public class MySQLConnection {
 		return reportVisitorMap;
 	}
 
-	/*
-	 * public static List<ParkCapacityReport> getParkCapacityReport(String parkName)
-	 * throws SQLException { List<ParkCapacityReport> dateList = new ArrayList<>();
-	 * PreparedStatement getParkCapacityReport; getParkCapacityReport =
-	 * con.prepareStatement(
-	 * "SELECT parkFull.dateFull,parkFull.timeFull FROM parkFull WHERE (MONTH(NOW()) = MONTH(parkFull.dateFull)) "
-	 * + "AND (YEAR(NOW()) = YEAR(parkFull.dateFull)) AND parkFull.parkName_fk=?");
-	 * getParkCapacityReport.setString(1, parkName); ResultSet rs =
-	 * getParkCapacityReport.executeQuery(); while (rs.next()) { dateList.add(new
-	 * ParkCapacityReport(rs.getString(1), rs.getString(2))); } return dateList;
-	 * 
-	 * }
-	 */
+
 	public static Map<Integer, boolean[]> getParkCapacityReport(String parkName) throws SQLException {
 		HashMap<Integer, boolean[]> map = new LinkedHashMap<Integer, boolean[]>();
 		PreparedStatement getParkCapacityReport;
@@ -286,20 +280,24 @@ public class MySQLConnection {
 		return map;
 	}
 
-	public static Map<Integer, VisitorReport> getIncomeReport(String namePark) throws SQLException {
-		PreparedStatement GetIncomeReport;
+	public static Map<Integer, VisitorReport> getIncomeReport(ReportDate reportDate) throws SQLException {
+		
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 		Calendar c = Calendar.getInstance();
-		GetIncomeReport = con.prepareStatement("SELECT sum(finishedOrders.actualPrice ) ," + "orders.dateOfOrder "
+		String query=("SELECT sum(finishedOrders.actualPrice ) ," + "orders.dateOfOrder "
 				+ "FROM finishedOrders " + "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
-				+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) AND orders.parkName_fk=? "
-				+ "GROUP by orders.parkName_fk,orders.dateOfOrder");
-		GetIncomeReport.setString(1, namePark);
-		ResultSet rs = GetIncomeReport.executeQuery();
+				+ "WHERE MONTH(orders.dateOfOrder)=? AND YEAR(orders.dateOfOrder)=? AND orders.parkName_fk=? "
+				+ "GROUP by orders.parkName_fk,orders.dateOfOrder;");
+		PreparedStatement getIncomeReport = con.prepareStatement(query);
+		getIncomeReport.setInt(1, Integer.parseInt(reportDate.getMonth()));
+		getIncomeReport.setInt(2,Integer.parseInt( reportDate.getYear()));
+		getIncomeReport.setString(3, reportDate.getNamePark());
+        ResultSet rs = getIncomeReport.executeQuery();
+		
 		int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
 		for (int i = 1; i <= daysInMonth; i++)
-			reportVisitorMap.put(i, new VisitorReport(namePark));
+			reportVisitorMap.put(i, new VisitorReport(reportDate.getNamePark()));
 
 		if (!rs.next()) {
 			return reportVisitorMap;

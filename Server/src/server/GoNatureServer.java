@@ -18,6 +18,7 @@ import entity.Order;
 import entity.ParameterUpdate;
 import entity.Subscriber;
 import entity.ParkDiscount;
+import entity.ReportDate;
 import message.ClientMessage;
 import message.ServerMessage;
 import message.ServerMessageType;
@@ -114,7 +115,7 @@ public class GoNatureServer extends AbstractServer {
 				case CONNECTION:
 					break;
 				case VISITOR_REPORT:
-					returnVal = MySQLConnection.getVisitorReport((String) (clientMsg.getMessage()));
+					returnVal = MySQLConnection.getVisitorReport((ReportDate) (clientMsg.getMessage()));
 					type = ServerMessageType.PARK_VISITATION_REPORT;
 					break;
 				case ORDER:
@@ -135,7 +136,7 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.WAITING_LIST;
 					break;
 				case INCOME_REPORT:
-					returnVal = MySQLConnection.getIncomeReport((String) (clientMsg.getMessage()));
+					returnVal = MySQLConnection.getIncomeReport((ReportDate) (clientMsg.getMessage()));
 					type = ServerMessageType.PARK_INCOME_REPORT;
 					break;
 				case PICK_AVAILABLE_DATES:
