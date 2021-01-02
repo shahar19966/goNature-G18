@@ -43,7 +43,7 @@ public class CapacityUpdateController implements Initializable{
 ParameterUpdate parupdate=new ParameterUpdate(EntityConstants.ParkParameter.CAPACITY,Integer.parseInt(newvalue.getText()),emp.getParkName());
 
 guiControl.sendToServer(new ClientMessage(ClientMessageType.PARAMETER_UPDATE, parupdate));
-
+newvalue.setText("");
     }
 
 

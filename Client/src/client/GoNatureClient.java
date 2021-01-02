@@ -97,7 +97,7 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(serverMsg);
 				break;
 			case PARAMETER_UPDATE:
-				GUIControl.popUpMessage("Parameter Update Succeeded",
+				GUIControl.popUpMessage("Parameter Update Sent",
 						((ParameterUpdate) serverMsg.getMessage()).toString());
 				break;
 			case DISCOUNT_REQUEST:

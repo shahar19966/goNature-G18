@@ -88,7 +88,7 @@ public class GUIControl {
 		}
 	}
 	public static void popUpError(String msg) {
-		Platform.runLater(() -> {
+		Platform.runLater(() -> { 
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
 			alert.setHeaderText("");

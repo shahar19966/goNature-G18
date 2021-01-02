@@ -40,6 +40,7 @@ public class DifferenceParameterUpdateController implements Initializable{
 ParameterUpdate parupdate=new ParameterUpdate(EntityConstants.ParkParameter.DIFFERENCE,Integer.parseInt(newvalue.getText()),emp.getParkName());
 
 guiControl.sendToServer(new ClientMessage(ClientMessageType.PARAMETER_UPDATE, parupdate));
+newvalue.setText("");
     }
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

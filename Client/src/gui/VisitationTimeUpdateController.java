@@ -37,6 +37,7 @@ public class VisitationTimeUpdateController {
     	ParameterUpdate parupdate=new ParameterUpdate(EntityConstants.ParkParameter.DURATION,Integer.parseInt(newvalue.getText()),emp.getParkName());
 
     	guiControl.sendToServer(new ClientMessage(ClientMessageType.PARAMETER_UPDATE, parupdate));
+    	newvalue.setText("");
     }
 
 }
