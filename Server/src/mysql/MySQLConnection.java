@@ -58,6 +58,7 @@ import entity.EntityConstants.RequestStatus;
  */
 public class MySQLConnection {
 	private static Connection con;
+
 	public static void connectToDB()
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -158,7 +159,7 @@ public class MySQLConnection {
 		}
 
 		do {
-			
+
 			String temp = rs.getString(2);
 			temp = temp.substring(8, 10);
 			if (rs.getString(1).equals("GUIDE"))
@@ -238,19 +239,51 @@ public class MySQLConnection {
 		return reportVisitorMap;
 	}
 
-	public static List<ParkCapacityReport> getParkCapacityReport(String parkName) throws SQLException {
-		List<ParkCapacityReport> dateList = new ArrayList<>();
+	/*
+	 * public static List<ParkCapacityReport> getParkCapacityReport(String parkName)
+	 * throws SQLException { List<ParkCapacityReport> dateList = new ArrayList<>();
+	 * PreparedStatement getParkCapacityReport; getParkCapacityReport =
+	 * con.prepareStatement(
+	 * "SELECT parkFull.dateFull,parkFull.timeFull FROM parkFull WHERE (MONTH(NOW()) = MONTH(parkFull.dateFull)) "
+	 * + "AND (YEAR(NOW()) = YEAR(parkFull.dateFull)) AND parkFull.parkName_fk=?");
+	 * getParkCapacityReport.setString(1, parkName); ResultSet rs =
+	 * getParkCapacityReport.executeQuery(); while (rs.next()) { dateList.add(new
+	 * ParkCapacityReport(rs.getString(1), rs.getString(2))); } return dateList;
+	 * 
+	 * }
+	 */
+	public static Map<Integer, boolean[]> getParkCapacityReport(String parkName) throws SQLException {
+		HashMap<Integer, boolean[]> map = new LinkedHashMap<Integer, boolean[]>();
 		PreparedStatement getParkCapacityReport;
+		Calendar c = Calendar.getInstance();
 		getParkCapacityReport = con.prepareStatement(
 				"SELECT parkFull.dateFull,parkFull.timeFull FROM parkFull WHERE (MONTH(NOW()) = MONTH(parkFull.dateFull)) "
 						+ "AND (YEAR(NOW()) = YEAR(parkFull.dateFull)) AND parkFull.parkName_fk=?");
 		getParkCapacityReport.setString(1, parkName);
 		ResultSet rs = getParkCapacityReport.executeQuery();
-		while (rs.next()) {
-			dateList.add(new ParkCapacityReport(rs.getString(1), rs.getString(2)));
-		}
-		return dateList;
+		int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
+		for (int i =EntityConstants.PARK_OPEN ; i <= EntityConstants.PARK_CLOSED; i++)
+			map.put(i, new boolean[daysInMonth+1]);
+		if (!(rs.next()))
+			return map;
+		String time = rs.getString(2).substring(0, 2);
+		boolean[] tempArr = map.get(Integer.parseInt(time));
+		do {
+			
+			if (!time.equals(rs.getString(2).substring(0,2))) {
+				map.put(Integer.parseInt(time), tempArr);
+				time = rs.getString(2).substring(0,2);
+				if((Integer.parseInt(time)>EntityConstants.PARK_CLOSED) || (Integer.parseInt(time)<EntityConstants.PARK_OPEN))
+				{ continue;
+				}
+				tempArr = map.get(Integer.parseInt(time));
+			}
+			String date = rs.getString(1).substring(8,10);
+			tempArr[Integer.parseInt(date)] = true;
+
+		} while (rs.next());
+		return map;
 	}
 
 	public static Map<Integer, VisitorReport> getIncomeReport(String namePark) throws SQLException {
@@ -274,7 +307,7 @@ public class MySQLConnection {
 
 		do {
 			String temp = rs.getString(2);
-			temp = temp.substring(8, 9);
+			temp = temp.substring(8, 10);
 			reportVisitorMap.get(Integer.parseInt(temp)).setPrice(Integer.parseInt((rs.getString(1))));
 
 		} while (rs.next());
@@ -808,6 +841,7 @@ public class MySQLConnection {
 			return false;
 		}
 	}
+
 	public static boolean updateParkFull(String parkName) {
 		try {
 			PreparedStatement checkParkFull = con
@@ -1031,7 +1065,7 @@ public class MySQLConnection {
 	public static List<List<Order>> sendSmsToCancelOrders() throws SQLException, NumberFormatException, ParseException {
 		System.out.println("Cancel Orders");
 		List<Order> orders = new ArrayList<>();
-		List<Order> ordersFromWaitingList=null;
+		List<Order> ordersFromWaitingList = null;
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String nowString = now.format(formatter);
@@ -1085,9 +1119,9 @@ public class MySQLConnection {
 			}
 			con.prepareStatement(queryCancelOrders).executeUpdate();
 			con.prepareStatement(queryDelSms).executeUpdate();
-			ordersFromWaitingList=checkWatingList(checkWating);
+			ordersFromWaitingList = checkWatingList(checkWating);
 		}
-		List<List<Order>> ordersToSendSMS=new ArrayList<>();
+		List<List<Order>> ordersToSendSMS = new ArrayList<>();
 		ordersToSendSMS.add(orders);
 		ordersToSendSMS.add(ordersFromWaitingList);
 		return ordersToSendSMS;
@@ -1184,10 +1218,11 @@ public class MySQLConnection {
 		}
 		return ordersToSendSms;
 	}
+
 	public static void checkIfParksFull() throws SQLException {
-		List<Park> parkList=getParks();
-		for(Park park:parkList) {
-			if(park.getParkCurrentVisitors()>park.getParkMaxVisitorsDefault()) {
+		List<Park> parkList = getParks();
+		for (Park park : parkList) {
+			if (park.getParkCurrentVisitors() > park.getParkMaxVisitorsDefault()) {
 				String updateParkFullQuery = "INSERT IGNORE INTO parkFull (parkName_fk,dateFull,timeFull) VALUES (?,?,?)";
 				PreparedStatement updateParkFull = con.prepareStatement(updateParkFullQuery);
 				updateParkFull.setString(1, park.getParkName());
@@ -1198,19 +1233,18 @@ public class MySQLConnection {
 				updateParkFull.setString(3, timeNow);
 				updateParkFull.executeUpdate();
 			}
-		}	
+		}
 	}
-	public static Park getPark(String parkname) throws SQLException
-	{
-		Park parktoreturn=null;
+
+	public static Park getPark(String parkname) throws SQLException {
+		Park parktoreturn = null;
 		PreparedStatement getParkdetails;
-		getParkdetails = con
-				.prepareStatement("SELECT * FROM park WHERE parkName=?;");
+		getParkdetails = con.prepareStatement("SELECT * FROM park WHERE parkName=?;");
 		getParkdetails.setString(1, parkname);
-		
+
 		ResultSet rs = getParkdetails.executeQuery();
-		if(rs.next())
-		 parktoreturn=new Park (rs.getString(1),rs.getInt(2),rs.getInt(3),rs.getInt(4),rs.getInt(5));
+		if (rs.next())
+			parktoreturn = new Park(rs.getString(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
 		return parktoreturn;
 	}
 

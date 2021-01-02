@@ -16,11 +16,11 @@
 <?import javafx.scene.text.Font?>
 
 
-<ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerVisitationReportController">
+<ScrollPane prefHeight="726.0" prefWidth="1046.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerVisitationReportController">
    <content>
       <VBox>
          <children>
-            <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1027.0" stylesheets="@application.css">
+            <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1044.0" stylesheets="@application.css">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="347.0" layoutY="27.0" prefHeight="58.0" prefWidth="339.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 40;" text="Visit report" textAlignment="CENTER">
                      <font>
@@ -107,7 +107,7 @@
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </Label>
-                  <LineChart fx:id="lineChar" layoutX="76.0" layoutY="250.0" stylesheets="@application.css">
+                  <LineChart fx:id="lineChar" layoutX="52.0" layoutY="250.0" stylesheets="@application.css">
                      <xAxis>
                         <CategoryAxis label="Days a month" side="BOTTOM" fx:id="x1">
                            <rotationAxis>
@@ -119,13 +119,13 @@
                         <NumberAxis fx:id="y1" label="number of visitation" side="LEFT" />
                      </yAxis>
                   </LineChart>
-                  <PieChart fx:id="pieChart" layoutX="570.0" layoutY="250.0" prefHeight="400.0" prefWidth="435.0" title="Total amount" />
-                  <Button fx:id="yesBtn" layoutX="786.0" layoutY="124.0" mnemonicParsing="false" onAction="#yesBtnClick" prefHeight="44.0" prefWidth="70.0" styleClass="logOutBtn" text="YES" textAlignment="CENTER" />
+                  <PieChart fx:id="pieChart" layoutX="595.0" layoutY="250.0" prefHeight="400.0" prefWidth="435.0" title="Total amount" />
+                  <Button fx:id="yesBtn" layoutX="778.0" layoutY="124.0" mnemonicParsing="false" onAction="#yesBtnClick" prefHeight="44.0" prefWidth="70.0" styleClass="logOutBtn" text="YES" textAlignment="CENTER" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="lastMAncchorPane" prefHeight="167.0" prefWidth="1027.0" visible="false">
                <children>
-                  <LineChart fx:id="lineCharLastM" layoutX="72.0" layoutY="143.0" stylesheets="@application.css">
+                  <LineChart fx:id="lineCharLastM" layoutX="52.0" layoutY="143.0" stylesheets="@application.css">
                      <xAxis>
                         <CategoryAxis label="Days a month" side="BOTTOM" fx:id="x11">
                            <rotationAxis>
@@ -137,7 +137,7 @@
                         <NumberAxis fx:id="y11" label="number of visitation" side="LEFT" />
                      </yAxis>
                   </LineChart>
-                  <PieChart fx:id="pieChartLastM" layoutX="616.0" layoutY="153.0" prefHeight="400.0" prefWidth="382.0" title="Total amount" />
+                  <PieChart fx:id="pieChartLastM" layoutX="595.0" layoutY="153.0" prefHeight="400.0" prefWidth="382.0" title="Total amount" />
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="382.0" layoutY="28.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Last month:" textAlignment="CENTER">
                      <font>
                         <Font size="40.0" />
