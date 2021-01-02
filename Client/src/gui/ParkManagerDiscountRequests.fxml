@@ -25,7 +25,7 @@
             <RowConstraints percentHeight="15.0" valignment="CENTER" vgrow="ALWAYS" />
          </rowConstraints>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="seconderyTitle" stylesheets="@application.css" text="Discount Requests" />
+            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="titelHome" stylesheets="@application.css" text="Discount Requests" />
             <TableView fx:id="discountTableView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
               <columns>
                 <TableColumn fx:id="discountParkNumberCol" prefWidth="75.0" text="ID" />
