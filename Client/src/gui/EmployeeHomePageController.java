@@ -17,6 +17,8 @@ public class EmployeeHomePageController {
 
     @FXML
     private Label firstNameLabel;
+    @FXML
+    private Label titelName;
 
     @FXML
     private Label lastNameLabel;
@@ -37,6 +39,7 @@ public class EmployeeHomePageController {
     	lastNameLabel.setText(emp.getLastName());
     	emailLabel.setText(emp.getEmail());
     	roleLabel.setText(emp.getRole());
+    	titelName.setText(emp.getFirstName());
     	parkOrDepLabel.setText(emp.getRoleEnum().equals(EntityConstants.EmployeeRole.DEP_MANAGER)?"Department":emp.getParkName());
     }
 
