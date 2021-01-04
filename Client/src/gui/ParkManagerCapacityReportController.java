@@ -110,6 +110,7 @@ public class ParkManagerCapacityReportController implements Initializable {
 	map.put(key++,list16);
 	map.put(key++,list17);
 	 key=EntityConstants.PARK_OPEN;
+	 ObservableList listDateOb=FXCollections.observableArrayList();
 		for(boolean[] b: capacityMap.values())
 		{ list.removeAll(list);
 		list.add(key>=10?key+":00":"0"+key+":00");
@@ -117,7 +118,7 @@ public class ParkManagerCapacityReportController implements Initializable {
 			{
 				if(b[i]==false)
 				{
-					list.add(i<10?"0"+i+"/"+(intMonth<10?"0"+intMonth:intMonth):i+"/"+(intMonth<10?"0"+intMonth:intMonth));
+					list.add("Not Full");
 				}
 				else
 					list.add("");
@@ -129,9 +130,11 @@ public class ParkManagerCapacityReportController implements Initializable {
 			if(key>EntityConstants.PARK_CLOSED)
 				break;
 		}
-	       
-	      
+		listDateOb.add("");
+		for(int i=1;i<=thisDay;i++)   
+		listDateOb.add(i<10?"0"+i+"/"+(intMonth<10?"0"+intMonth:intMonth):i+"/"+(intMonth<10?"0"+intMonth:intMonth));
 		
+		listDate.getItems().addAll(listDateOb);
+		}
 	
-	}
 }

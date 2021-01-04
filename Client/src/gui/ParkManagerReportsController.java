@@ -27,7 +27,7 @@ public class ParkManagerReportsController {
         	 root = FXMLLoader.load(getClass().getResource(ClientConstants.Screens.PARK_CAPACITY_REPORT.toString()));
             Stage stage = new Stage();
             stage.setTitle("park manager capacit report");
-           stage.setScene(new Scene(root,887, 653));
+           stage.setScene(new Scene(root,964, 653));
             stage.show();
 	} catch(Exception e) {
 		e.printStackTrace();

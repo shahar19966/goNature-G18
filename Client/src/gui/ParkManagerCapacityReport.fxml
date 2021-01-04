@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="year" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="653.0" prefWidth="887.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerCapacityReportController">
+<AnchorPane fx:id="year" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="653.0" prefWidth="964.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ParkManagerCapacityReportController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="259.0" layoutY="28.0" prefHeight="58.0" prefWidth="339.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 40;" text="Capacity Report" textAlignment="CENTER">
          <font>
@@ -71,16 +71,16 @@
             <Image url="@../resources/logo.png" />
          </image>
       </ImageView>
-      <ListView fx:id="list8" layoutX="37.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list9" layoutX="119.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list10" layoutX="201.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list11" layoutX="283.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list12" layoutX="363.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list13" layoutX="445.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list14" layoutX="527.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list15" layoutX="609.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list16" layoutX="691.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
-      <ListView fx:id="list17" layoutX="766.0" layoutY="244.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list8" layoutX="116.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list9" layoutX="198.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list10" layoutX="280.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list11" layoutX="362.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list12" layoutX="442.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list13" layoutX="524.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list14" layoutX="606.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list15" layoutX="688.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list16" layoutX="770.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
+      <ListView fx:id="list17" layoutX="845.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="230.0" layoutY="190.0" prefHeight="47.0" prefWidth="428.0" style="-fx-font-weight: bold; -fx-text-fill: DARKSEAGREEN; -fx-font-size: 20;" text="Hours and dates when the park was not full:" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
@@ -89,5 +89,6 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
+      <ListView fx:id="listDate" layoutX="38.0" layoutY="237.0" prefHeight="395.0" prefWidth="82.0" />
    </children>
 </AnchorPane>
