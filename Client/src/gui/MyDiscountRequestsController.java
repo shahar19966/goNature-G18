@@ -79,8 +79,10 @@ import message.ServerMessageType;
 
 	    @FXML
 	    void addFunc(ActionEvent event) {
-
-	    	ParkDiscount newDiscountRequest= new ParkDiscount
+	    	if( discountFinishDatePicker.getValue().isBefore(discountStartDatePicker.getValue()))
+	    		guiControl.popUpMessage("Date is wrong", "Finish date is before start date\nPlease pick correct start and finish dates");
+	    	else {
+	    		ParkDiscount newDiscountRequest= new ParkDiscount
 	    			(parkName.getText(),discountStartDatePicker.getValue().toString(),
 	    					discountFinishDatePicker.getValue().toString(), discountAmountSpinner.getValue(),
 	    					EntityConstants.RequestStatus.WAITING, ((Employee) guiControl.getUser()).getEmployeeNumber());
@@ -89,6 +91,7 @@ import message.ServerMessageType;
 	    		guiControl.popUpMessage("Discount Is Exist","There is already existing discount\nBy you with the same amount and dates\nPlease try different values" );
 	    	else if( guiControl.getServerMsg().getType()== ServerMessageType.CAN_INSERT_NEW_DISCOUNT)
 	    		guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_REQUEST, newDiscountRequest));
+	    	}
 	    }
 	    
 	    
@@ -129,7 +132,19 @@ import message.ServerMessageType;
 			List<ParkDiscount> discountRequestsarr = (List<ParkDiscount>) guiControl.getServerMsg().getMessage();
 			for( ParkDiscount pd:discountRequestsarr)	
 			{
-
+				StringBuilder rebuildStartDate= new StringBuilder();
+				StringBuilder rebuildFinishDate= new StringBuilder();
+				String reverseStartDate[]=pd.getStartDate().split("-");
+				String reverseFinishDate[]=pd.getFinishDate().split("-");
+				for(int i=reverseStartDate.length-1;i>=0;i--)
+				{
+					rebuildStartDate.append(reverseStartDate[i]+"-");
+					rebuildFinishDate.append(reverseFinishDate[i]+"-");
+				}
+				rebuildStartDate.delete(rebuildStartDate.length()-1, rebuildStartDate.length());
+				rebuildFinishDate.delete(rebuildFinishDate.length()-1, rebuildFinishDate.length());
+				pd.setStartDate(rebuildStartDate.toString());
+				pd.setFinishDate(rebuildFinishDate.toString());
 				discountRequestsObservableList.add(pd);
 			}
 			updateIdColumn();//update id column with running counter

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -60,7 +61,10 @@
                      </rowConstraints>
                      <children>
                         <Label text="Park Name" />
-                        <TextField fx:id="parkName" prefHeight="31.0" prefWidth="100.0" GridPane.rowIndex="1" />
+                        <TextField fx:id="parkName" prefHeight="31.0" prefWidth="100.0" GridPane.rowIndex="1">
+                           <cursor>
+                              <Cursor fx:constant="DISAPPEAR" />
+                           </cursor></TextField>
                      </children>
                   </GridPane>
                   <GridPane GridPane.columnIndex="1">

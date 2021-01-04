@@ -83,7 +83,25 @@ public class RequestsDepManagerController implements Initializable {
 		parametersTable.setItems(parameters);
 		guiControl.sendToServer(new ClientMessage(ClientMessageType.DEP_MANAGER_GET_DISCOUNT_REQUESTS, null));
 		List<ParkDiscount> discountList=(List<ParkDiscount>)guiControl.getServerMsg().getMessage();
-		discountRequests.addAll(discountList);
+		for( ParkDiscount pd:discountList)
+		{
+			StringBuilder rebuildStartDate= new StringBuilder();
+			StringBuilder rebuildFinishDate= new StringBuilder();
+			String reverseStartDate[]=pd.getStartDate().split("-");
+			String reverseFinishDate[]=pd.getFinishDate().split("-");
+			for(int i=reverseStartDate.length-1;i>=0;i--)
+			{
+				rebuildStartDate.append(reverseStartDate[i]+"-");
+				rebuildFinishDate.append(reverseFinishDate[i]+"-");
+			}
+			rebuildStartDate.delete(rebuildStartDate.length()-1, rebuildStartDate.length());
+			rebuildFinishDate.delete(rebuildFinishDate.length()-1, rebuildFinishDate.length());
+			pd.setStartDate(rebuildStartDate.toString());
+			pd.setFinishDate(rebuildFinishDate.toString());
+			discountRequests.add(pd);	
+			
+			
+		}
 		parkNameCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("parkName"));
 		startDateCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("startDate"));
 		finishDateCol.setCellValueFactory(new PropertyValueFactory<ParkDiscount, String>("finishDate"));
