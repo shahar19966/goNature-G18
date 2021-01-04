@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EmployeeHomePageController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="657.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EmployeeHomePageController">
    <children>
-      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="434.0">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="597.0" prefWidth="429.0">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="51.0" layoutY="142.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="ID:" textAlignment="CENTER">
                <font>
@@ -83,28 +83,12 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="51.0" layoutY="262.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Park:" textAlignment="CENTER">
-               <font>
-                  <Font size="40.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="51.0" layoutY="292.0" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Role:" textAlignment="CENTER">
-               <font>
-                  <Font size="40.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor>
-            </Label>
-            <Label fx:id="roleLabel" layoutX="102.0" layoutY="292.0">
+            <Label fx:id="roleLabel" layoutX="102.0" layoutY="290.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="parkOrDepLabel" layoutX="102.0" layoutY="262.0" prefHeight="30.0" prefWidth="6.0">
+            <Label fx:id="parkOrDepLabel" layoutX="102.0" layoutY="260.0" prefHeight="30.0" prefWidth="6.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -117,6 +101,39 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
+            <Label fx:id="visitorsAmountLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="-90.0" layoutY="357.0" prefHeight="58.0" prefWidth="544.0" styleClass="titelHome" text="Current Visitors In The Park:" textAlignment="CENTER">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Label>
+            <Label fx:id="visitorsAmountNumberLabel" layoutX="105.0" layoutY="415.0" prefHeight="108.0" prefWidth="135.0">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <VBox layoutX="51.0" layoutY="260.0" prefHeight="65.0" prefWidth="100.0">
+               <children>
+                  <Label fx:id="parkTextLabel" alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Park:" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+                  <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 20;" text="Role:" textAlignment="CENTER">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
+               </children>
+            </VBox>
          </children>
       </AnchorPane>
    </children>

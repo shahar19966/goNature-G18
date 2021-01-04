@@ -21,68 +21,68 @@
          <children>
             <HBox prefHeight="49.0" prefWidth="375.0">
                <children>
-                  <Label prefHeight="35.0" prefWidth="102.0" styleClass="labelSmall" text="Park Name: " />
-                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="67.0" text="*" textFill="RED">
+                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="9.0" text="*" textFill="RED">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
+                  <Label prefHeight="35.0" prefWidth="160.0" styleClass="labelSmall" text="Park Name: " />
                   <ComboBox fx:id="parkNameComboBox" minHeight="37.0" minWidth="240.0" prefHeight="37.0" prefWidth="240.0" promptText="Park Name" styleClass="text-field-Small" />
                </children>
             </HBox>
             <HBox prefHeight="49.0" prefWidth="375.0">
                <children>
-                  <Label prefHeight="35.0" prefWidth="130.0" styleClass="labelSmall" text="People Amount:" />
-                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="39.0" text="*" textFill="RED">
+                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="9.0" text="*" textFill="RED">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
+                  <Label prefHeight="35.0" prefWidth="160.0" styleClass="labelSmall" text="People Amount:" />
                   <Spinner fx:id="peopleAmount" minHeight="37.0" minWidth="240.0" prefHeight="37.0" prefWidth="240.0" styleClass="text-field-Small" />
                </children>
             </HBox>
             <HBox prefHeight="49.0" prefWidth="375.0">
                <children>
-                  <Label prefHeight="35.0" prefWidth="47.0" styleClass="labelSmall" text="Date:" />
-                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="122.0" text="*" textFill="RED">
+                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="9.0" text="*" textFill="RED">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
+                  <Label prefHeight="35.0" prefWidth="160.0" styleClass="labelSmall" text="Date:" />
                   <DatePicker fx:id="date" minHeight="37.0" minWidth="240.0" prefHeight="37.0" prefWidth="240.0" styleClass="text-field-Small" />
                </children>
             </HBox>
             <HBox prefHeight="49.0" prefWidth="375.0">
                <children>
-                  <Label prefHeight="35.0" prefWidth="122.0" styleClass="labelSmall" text="Time of Arrival:" />
-                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="47.0" text="*" textFill="RED">
+                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="9.0" text="*" textFill="RED">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
+                  <Label prefHeight="35.0" prefWidth="160.0" styleClass="labelSmall" text="Time of Arrival:" />
                   <ComboBox fx:id="timeComboBox" minHeight="37.0" minWidth="240.0" prefHeight="37.0" prefWidth="240.0" styleClass="text-field-Small" />
                </children>
             </HBox>
             <HBox prefHeight="49.0" prefWidth="375.0">
                <children>
-                  <Label prefHeight="35.0" prefWidth="49.0" styleClass="labelSmall" text="Email:" />
-                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="120.0" text="*" textFill="RED">
+                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="9.0" text="*" textFill="RED">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
+                  <Label prefHeight="35.0" prefWidth="160.0" styleClass="labelSmall" text="Email:" />
                   <TextField fx:id="emailText" minHeight="37.0" minWidth="240.0" prefHeight="37.0" prefWidth="240.0" promptText="Email" styleClass="text-field-Small" />
                </children>
             </HBox>
             <HBox prefHeight="49.0" prefWidth="375.0">
                <children>
-                  <Label prefHeight="35.0" prefWidth="128.0" styleClass="labelSmall" text="Phone Number:" />
-                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="42.0" text="*" textFill="RED">
+                  <Label contentDisplay="BOTTOM" prefHeight="33.0" prefWidth="9.0" text="*" textFill="RED">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="startPhone" minHeight="37.0" minWidth="66.0" prefHeight="37.0" prefWidth="96.0" styleClass="text-field-Small" />
+                  <Label prefHeight="35.0" prefWidth="160.0" styleClass="labelSmall" text="Phone Number:" />
+                  <ComboBox fx:id="startPhone" minHeight="37.0" minWidth="66.0" prefHeight="37.0" prefWidth="97.0" styleClass="text-field-Small" />
                   <Label prefHeight="40.0" prefWidth="1.0" text="-">
                      <font>
                         <Font name="System Bold" size="18.0" />
