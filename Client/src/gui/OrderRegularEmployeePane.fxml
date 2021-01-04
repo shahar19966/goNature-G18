@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -45,6 +46,9 @@
                      <toggleGroup>
                         <ToggleGroup fx:id="userType" />
                      </toggleGroup>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </RadioButton>
                </children>
             </VBox>
@@ -62,6 +66,9 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </RadioButton>
                </children>
             </VBox>
@@ -79,6 +86,9 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </RadioButton>
                </children>
             </VBox>

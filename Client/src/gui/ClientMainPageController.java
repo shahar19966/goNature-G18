@@ -98,18 +98,21 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void EntryControlBtnClick(ActionEvent event) {
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		loadEntryControl();
 		setSwitchPane(panesMap.get("entryControl"));
 	}
 
 	@FXML
 	void discountBtnClick(ActionEvent event) {
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		loadParkManagerDiscountRequests();
 		setSwitchPane(panesMap.get("discount"));
 	}
 
 	@FXML
 	void exitControlBtnClick(ActionEvent event) {
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		loadExitControl();
 		setSwitchPane(panesMap.get("exitControl"));
 
@@ -117,6 +120,9 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void homeBtnClick(ActionEvent event) {
+		setOpacityOfRestOfButtons(null);
+		if(user instanceof Employee)
+			loadEmployeeHome();
 		setSwitchPane(panesMap.get("home"));
 	}
 
@@ -128,6 +134,7 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void orderBtnClick(ActionEvent event) {
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		if (guiControl.getUser() instanceof Employee) {
 			loadRegularEmployeeOrder();
 			setSwitchPane(panesMap.get("orderRegularEmployee"));
@@ -139,12 +146,14 @@ public class ClientMainPageController implements Initializable {
 
 	@FXML
 	void orderTrakingBtnClick(ActionEvent event) {
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		loadOrderTracking();
 		setSwitchPane(panesMap.get("orderTracking"));
 	}
 
 	@FXML
 	void parametersBtnClick(ActionEvent event) {// liron
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		loadParkManagerParametersUpdate();
 		setSwitchPane(panesMap.get("parameters"));
 
@@ -154,19 +163,21 @@ public class ClientMainPageController implements Initializable {
 	// Switch to registration screen when the registration button is clicked- OR
 	@FXML
 	void registrationBtnClick(ActionEvent event) {
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		loadRegistrationAndGuideScreen();
 		setSwitchPane(panesMap.get("registration"));
 	}
 
 	@FXML
 	void requestsBtnClick(ActionEvent event) {//liron
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		loadRequestsDepManager();
 		setSwitchPane(panesMap.get("requests"));
 	}
 
 	@FXML
 	void reportsBtnClick(ActionEvent event) {
-
+		setOpacityOfRestOfButtons((Button)event.getSource());
 		Employee emp = (Employee) user;
 		if (emp.getRole().equals("PARK_MANAGER"))
 			loadParkManagerReports();
@@ -186,14 +197,16 @@ public class ClientMainPageController implements Initializable {
 		this.user = user;
 		if (user instanceof Visitor) {
 			setVisitorAndSubscriberButtons(btnList);
-			loadVisitorScreens();
+			loadVisitorHome();
 		} else if (user instanceof Subscriber) {
 			setVisitorAndSubscriberButtons(btnList);
-			loadSubscriberScreens();
+			loadSubscriberHome();
 		} else { // employee
 			setEmployeeButtons(btnList);
-			loadEmployeeScreens();
+			loadEmployeeHome();
 		}
+		btnList=new ArrayList<>();
+		setBtnList(btnList);
 		setSwitchPane(panesMap.get("home"));
 	}
 
@@ -268,8 +281,19 @@ public class ClientMainPageController implements Initializable {
 		AnchorPane.setBottomAnchor(toSwitch, 10.0);
 		AnchorPane.setTopAnchor(toSwitch, 0.0);
 	}
+	private void setOpacityOfRestOfButtons(Button button) {
+		if(button!=null) {
+			for(Button b:btnList) {
+				b.setOpacity(0.5);
+			}
+			button.setOpacity(1);
+		}
+		else 
+			for(Button b:btnList)
+				b.setOpacity(1);
+	}
 
-	private void loadVisitorScreens() {
+	private void loadVisitorHome() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.VISITOR_MAIN_PAGE.toString()));
 		VBox root = null;
@@ -356,7 +380,7 @@ public class ClientMainPageController implements Initializable {
 		panesMap.put("reports", root);
 	}
 
-	private void loadSubscriberScreens() {
+	private void loadSubscriberHome() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass()
 				.getResource(user instanceof Subscriber ? ClientConstants.Screens.SUBSCRIBER_MAIN_PAGE.toString()
 						: ClientConstants.Screens.GUIDE_MAIN_PAGE.toString()));
@@ -372,7 +396,7 @@ public class ClientMainPageController implements Initializable {
 		panesMap.put("home", root);
 	}
 
-	private void loadEmployeeScreens() {
+	private void loadEmployeeHome() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.EMPLOYEE_MAIN_PAGE.toString()));
 		VBox root = null;

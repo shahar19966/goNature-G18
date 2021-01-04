@@ -111,19 +111,19 @@ public class OrderPaneController implements Initializable {
 		List<Object> orderDes = createOrderFromForm();
 		guiControl.sendToServer(new ClientMessage(ClientMessageType.ORDER, orderDes));
 		if (guiControl.getServerMsg() == null) {
-			GuiButton cancelButton = new GuiButton("Cancel Order", AlertType.Warning, Sizes.Medium);
+			GuiButton cancelButton = new GuiButton("Cancel Order", AlertType.Warning, Sizes.Large);
 			cancelButton.setOnAction(e -> {
 				guiControl.getClientMainPageController().hideAlert();
 
 			});
-			GuiButton watingListButton = new GuiButton("Enter Wating List", AlertType.Info, Sizes.Medium);
+			GuiButton watingListButton = new GuiButton("Enter Wating List", AlertType.Info, Sizes.Large);
 			watingListButton.setOnAction(e -> {
 				guiControl.sendToServer(new ClientMessage(ClientMessageType.WAITING_LIST, orderDes));
 				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
 						"Enter Wating List Succeeded", ((Order) guiControl.getServerMsg().getMessage()).toString(),
 						null);
 			});
-			GuiButton datePickerListButton = new GuiButton("Pick Another Date", AlertType.Info, Sizes.Medium);
+			GuiButton datePickerListButton = new GuiButton("Pick Another Date", AlertType.Info, Sizes.Large);
 			datePickerListButton.setOnAction(e -> {
 				Order order = (Order) orderDes.get(0);
 				guiControl.sendToServer(new ClientMessage(ClientMessageType.PICK_AVAILABLE_DATES, order));
