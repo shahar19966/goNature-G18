@@ -117,6 +117,7 @@ public class ParkManagerIncomeReportController implements Initializable {
 			GUIControl.popUpError("Future date does not exist ! try again");
 
 		setDataSecondReport();
+		
 
 	}
 
