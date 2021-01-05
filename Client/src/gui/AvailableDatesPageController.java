@@ -36,6 +36,7 @@ public class AvailableDatesPageController implements Initializable {
     	Set keySet=dateMap.keySet();
     	String[] dates = Arrays.copyOf(keySet.toArray(), keySet.toArray().length, String[].class);
     	int i=0;
+    	int count=0;
     	for(Node node:mainHBox.getChildren()) {
     		VBox mainVBox=(VBox)node;
     		Label title=(Label)mainVBox.getChildren().get(0);
@@ -55,10 +56,13 @@ public class AvailableDatesPageController implements Initializable {
 							((Order) guiControl.getServerMsg().getMessage()).toString(), null);
 				});
 				secondaryVBox.getChildren().add(button);
+				count++;
 			}
 			i++;
     		
     	}
+    	if(count==0)
+    		GUIControl.popUpError("The park is full for te next seven days.");
     }
 
 	@Override

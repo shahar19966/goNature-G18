@@ -154,20 +154,20 @@ public class Order implements Serializable {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-		orderDetails.append("Order Number:" + orderNum + "\n");
-		orderDetails.append("ID:" + id + "\n");
-		orderDetails.append("Park Name:" + parkName + "\n");
-		orderDetails.append("Number Of Visitors:" + numOfVisitors + "\n");
-		orderDetails.append("Type:" + type.name() + "\n");
+		orderDetails.append("Order Number: " + orderNum + "\n");
+		orderDetails.append("ID: " + id + "\n");
+		orderDetails.append("Park Name: " + parkName + "\n");
+		orderDetails.append("Number Of Visitors: " + numOfVisitors + "\n");
+		orderDetails.append("Type: " + type.name() + "\n");
 		String[] datearr = dateOfOrder.split("-");
-		orderDetails.append("Date:" + datearr[2] + "-" + datearr[1] + "-" + datearr[0] + "\n");
-		orderDetails.append("Time:" + timeOfOrder + "\n");
+		orderDetails.append("Date: " + datearr[2] + "-" + datearr[1] + "-" + datearr[0] + "\n");
+		orderDetails.append("Time: " + timeOfOrder + "\n");
 		if (orderCreationDate != null)
 			orderDetails.append(
-					"Creation Date:" + LocalDateTime.parse(orderCreationDate, formatter).format(formatter2) + "\n");
-		orderDetails.append("Email:" + email + "\n");
-		orderDetails.append("Phone:" + phone + "\n");
-		orderDetails.append("Total Price:" + price);
+					"Creation Date: " + LocalDateTime.parse(orderCreationDate, formatter).format(formatter2) + "\n");
+		orderDetails.append("Email: " + email + "\n");
+		orderDetails.append("Phone: " + phone + "\n");
+		orderDetails.append("Total Price: " + price);
 		return orderDetails.toString();
 	}
 
