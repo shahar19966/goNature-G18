@@ -46,7 +46,7 @@ public class LoginPageController {
 
     @FXML
     private Button loginBtn;
-    /*
+    /**
      * method called upon clicking the login button, calls validateLogin() and incase it's validated opens up the user's main screen to display
      */
     @FXML
@@ -95,7 +95,7 @@ public class LoginPageController {
     	idBtn.setSelected(false);
     	employeeBtn.setSelected(false);
     }
-    /*
+    /**
      * method that asks the server for a certain user given the fields that were selected and filled
      * @return true if user was found (and holds the object of the user in GUIControl) or false if user wasn't found in database
      */
