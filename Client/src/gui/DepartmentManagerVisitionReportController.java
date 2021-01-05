@@ -2,10 +2,12 @@ package gui;
 
 import java.net.URL;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import entity.Park;
 import entity.VisitorReport;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,7 +19,11 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/**
+ * 
+ * This class responsible for the control page of the department manager's visition report
+ *
+ */
 public class DepartmentManagerVisitionReportController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
 
@@ -59,23 +65,33 @@ public class DepartmentManagerVisitionReportController implements Initializable 
 
     @FXML
     private NumberAxis yPark3;
-  
+
+    /**
+     * initialize all the Data report before the page uploaded and displayed to the user
+     */
     
     @Override
    	public void initialize(URL location, ResourceBundle resources) 
        {
     	Calendar c=Calendar.getInstance();
     	month.setText(c.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
+    	guiControl.sendToServer(new ClientMessage(ClientMessageType.GET_PARKS, null));
+    	List<Park> parks = (List<Park> ) guiControl.getServerMsg().getMessage();
     	
-    	 park1.setText("1");
-    	 park2.setText("2");
-    	 park3.setText("3");
-    	 dataBar(barPark1,"1");
-    	 dataBar(barPark2, "2");
-    	 dataBar(barPark3, "3");
+    	 park1.setText(parks.get(0).getParkName());
+    	 park2.setText(parks.get(1).getParkName());
+    	 park3.setText(parks.get(2).getParkName());
+    	 dataBar(barPark1,parks.get(0).getParkName());
+    	 dataBar(barPark2, parks.get(1).getParkName());
+    	 dataBar(barPark3,parks.get(2).getParkName());
     	
+       
        }
-
+/**
+ * initialize data into a graph of the appropriate park
+ * @param bar -bar chart suitable for the park
+ * @param nameP - The name of the park you want to initialize the graph
+ */
     private void dataBar(BarChart<String,Number > bar,String nameP)
     {
     	guiControl.sendToServer(new ClientMessage(ClientMessageType.DEP_MNG_VISITION_REPORT, nameP));

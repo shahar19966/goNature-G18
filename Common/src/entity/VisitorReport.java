@@ -1,7 +1,10 @@
 package entity;
 
 import java.io.Serializable;
-
+/**
+ * class with all the parameters we need for reports related to visitors
+ * 
+ */
 public class VisitorReport implements Serializable {
 
 	private String namePark;

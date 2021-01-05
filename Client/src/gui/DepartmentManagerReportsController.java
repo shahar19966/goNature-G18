@@ -7,10 +7,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+/**
+ * 
+ * This class responsible for the control page of selecting a report that the department manager will want to view
+ *
+ */
 
 public class DepartmentManagerReportsController {
 
+	/**
+	 * Upload of the page cancellation report
+	 * @param event click on cancellation report btn 
+	 */
     @FXML
     void cancellationReport(ActionEvent event) {
 		Parent root ;
@@ -25,6 +33,11 @@ public class DepartmentManagerReportsController {
 	}
     }
 
+    /**
+     * 
+     * Upload of the page visitation report
+	 * @param event click on visitation report btn
+     */
     @FXML
     void visitationReport(ActionEvent event) {
     	Parent root ;

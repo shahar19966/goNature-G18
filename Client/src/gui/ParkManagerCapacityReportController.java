@@ -34,7 +34,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/**
+ * 
+ * This class responsible for the control page of the park manager's capacity report
+ *
+ */
 public class ParkManagerCapacityReportController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
 
@@ -79,6 +83,9 @@ public class ParkManagerCapacityReportController implements Initializable {
 
 	    @FXML
 	    private ListView<String> listDate;
+	    /**
+	     * initialize all the Data report before the page uploaded and displayed to the user
+	     */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	

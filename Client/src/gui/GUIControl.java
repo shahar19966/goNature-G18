@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
 import message.ServerMessage;
-/*
+/**
  * service class for the client with various service methods
  * this class is implemented as a singleton so that every instance of it holds the same values.
  */

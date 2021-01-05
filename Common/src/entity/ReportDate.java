@@ -2,7 +2,11 @@ package entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-
+/**
+ * 
+ *  class with parameters that match the report with a specific month and year
+ *
+ */
 public class ReportDate implements Serializable{
 	
 	

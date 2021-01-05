@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
-/*
+/**
  * controller for the login page
  */
 public class LoginPageController {

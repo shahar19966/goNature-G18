@@ -5,7 +5,7 @@ import entity.EntityConstants;
 import entity.Subscriber;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-/*
+/**
  * controller for subscriber home page,fills labels with given subscriber's details
  */
 public class SubscriberHomePageController {
@@ -33,7 +33,10 @@ public class SubscriberHomePageController {
 
     @FXML
     private Label isGuideLabel;
-    
+    /**
+     *   set all the label in the page
+     * @param sub connected to the system
+     */
     public void setLabels(Subscriber sub) {
         	idLabel.setText(sub.getID());
         	subNumLabel.setText(sub.getSubscriberNumber());

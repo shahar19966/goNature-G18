@@ -36,7 +36,7 @@ import ocsf.server.ConnectionToClient;
  * @author Paul Holden
  * @version July 2000
  */
-/*
+/**
  * GoNatureServer is responsible to handling client messages and sending
  * messages to client
  */

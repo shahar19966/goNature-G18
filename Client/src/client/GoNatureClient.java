@@ -19,7 +19,7 @@ import message.ClientMessageType;
 import message.ServerMessage;
 import ocsf.client.AbstractClient;
 
-/*
+/**
  * This class controls the communication between the client and the server using handleMessageFromClientUI and handleMessageFromClient
  */
 public class GoNatureClient extends AbstractClient {

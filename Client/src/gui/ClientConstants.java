@@ -4,7 +4,7 @@ import java.nio.file.Paths;
 
 import javafx.scene.media.AudioClip;
 
-/*
+/**
  *this class holds the relative paths of fxml files
  */
 public class ClientConstants {
