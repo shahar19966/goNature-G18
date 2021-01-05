@@ -429,7 +429,7 @@ public class MySQLConnection {
 		discountStatement.setString(3, orderToRequest.getParkName());
 		ResultSet rs = discountStatement.executeQuery();
 		while (rs.next())
-			priceForOrder = priceForOrder * ((100 - Integer.parseInt(rs.getString(1))) / 100);
+			priceForOrder = priceForOrder * ((100 - Integer.parseInt(rs.getString(1))) / 100.0);
 		return priceForOrder;
 
 	}
