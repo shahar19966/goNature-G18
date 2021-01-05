@@ -160,9 +160,10 @@ public class ClientMainPageController implements Initializable {
 	}
 	
 
-	/**
-	 *  Switch to registration screen when the registration button is clicked- OR
-	 * @param event
+	/*
+	 * 
+	 *  Switch to registration screen when the registration button is clicked
+	 * 
 	 */
 	@FXML
 	void registrationBtnClick(ActionEvent event) {

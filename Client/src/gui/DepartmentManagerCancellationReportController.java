@@ -17,7 +17,7 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
 import message.ClientMessage;
 import message.ClientMessageType;
-/**
+/*
  * 
  * This class responsible for the control page of the department manager's cancellation report
  *
@@ -37,7 +37,9 @@ public class DepartmentManagerCancellationReportController  implements Initializ
     private Label month;
     @FXML
 	private Label year;
-    /**
+    /*
+     * 
+     * 
      * initialize all the Data report before the page uploaded and displayed to the user
      */
     @Override

@@ -993,8 +993,12 @@ public class MySQLConnection {
 		return true;
 	}
 
+	/*
+	 * 
+	 * A method that returns ServerMessage if the registration was succeeded with a new subscriber, 
+	 * or failure with the existing subscriber details.
+	 */
 	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
-		// TODO!!!!!!!!! maybe to check in the visitor table for existing id!!!!!
 		PreparedStatement registerPreparedStatement;
 		registerPreparedStatement = con.prepareStatement("SELECT * FROM subscriber WHERE id_fk=? ");
 		registerPreparedStatement.setString(1, subscriber.getID());
@@ -1009,7 +1013,6 @@ public class MySQLConnection {
 		registerPreparedStatement = con.prepareStatement("INSERT INTO subscriber "
 				+ "(id_fk,firstName,lastName, phone, email, familyMembers, cardDetails,isGuide) VALUES "
 				+ "(?,?,?,?,?,?,?,?);");
-		// registerPreparedStatement.setString(1, subscriber.getSubscriberNumber());
 		registerPreparedStatement.setString(1, subscriber.getID());
 		registerPreparedStatement.setString(2, subscriber.getFirstName());
 		registerPreparedStatement.setString(3, subscriber.getLastName());
