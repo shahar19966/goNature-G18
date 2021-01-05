@@ -86,6 +86,7 @@ public class OrderPaneController implements Initializable {
     private Button clearButton;
 	private Tooltip tooltip = new Tooltip();
 	private boolean orderButtonAble = false;
+	private Order orderDetailes;
 	private ObservableList<String> parkNameObservableList = FXCollections.observableArrayList();
 
   	@FXML
@@ -136,6 +137,7 @@ public class OrderPaneController implements Initializable {
 			guiControl.getClientMainPageController().showAlert(AlertType.Warning, "Unavailable Date",
 					"The date you picked is unavailable.\nHow would you like to proceed?", buttonList);
 		} else {
+			orderDetailes=(Order) guiControl.getServerMsg().getMessage();
 			guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Order Succeeded",
 					((Order) guiControl.getServerMsg().getMessage()).toString(), null);
 		}
@@ -312,5 +314,10 @@ public class OrderPaneController implements Initializable {
 		orderDesList.add(payInAdvane);
 		return orderDesList;
 	}
+    public Order getOrderDetailes()
+    {
+    	return orderDetailes;
+    }
+  
 
 }
