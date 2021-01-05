@@ -31,7 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-/*
+/**
  * this class is the controller of the client's main page after logging in
  * initially it consists of all user's buttons,but upon being created it removes every button that doesn't concern the connected user
  * additionally it holds the functionality of the client main frames
@@ -160,7 +160,10 @@ public class ClientMainPageController implements Initializable {
 	}
 	
 
-	// Switch to registration screen when the registration button is clicked- OR
+	/**
+	 *  Switch to registration screen when the registration button is clicked- OR
+	 * @param event
+	 */
 	@FXML
 	void registrationBtnClick(ActionEvent event) {
 		setOpacityOfRestOfButtons((Button)event.getSource());
@@ -189,7 +192,7 @@ public class ClientMainPageController implements Initializable {
 
 	private Map<String, Pane> panesMap;
 
-	/*
+	/**
 	 * method called to set the user currently connected to the client and show his
 	 * main screen and buttons
 	 */
@@ -210,7 +213,7 @@ public class ClientMainPageController implements Initializable {
 		setSwitchPane(panesMap.get("home"));
 	}
 
-	/*
+	/**
 	 * method that adds every button loaded into a button list
 	 */
 	private void setBtnList(List<Button> list) {
@@ -225,7 +228,7 @@ public class ClientMainPageController implements Initializable {
 		list.add(discountBtn);
 	}
 
-	/*
+	/**
 	 * method that removes every button that doesn't concern a visitor and a
 	 * subscriber from display
 	 */
@@ -238,7 +241,7 @@ public class ClientMainPageController implements Initializable {
 		}
 	}
 
-	/*
+	/**
 	 * method that removes every button that doesn't concern a certain employee type
 	 * (decided by the type of employee that connected)
 	 */
@@ -269,7 +272,7 @@ public class ClientMainPageController implements Initializable {
 		}
 	}
 
-	/*
+	/**
 	 * method that takes a pane and displays it and it's content in the small window
 	 * set for it in the client display
 	 */
@@ -318,7 +321,7 @@ public class ClientMainPageController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// ParkManagerReportsController pmrc=fxmlLoader1.getController();
+		
 		panesMap.put("reports", root);
 	}
 	private void loadRequestsDepManager()//liron
@@ -453,7 +456,9 @@ public class ClientMainPageController implements Initializable {
 		logOutClick.disableProperty().bind(alertPane.visibleProperty());
 	}
 
-	// Load subscriber and guide registration screen- OR
+	/**
+	 *  Load subscriber and guide registration screen- OR
+	 */
 	private void loadRegistrationAndGuideScreen() {
 		FXMLLoader fxmlLoader1 = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.REGISTRATION_PAGE.toString()));

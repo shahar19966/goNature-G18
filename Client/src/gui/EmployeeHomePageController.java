@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import message.ClientMessage;
 import message.ClientMessageType;
-/*
+/**
  * controller for employee home page, sets the labels according to the given employee
  */
 public class EmployeeHomePageController {
@@ -43,6 +43,11 @@ public class EmployeeHomePageController {
     private Label visitorsAmountNumberLabel;
     @FXML
     private Label parkTextLabel;
+    /**
+     * set all the label in the page
+     * @param emp connected to the system
+     */
+    
     
     public void setLabels(Employee emp) {
     	idLabel.setText(emp.getID());

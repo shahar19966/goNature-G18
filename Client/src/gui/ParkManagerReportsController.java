@@ -13,13 +13,20 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/**
+ * 
+ * This class responsible for the control page of selecting a report that the park manager will want to view
+ *
+ */
 public class ParkManagerReportsController {
 
 	Stage primaryStage;
 	@FXML
 	private AnchorPane anchorPane;
-
+	/**
+	 * Upload of the page capacity report
+	 * @param event click on capacity report btn 
+	 */
 	@FXML
 	void capacityReport(ActionEvent event) {
 		Parent root ;
@@ -33,7 +40,10 @@ public class ParkManagerReportsController {
 		e.printStackTrace();
 	}
 	}
-
+	/**
+	 * Upload of the page income report
+	 * @param event click on income report btn 
+	 */
 	@FXML
 	void incomeReport(ActionEvent event) {
 		Parent root ;
@@ -48,7 +58,10 @@ public class ParkManagerReportsController {
 	}
 
 	}
-
+	/**
+	 * Upload of the page visit report
+	 * @param event click on visit report btn 
+	 */
 	@FXML
 	
 	void visitationReport(ActionEvent event) {

@@ -23,7 +23,7 @@ import message.ServerMessageType;
 import mysql.MySQLConnection;
 import server.GoNatureServer;
 
-/*
+/**
  * main class for running the application,opens main server screen
  */
 public class ServerMain extends Application {
@@ -45,7 +45,7 @@ public class ServerMain extends Application {
 		 launch(args);
 	  } // end main
 	
-	/*
+	/**
 	 * static method that upon being called,sets up a server connection to default port and connects to database
 	 */
 	public static boolean runServer(){
@@ -75,7 +75,7 @@ public class ServerMain extends Application {
 	       
 	       
 	}
-	/*
+	/**
 	 * static method that upon being called sends a crash message to all clients and exits the application
 	 */
 	public static void stopServer() {

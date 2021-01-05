@@ -54,7 +54,7 @@ import entity.EntityConstants.OrderType;
 import entity.EntityConstants.ParkParameter;
 import entity.EntityConstants.RequestStatus;
 
-/*
+/**
  * class that holds static methods related to database actions such as connection, queries,updates and more
  */
 public class MySQLConnection {
@@ -69,7 +69,7 @@ public class MySQLConnection {
 		System.out.println("SQL connection succeed");
 	}
 
-	/*
+	/**
 	 * 
 	 */
 	public static Visitor validateVisitor(String id) throws SQLException {
@@ -138,7 +138,13 @@ public class MySQLConnection {
 		}
 		return null;
 	}
-
+/**
+ * A method that returns the data to the park manager's visitor report from database
+   According to the data she receives (name of park, month and year)
+ * @param reportDate 
+ * @return
+ * @throws SQLException
+ */
 	public static Map<Integer, VisitorReport> getVisitorReport(ReportDate reportDate) throws SQLException {
 		
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
@@ -179,7 +185,9 @@ public class MySQLConnection {
 		return reportVisitorMap;
 
 	}
-
+/**
+ * 	A method that returns the data to the department manager's visition report from database
+ */
 	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 
@@ -212,7 +220,10 @@ public class MySQLConnection {
 		return reportVisitorMap;
 
 	}
-
+	/**
+	 * A method that returns the data to the department manager's cancellation report from database
+	 */
+	
 	public static Map<String, VisitorReport> getCancellationReport() throws SQLException {
 		Map<String, VisitorReport> reportVisitorMap = new HashMap<String, VisitorReport>();
 		Statement getCancellationReport;
@@ -245,7 +256,12 @@ public class MySQLConnection {
 		return reportVisitorMap;
 	}
 
-
+	/**
+	 * A method that returns the data to the park manager's capacity report from database
+	 * @param parkName -The name of the park we want data on
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Map<Integer, boolean[]> getParkCapacityReport(String parkName) throws SQLException {
 		HashMap<Integer, boolean[]> map = new LinkedHashMap<Integer, boolean[]>();
 		PreparedStatement getParkCapacityReport;
@@ -279,7 +295,13 @@ public class MySQLConnection {
 		} while (rs.next());
 		return map;
 	}
-
+/**
+ * A method that returns the data to the park manager's icome report from database
+   According to the data she receives (name of park, month and year)
+ * @param reportDate
+ * @return
+ * @throws SQLException
+ */
 	public static Map<Integer, VisitorReport> getIncomeReport(ReportDate reportDate) throws SQLException {
 		
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();

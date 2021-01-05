@@ -36,7 +36,11 @@ import javafx.scene.chart.XYChart;
 import message.ClientMessage;
 import message.ClientMessageType;
 
-
+/**
+ * 
+ * This class responsible for the control page of the park manager's visit report
+ *
+ */
 public class ParkManagerVisitationReportController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
 	
@@ -102,6 +106,9 @@ public class ParkManagerVisitationReportController implements Initializable {
 	private ObservableList<String> yearObsList = FXCollections.observableArrayList("2021", "2020");
 	private ObservableList<String> monthObsList = FXCollections.observableArrayList("01", "02", "03", "04", "05", "06",
 			"07", "08", "09", "10", "11", "12");
+	 /**
+     * initialize all the Data report before the page uploaded and displayed to the user
+     */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -123,6 +130,10 @@ public class ParkManagerVisitationReportController implements Initializable {
 	       setDataCurrentMonth();
 			
 		}
+	/***
+	 * 
+	 * @param event click on yes btn 
+	 */
 	   @FXML
 	    void yesBtnClick(ActionEvent event) {
 		   
@@ -140,6 +151,10 @@ public class ParkManagerVisitationReportController implements Initializable {
 		   
 
 	    }
+	   /**
+	     * initialize all the Data report to Current Month and year
+	     */
+
 	   private void setDataCurrentMonth()
 	   {
 		   guiControl.sendToServer(new ClientMessage(ClientMessageType.VISITOR_REPORT, reportDate));
@@ -171,6 +186,9 @@ public class ParkManagerVisitationReportController implements Initializable {
 						new PieChart.Data("Individuals("+sumIndivi+")",sumIndivi));
 				pieChart.setData(pieCharData);
 	   }
+		/**
+	     * initialize all the Data report to month and year that the user has selected
+	     */
 	   private void setDataSecondReport()
 	   {
 		   lineCharLastM.getData().clear();

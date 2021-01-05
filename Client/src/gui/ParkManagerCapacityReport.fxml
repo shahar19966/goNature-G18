@@ -34,7 +34,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label fx:id="month" alignment="CENTER" layoutX="385.0" layoutY="86.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+      <Label fx:id="month" layoutX="382.0" layoutY="86.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -42,7 +42,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label fx:id="parkName" alignment="CENTER" layoutX="428.0" layoutY="146.0" prefHeight="30.0" prefWidth="82.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+      <Label fx:id="parkName" layoutX="428.0" layoutY="146.0" prefHeight="30.0" prefWidth="82.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -58,7 +58,7 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Label fx:id="year2021" alignment="CENTER" layoutX="390.0" layoutY="116.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
+      <Label fx:id="year2021" layoutX="371.0" layoutY="116.0" prefHeight="30.0" prefWidth="142.0" style="-fx-text-fill: black; -fx-font-size: 20;" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>

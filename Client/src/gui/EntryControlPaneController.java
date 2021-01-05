@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import message.ClientMessage;
 import message.ClientMessageType;
-/*
+/**
  * Controller for the entry control screen
  */
 public class EntryControlPaneController {
