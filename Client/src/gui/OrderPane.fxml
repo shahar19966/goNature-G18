@@ -115,13 +115,7 @@
                         <String fx:value="btn" />
                      </styleClass>
                   </Button>
-                  <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearFunc" text="Clear">
-                     <styleClass>
-                        <String fx:value="btn" />
-                        <String fx:value="text-field-Medium" />
-                        <String fx:value="danger" />
-                     </styleClass>
-                  </Button>
+                  <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearFunc" styleClass="clearBtn" text="Clear" />
                </children>
             </HBox>
          </children>

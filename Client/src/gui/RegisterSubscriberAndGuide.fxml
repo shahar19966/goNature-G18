@@ -23,9 +23,10 @@
    <children>
       <GridPane layoutX="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="517.0" prefWidth="912.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="267.0" minWidth="10.0" prefWidth="267.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="266.0" minWidth="10.0" prefWidth="262.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="232.0" minWidth="10.0" prefWidth="222.0" />
+            <ColumnConstraints />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="267.0" minWidth="10.0" prefWidth="241.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="289.0" minWidth="10.0" prefWidth="289.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="232.0" minWidth="10.0" prefWidth="222.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="140.0" minWidth="10.0" prefWidth="116.0" />
         </columnConstraints>
         <rowConstraints>
@@ -42,27 +43,27 @@
             <RowConstraints maxHeight="153.0" minHeight="10.0" prefHeight="69.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label styleClass="labelSmall" text="ID Number" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="idTextFiled" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" promptText="ID Number" styleClass="text-field-Small" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
+            <Label styleClass="labelSmall" text="  ID Number" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="idTextFiled" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" promptText="ID Number" styleClass="text-field-Small" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
                <tooltip>
                   <Tooltip text="9 Digits only" wrapText="true" />
                </tooltip>
             </TextField>
-            <Label styleClass="labelSmall" text="Amount of Familiy Members" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <Spinner fx:id="familiyCount" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="text-field-Small" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label styleClass="labelSmall" text="First Name" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="fNameTextFiled" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" promptText="First Name" styleClass="text-field-Small" GridPane.rowIndex="5">
+            <Label styleClass="labelSmall" text="  Amount of Familiy Members" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Spinner fx:id="familiyCount" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="text-field-Small" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label styleClass="labelSmall" text="  First Name" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="fNameTextFiled" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" promptText="First Name" styleClass="text-field-Small" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <tooltip>
                   <Tooltip text="English letters only" wrapText="true" />
                </tooltip>
             </TextField>
-            <Label fx:id="creditCardNumLabel" prefHeight="27.0" prefWidth="171.0" styleClass="labelSmall" text="Credit Card Number" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="cardNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="37.0" prefWidth="161.0" promptText="Credit Card Number" styleClass="text-field-Small" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+            <Label fx:id="creditCardNumLabel" prefHeight="27.0" prefWidth="171.0" styleClass="labelSmall" text="Credit Card Number" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="cardNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="37.0" prefWidth="161.0" promptText="Credit Card Number" styleClass="text-field-Small" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                <tooltip>
                   <Tooltip text="16 Digits only" wrapText="true" />
                </tooltip>
             </TextField>
-            <GridPane hgap="20.0" prefHeight="0.0" prefWidth="5.0" GridPane.rowIndex="7">
+            <GridPane hgap="20.0" prefHeight="0.0" prefWidth="5.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
@@ -75,9 +76,9 @@
                   <CheckBox fx:id="isCard" mnemonicParsing="false" onAction="#clearCreditCardDes" prefHeight="17.0" prefWidth="13.0" GridPane.columnIndex="1" />
                </children>
             </GridPane>
-            <Pane prefHeight="37.0" prefWidth="775.0" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Pane prefHeight="37.0" prefWidth="775.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="154.0" layoutY="-6.0" prefHeight="58.0" prefWidth="529.0" styleClass="titelHome" text="Register Subscriber/Guide" textAlignment="CENTER">
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="189.0" layoutY="-6.0" prefHeight="58.0" prefWidth="529.0" styleClass="titelHome" text="Register Subscriber/Guide" textAlignment="CENTER">
                      <font>
                         <Font size="40.0" />
                      </font>
@@ -87,34 +88,34 @@
                   </Label>
                </children>
             </Pane>
-            <Button fx:id="registerBtn" mnemonicParsing="false" onAction="#registerBtnClick" prefHeight="44.0" prefWidth="108.0" text="Register" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="TOP">
+            <Button fx:id="registerBtn" mnemonicParsing="false" onAction="#registerBtnClick" prefHeight="44.0" prefWidth="108.0" text="Register" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
                <styleClass>
                   <String fx:value="logInBtn" />
                   <String fx:value="btn" />
                </styleClass>
             </Button>
-            <Label styleClass="labelSmall" text="Last Name" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="lNameTextFiled" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" promptText="Last Name" styleClass="text-field-Small" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <Label styleClass="labelSmall" text="  Last Name" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="lNameTextFiled" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" promptText="Last Name" styleClass="text-field-Small" GridPane.columnIndex="2" GridPane.rowIndex="5">
                <tooltip>
                   <Tooltip text="English letters only" wrapText="true" />
                </tooltip>
             </TextField>
-            <Label fx:id="expiraqtionDateLabel" prefHeight="27.0" prefWidth="133.0" styleClass="labelSmall" text="Expiration Date" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" />
-            <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
+            <Label fx:id="expiraqtionDateLabel" prefHeight="27.0" prefWidth="133.0" styleClass="labelSmall" text="Expiration Date" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" />
+            <Pane maxWidth="-Infinity" prefHeight="64.0" prefWidth="288.0" GridPane.columnIndex="2" GridPane.rowIndex="9">
                <children>
-                  <Label fx:id="separetorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="110.0" layoutY="11.0" text="/">
+                  <Label fx:id="separetorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="114.0" layoutY="17.0" text="/">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="yearComboBox" layoutX="125.0" layoutY="12.0" promptText="Year" styleClass="text-field-Small" />
-                  <ComboBox fx:id="monthComboBox" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="month" styleClass="text-field-Small" />
+                  <ComboBox fx:id="yearComboBox" layoutX="132.0" layoutY="12.0" prefHeight="37.0" prefWidth="96.0" promptText="Year" styleClass="text-field-Small" />
+                  <ComboBox fx:id="monthComboBox" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="103.0" promptText="month" styleClass="text-field-Small" />
                </children>
             </Pane>
-            <Label styleClass="labelSmall" text="Email" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="emailTextField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="37.0" prefWidth="161.0" promptText="Email" styleClass="text-field-Small" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label styleClass="labelSmall" text="Phone Number" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-            <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+            <Label styleClass="labelSmall" text="  Email" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="emailTextField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="37.0" prefWidth="161.0" promptText="Email" styleClass="text-field-Small" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <Label styleClass="labelSmall" text="  Phone Number" GridPane.columnIndex="3" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
+            <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
                <children>
                   <ComboBox fx:id="prefixPhoneComboBox" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="56.0" styleClass="text-field-Small" />
                   <TextField fx:id="finishPhone" layoutX="104.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="37.0" prefWidth="121.0" promptText="Phone Number" styleClass="text-field-Small">
@@ -124,7 +125,7 @@
                   </TextField>
                </children>
             </Pane>
-            <Label fx:id="csvCodeLabel" prefHeight="27.0" prefWidth="142.0" styleClass="labelSmall" text="CVV Code" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+            <Label fx:id="csvCodeLabel" prefHeight="27.0" prefWidth="142.0" styleClass="labelSmall" text="CVV Code" GridPane.columnIndex="3" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
                <graphic>
                   <ImageView fitHeight="19.0" fitWidth="51.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -147,9 +148,9 @@
                   </Tooltip>
                </tooltip>
             </Label>
-            <TextField fx:id="csvTextField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="37.0" prefWidth="97.0" promptText="CSV Code" styleClass="text-field-Small" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-            <Label alignment="BOTTOM_LEFT" prefHeight="17.0" prefWidth="151.0" styleClass="labelSmall" underline="true" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <GridPane hgap="20.0" prefHeight="29.0" prefWidth="81.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <TextField fx:id="csvTextField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="37.0" prefWidth="97.0" promptText="CSV Code" styleClass="text-field-Small" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
+            <Label alignment="BOTTOM_LEFT" prefHeight="17.0" prefWidth="151.0" styleClass="labelSmall" underline="true" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <GridPane hgap="20.0" prefHeight="29.0" prefWidth="81.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
@@ -160,14 +161,54 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
             </GridPane>
-            <Label styleClass="labelSmall" text="Is Guide" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <CheckBox fx:id="isGuide" mnemonicParsing="false" onAction="#clearCreditCardDes" prefHeight="17.0" prefWidth="23.0" selected="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearBtnClick" text="Clear" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="TOP">
+            <Label styleClass="labelSmall" text="  Is Guide?" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <CheckBox fx:id="isGuide" mnemonicParsing="false" onAction="#clearCreditCardDes" prefHeight="17.0" prefWidth="23.0" selected="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearBtnClick" text="Clear" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER">
                <styleClass>
                   <String fx:value="clearBtn" />
                   <String fx:value="btn" />
                </styleClass>
             </Button>
+            <Label fx:id="MandatoryFieldsLabel" prefHeight="21.0" prefWidth="131.0" text="*marked fields are mandatory" textFill="#f80000" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <Label contentDisplay="BOTTOM" prefHeight="27.0" prefWidth="17.0" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label contentDisplay="BOTTOM" prefHeight="27.0" prefWidth="17.0" text="*" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label contentDisplay="BOTTOM" prefHeight="27.0" prefWidth="17.0" text="*" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label contentDisplay="BOTTOM" prefHeight="27.0" prefWidth="17.0" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label contentDisplay="BOTTOM" prefHeight="27.0" prefWidth="17.0" text="*" textFill="RED" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label contentDisplay="BOTTOM" prefHeight="27.0" prefWidth="17.0" text="*" textFill="RED" GridPane.columnIndex="3" GridPane.rowIndex="4">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label contentDisplay="BOTTOM" prefHeight="27.0" prefWidth="17.0" text="*" textFill="RED" GridPane.columnIndex="3" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
       </GridPane>
    </children>

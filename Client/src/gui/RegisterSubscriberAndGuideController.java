@@ -23,6 +23,11 @@ import message.ClientMessageType;
 import message.ServerMessage;
 import message.ServerMessageType;
 
+/*
+ * 
+ * This class responsible for the registration of subscriber to Go Nature 
+ * 
+ */
 public class RegisterSubscriberAndGuideController implements Initializable {
 
 	@FXML
@@ -93,6 +98,11 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 	private ObservableList<String> monthObsList = FXCollections.observableArrayList("01", "02", "03", "04", "05", "06",
 			"07", "08", "09", "10", "11", "12");
 
+    /*
+     * 
+     * A method that initialize  Data for combo boxes,bind buttons to text fields, and text fields to check box.
+     * 
+     */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
@@ -126,6 +136,11 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		familiyCount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15));
 	}
 
+	/*
+	 * 
+	 * When register button pressed, the subscriber details save and send to the server.
+	 * Depending on the server response, shows alert with message if the registration was successful or not.
+	 */
 	@FXML
 	void registerBtnClick(ActionEvent event) {
 		if (!IsValidInputForRegistration()) {
@@ -158,71 +173,73 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 	}
 
 	/*
-	 * method for input checks for the registration fields
+	 * 
+	 * A method for input checks for the registration fields
+	 * 
 	 */
 	public boolean IsValidInputForRegistration() {
-		// input checks for ID
-		// check if ID contains only digits
+		// Input checks for ID
+		// Check if ID contains only digits
 		if (!idTextFiled.getText().matches("[0-9]+")) {
 			GUIControl.popUpError("ID can only contain digits");
 			return false;
 		}
-		// check if ID contains 9 digits
+		// Check if ID contains 9 digits
 		if (idTextFiled.getText().length() != 9) {
 			GUIControl.popUpError("ID need to contain 9 digits");
 			return false;
 		}
 
-		// input check for Email
-		// check if Email is in the correct format
+		// Input check for Email
+		// Check if Email is in the correct format
 		if (!emailTextField.getText().matches("^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$")) {
 			GUIControl.popUpError("Email is not in the correct format");
 			return false;
 		}
 
-		// input check for first name and last name
-		// check if First Name contains only letters
+		// Input check for first name and last name
+		// Check if First Name contains only letters
 		if (!fNameTextFiled.getText().matches("^[a-zA-Z]*$") || !lNameTextFiled.getText().matches("^[a-zA-Z]*$")) {
 			GUIControl.popUpError("First name and Last name can only contain letters");
 			return false;
 		}
 
-		// input checks for phone number
-		// check if phone number contains only digits
+		// Input checks for phone number
+		// Check if phone number contains only digits
 		if (!finishPhone.getText().matches("[0-9]+")) {
 			GUIControl.popUpError("phone number can only contain digits");
 			return false;
 		}
-		// check if ID contains 9 digits
+		// Check if ID contains 9 digits
 		if (finishPhone.getText().length() != 7) {
 			GUIControl.popUpError("phone number need to contain 10 digits in total");
 			return false;
 		}
-		// if check box selected, input check for credit card
+		// If check box selected, input check for credit card
 		if (isCard.isSelected()) {
 
 			yearComboBox.getSelectionModel().selectFirst();
 			monthComboBox.getSelectionModel().selectFirst();
 
-			// input checks for credit card number
-			// check if credit card number contains only digits
+			// Input checks for credit card number
+			// Check if credit card number contains only digits
 			if (!cardNumber.getText().matches("[0-9]+")) {
 				GUIControl.popUpError("credit card number can only contain digits");
 				return false;
 			}
-			// check if ID contains 9 digits
+			// Check if ID contains 9 digits
 			if (cardNumber.getText().length() != 16) {
 				GUIControl.popUpError("credit card number need to contain 16 digits");
 				return false;
 			}
 
-			// input checks for CSV code
-			// check if CSV code contains only digits
+			// Input checks for CSV code
+			// Check if CSV code contains only digits
 			if (!csvTextField.getText().matches("[0-9]+")) {
 				GUIControl.popUpError("CSV code can only contain digits");
 				return false;
 			}
-			// check if CSV code contains 9 digits
+			// Check if CSV code contains 9 digits
 			if (csvTextField.getText().length() != 3) {
 				GUIControl.popUpError("CSV code need to contain 3 digits");
 				return false;
@@ -230,12 +247,22 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		}
 		return true;
 	}
-
+	
+	/*
+	 * 
+	 * When clear button is pressed, all fields are cleared.
+	 * 
+	 */
 	@FXML
 	void clearBtnClick(ActionEvent event) {
 		clearAllFields();
 	}
-
+	
+	/*
+	 * 
+	 * A method that clear all registration fields
+	 *
+	 */
 	public void clearAllFields() {
 		idTextFiled.setText("");
 		familiyCount.getValueFactory().setValue(0);
