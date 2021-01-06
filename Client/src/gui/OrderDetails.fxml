@@ -18,7 +18,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
-            <Label fx:id="idLabel" layoutX="64.0" layoutY="65.0" prefHeight="30.0" prefWidth="14.0">
+            <Label fx:id="idLabel" layoutX="64.0" layoutY="65.0" prefHeight="30.0" prefWidth="14.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -31,7 +31,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
-            <Label fx:id="orderNumberLabel" layoutX="188.0" layoutY="35.0" prefHeight="30.0" prefWidth="14.0">
+            <Label fx:id="orderNumberLabel" layoutX="188.0" layoutY="35.0" prefHeight="30.0" prefWidth="14.0" AnchorPane.leftAnchor="190.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -60,12 +60,12 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
-            <Label fx:id="emailLabel" layoutX="94.0" layoutY="95.0" prefHeight="30.0" prefWidth="14.0">
+            <Label fx:id="emailLabel" layoutX="94.0" layoutY="95.0" prefHeight="30.0" prefWidth="14.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="emailLabel" layoutX="101.0" layoutY="125.0" prefHeight="30.0" prefWidth="14.0">
+            <Label fx:id="phoneLabel" layoutX="101.0" layoutY="125.0" prefHeight="30.0" prefWidth="14.0" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -78,7 +78,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
-            <Label fx:id="dateLabel" layoutX="80.0" layoutY="210.0" prefHeight="30.0" prefWidth="27.0">
+            <Label fx:id="dateLabel" layoutX="80.0" layoutY="210.0" prefHeight="30.0" prefWidth="27.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -91,7 +91,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
-            <Label fx:id="timeLabel" layoutX="84.0" layoutY="240.0" prefHeight="30.0" prefWidth="27.0">
+            <Label fx:id="timeLabel" layoutX="84.0" layoutY="240.0" prefHeight="30.0" prefWidth="27.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -104,7 +104,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
-            <Label fx:id="typeLabel" layoutX="84.0" layoutY="270.0" prefHeight="30.0" prefWidth="27.0">
+            <Label fx:id="typeLabel" layoutX="84.0" layoutY="270.0" prefHeight="30.0" prefWidth="27.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -117,12 +117,12 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
-            <Label fx:id="TotalPriceLabel" layoutX="286.0" layoutY="342.0" prefHeight="30.0" prefWidth="27.0" textFill="RED">
+            <Label fx:id="TotalPriceLabel" layoutX="286.0" layoutY="342.0" prefHeight="30.0" prefWidth="27.0" textFill="RED" AnchorPane.leftAnchor="290.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="ParkNameLabel" layoutX="142.0" layoutY="180.0" prefHeight="30.0" prefWidth="27.0">
+            <Label fx:id="ParkNameLabel" layoutX="142.0" layoutY="180.0" prefHeight="30.0" prefWidth="27.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -135,7 +135,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Label>
-            <Label fx:id="numberOfVisitorsLabel" layoutX="209.0" layoutY="305.0" prefHeight="30.0" prefWidth="27.0">
+            <Label fx:id="numberOfVisitorsLabel" layoutX="209.0" layoutY="305.0" prefHeight="30.0" prefWidth="27.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>

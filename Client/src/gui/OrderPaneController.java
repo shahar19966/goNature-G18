@@ -36,8 +36,11 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import message.ClientMessage;
 import message.ClientMessageType;
@@ -45,51 +48,53 @@ import message.ClientMessageType;
 public class OrderPaneController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
 
-    @FXML
-    private ComboBox<String> parkNameComboBox;
+	@FXML
+	private ComboBox<String> parkNameComboBox;
 
-    @FXML
-    private Spinner<Integer> peopleAmount;
+	@FXML
+	private Spinner<Integer> peopleAmount;
 
-    @FXML
-    private DatePicker date;
+	@FXML
+	private DatePicker date;
 
-    @FXML
+	@FXML
 	private ComboBox<String> timeComboBox;
 
-    @FXML
-    private TextField emailText;
+	@FXML
+	private TextField emailText;
 
-    @FXML
-    private ComboBox<String> startPhone;
+	@FXML
+	private ComboBox<String> startPhone;
 
-    @FXML
-    private TextField finishPhone;
+	@FXML
+	private TextField finishPhone;
 
-    @FXML
-    private CheckBox guideGroupCheckBox;
+	@FXML
+	private CheckBox guideGroupCheckBox;
 
-    @FXML
-    private Label payInAdvanceLabel;
+	@FXML
+	private Label payInAdvanceLabel;
 
-    @FXML
-    private CheckBox payInAdvanceCheckBox;
+	@FXML
+	private CheckBox payInAdvanceCheckBox;
 
-    @FXML
-    private Button orderButton;
-    @FXML
-    private HBox payInAdvanceHBox;
-    @FXML
-    private HBox guideGroupHBox;
+	@FXML
+	private Button orderButton;
+	@FXML
+	private HBox payInAdvanceHBox;
+	@FXML
+	private HBox guideGroupHBox;
 
-    @FXML
-    private Button clearButton;
+	@FXML
+	private Button clearButton;
 	private Tooltip tooltip = new Tooltip();
 	private boolean orderButtonAble = false;
 	private Order orderDetailes;
 	private ObservableList<String> parkNameObservableList = FXCollections.observableArrayList();
+	private VBox orderDetails;
+	private OrderDetailsController orderDetailsController;
 
-  	@FXML
+	@FXML
 	void changePeopleAmount(ActionEvent event) {
 		int tmp = peopleAmount.getValue();
 		if (guideGroupCheckBox.isSelected()) {
@@ -120,9 +125,14 @@ public class OrderPaneController implements Initializable {
 			GuiButton watingListButton = new GuiButton("Enter Wating List", AlertType.Info, Sizes.Large);
 			watingListButton.setOnAction(e -> {
 				guiControl.sendToServer(new ClientMessage(ClientMessageType.WAITING_LIST, orderDes));
-				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
-						"Enter Wating List Succeeded", ((Order) guiControl.getServerMsg().getMessage()).toString(),
-						null);
+				if (null != orderDetails && null != orderDetailsController) {
+					orderDetailsController.getOrderDetailes((Order) guiControl.getServerMsg().getMessage());
+					guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
+							"Enter Wating List Succeeded", orderDetails, null);
+				} else
+					guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
+							"Enter Wating List Succeeded", ((Order) guiControl.getServerMsg().getMessage()).toString(),
+							null);
 			});
 			GuiButton datePickerListButton = new GuiButton("Pick Another Date", AlertType.Info, Sizes.Large);
 			datePickerListButton.setOnAction(e -> {
@@ -137,13 +147,20 @@ public class OrderPaneController implements Initializable {
 			guiControl.getClientMainPageController().showAlert(AlertType.Warning, "Unavailable Date",
 					"The date you picked is unavailable.\nHow would you like to proceed?", buttonList);
 		} else {
-			orderDetailes=(Order) guiControl.getServerMsg().getMessage();
-			guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Order Succeeded",
-					((Order) guiControl.getServerMsg().getMessage()).toString(), null);
+
+			if (null != orderDetails && null != orderDetailsController) {
+				orderDetailsController.getOrderDetailes((Order) guiControl.getServerMsg().getMessage());
+				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Order Succeeded",
+						orderDetails, null);
+			} else
+				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success, "Order Succeeded",
+						((Order) guiControl.getServerMsg().getMessage()).toString(), null);
+
 		}
 		clearFunc(null);
 
 	}
+
 	private void displayAvailableDates(Map<String, List<String>> map, List<Object> orderDes) {
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.AVAILABLE_DATES_PAGE.toString()));
@@ -156,17 +173,39 @@ public class OrderPaneController implements Initializable {
 		}
 		AvailableDatesPageController adpc = fxmlLoader.getController();
 		adpc.setTable(map, orderDes);
-		GuiButton cancelButton = new GuiButton("Cancel", AlertType.Danger, Sizes.Medium);
+		GuiButton cancelButton = new GuiButton("Cancel", AlertType.Danger, Sizes.Large);
 		cancelButton.setOnAction(e -> {
 			guiControl.getClientMainPageController().hideAlert();
 		});
+		GuiButton watingListButton = new GuiButton("Enter Wating List", AlertType.Info, Sizes.Large);
+		watingListButton.setOnAction(e -> {
+			guiControl.sendToServer(new ClientMessage(ClientMessageType.WAITING_LIST, orderDes));
+			if (null != orderDetails && null != orderDetailsController) {
+				orderDetailsController.getOrderDetailes((Order) guiControl.getServerMsg().getMessage());
+				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
+						"Enter Wating List Succeeded", orderDetails, null);
+			} else
+				guiControl.getClientMainPageController().showAlertWithOkButton(AlertType.Success,
+						"Enter Wating List Succeeded", ((Order) guiControl.getServerMsg().getMessage()).toString(),
+						null);
+		});
 		List<Button> buttonList = new ArrayList<>();
+		buttonList.add(watingListButton);
 		buttonList.add(cancelButton);
 		guiControl.getClientMainPageController().showAlert(AlertType.Info, "Smart Date Picker", root, buttonList);
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("OrderDetails.fxml"));
+			orderDetails = fxmlLoader.load();
+			orderDetailsController = (OrderDetailsController) fxmlLoader.getController();
+		} catch (IOException e) {
+			orderDetails=null;
+			orderDetailsController=null;
+		}
 
 		if (!(guiControl.getUser() instanceof Subscriber && ((Subscriber) guiControl.getUser()).getIsGuide())) {
 			guideGroupHBox.setVisible(false);
@@ -274,9 +313,7 @@ public class OrderPaneController implements Initializable {
 
 	}
 
-	
-
-    @FXML
+	@FXML
 	private void clearFunc(ActionEvent event) {
 		emailText.setText("");
 		parkNameComboBox.getSelectionModel().selectFirst();
@@ -291,7 +328,8 @@ public class OrderPaneController implements Initializable {
 		LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1);
 		date.setValue(localDate);
 	}
-    private List<Object> createOrderFromForm() {
+
+	private List<Object> createOrderFromForm() {
 		List<Object> orderDesList = new ArrayList<Object>();
 		Order order = new Order(null, parkNameComboBox.getValue(), peopleAmount.getValue(), null,
 				date.getValue().toString(), timeComboBox.getValue(), -1, emailText.getText(),
@@ -314,10 +352,9 @@ public class OrderPaneController implements Initializable {
 		orderDesList.add(payInAdvane);
 		return orderDesList;
 	}
-    public Order getOrderDetailes()
-    {
-    	return orderDetailes;
-    }
-  
+
+	public Order getOrderDetailes() {
+		return orderDetailes;
+	}
 
 }
