@@ -72,29 +72,11 @@ public class GoNatureClient extends AbstractClient {
 					GUIControl.popUpErrorExitOnClick((String) serverMsg.getMessage());
 				}
 				break;
-			case PARK_LIST:
-				guiControl.setServerMsg(serverMsg);
-				break;
 			case LOGOUT_SUCCESS:
 				GUIControl.popUpMessage("Logged out");
 				break;
-			case PARK_VISITATION_REPORT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case ORDER_SUCCESS:
-				guiControl.setServerMsg(serverMsg);
-				break;
 			case ORDER_FAILURE:
 				guiControl.setServerMsg(null);
-				break;
-			case WAITING_LIST:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case PARK_INCOME_REPORT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case AVAILABLE_DATES:
-				guiControl.setServerMsg(serverMsg);
 				break;
 			case PARAMETER_UPDATE:
 				GUIControl.popUpMessage("Parameter Update Sent",
@@ -103,52 +85,6 @@ public class GoNatureClient extends AbstractClient {
 			case DISCOUNT_REQUEST:
 				GUIControl.popUpMessage("Request sent to department manager",
 						"Request successfully sent to department manager");
-				break;
-
-			case OCCASIONAL_ORDER:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case PARK_CAPACITY_REPORT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case DEPARTMENT_CANCELLATION_REPORT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case GET_ORDERS_BY_ID:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case DEPARTMENT_VISITATION_REPORT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case CANCEL_ORDER:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case GET_DISCOUNT_REQUESTS_FROM_DB:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case VALIDATE_ORDER_ENTRY:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case VALIDATE_ORDER_EXIT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case REQUESTS_PARAMETERS:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case DEP_MANAGER_GET_DISCOUNT_REQUESTS:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case APPROVE_PARAMETER:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case DECLINE_PARAMETER:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case APPROVE_DISCOUNT:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case DECLINE_DISCOUNT:
-				guiControl.setServerMsg(serverMsg);
 				break;
 			case FINAL_APPROVAL_EMAIL_AND_SMS:
 				List<Order> orderToApproveList  = (List<Order>) serverMsg.getMessage();
@@ -212,12 +148,6 @@ public class GoNatureClient extends AbstractClient {
 				}
 				return; // this message should not interfere with the client in case he's waiting for
 						// server's response
-			case ACTIVATE_ORDER_FROM_WATING_LIST:
-				guiControl.setServerMsg(serverMsg);
-				break;
-			case GET_PARK:
-				guiControl.setServerMsg(serverMsg);
-				break;
 			default:
 				guiControl.setServerMsg(serverMsg);
 				break;
@@ -258,6 +188,7 @@ public class GoNatureClient extends AbstractClient {
 			quit();
 		}
 	}
+	
 
 	/**
 	 * This method terminates the client.

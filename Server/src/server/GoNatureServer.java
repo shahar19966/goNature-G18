@@ -248,7 +248,8 @@ public class GoNatureServer extends AbstractServer {
 			}
 		} catch (Exception e) {
 			try {
-				client.sendToClient(new ServerMessage(ServerMessageType.SERVER_ERROR, null));
+				if(client!=null)
+					client.sendToClient(new ServerMessage(ServerMessageType.SERVER_ERROR, null));
 				e.printStackTrace();
 			} catch (IOException e1) {
 			}
@@ -257,7 +258,8 @@ public class GoNatureServer extends AbstractServer {
 		System.out.println("Message received: " + msg + " from " + client);
 		System.out.println(userList.toString());
 		try {
-			client.sendToClient(new ServerMessage(type, returnVal));
+			if(client!=null)
+				client.sendToClient(new ServerMessage(type, returnVal));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

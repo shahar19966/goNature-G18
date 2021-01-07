@@ -824,7 +824,6 @@ public class MySQLConnection {
 				|| order.getStatus().equals(OrderStatus.EXPIRED)) {
 			return false;
 		}
-		System.out.println(order.getStatus().name() + " " + newStatus.name());
 		String query = "Update orders SET status=? WHERE orderNum=?";
 		String queryDelSms = "DELETE FROM smsSend WHERE orderNum_fk=?";
 		PreparedStatement delSms = con.prepareStatement(queryDelSms);
@@ -1086,7 +1085,6 @@ public class MySQLConnection {
 			return false;
 		}
 	}
-
 	/**
 	 * 
 	 * @param idAndParkName
@@ -1283,7 +1281,6 @@ public class MySQLConnection {
 				if (i != orders.size() - 1) {
 					sendSmsQuery += ",";
 				}
-				System.out.println(orders.get(i).toString());
 			}
 			sendSms = con.prepareStatement(sendSmsQuery);
 			sendSms.executeUpdate();
@@ -1328,7 +1325,6 @@ public class MySQLConnection {
 			String queryDelSms = "DELETE FROM smsSend WHERE ";
 			Map<String, Map<String, List<String>>> checkWating = new LinkedHashMap<String, Map<String, List<String>>>();
 			for (int i = 0; i < orders.size(); i++) {
-				System.out.println(orders.get(i));
 				if (checkWating.containsKey(orders.get(i).getParkName())) {
 					Map<String, List<String>> dateAndTimesForPark = checkWating.get(orders.get(i).getParkName());
 					if (dateAndTimesForPark.containsKey(orders.get(i).getDateOfOrder())) {
@@ -1354,7 +1350,6 @@ public class MySQLConnection {
 					queryCancelOrders += " OR ";
 					queryDelSms += " OR ";
 				}
-				System.out.println(orders.get(i).toString());
 			}
 			con.prepareStatement(queryCancelOrders).executeUpdate();
 			con.prepareStatement(queryDelSms).executeUpdate();
@@ -1426,9 +1421,6 @@ public class MySQLConnection {
 		if (park == null)
 			return null;
 		String query = "SELECT * FROM orders where parkName_fk=? AND dateOfOrder=? AND HOUR(TIMEDIFF(timeOfOrder,?))<? AND status=? ORDER BY orderCreationDate ASC";
-		System.out.println("SELECT * FROM orders where parkName_fk=" + park.getParkName() + " AND dateOfOrder='" + date
-				+ "' AND HOUR(TIMEDIFF(timeOfOrder,'" + time + "'))<" + park.getParkVisitDuration() + " AND status='"
-				+ OrderStatus.WAITING.name() + "' ORDER BY orderCreationDate ASC");
 		PreparedStatement getWatingOrdersStatement = con.prepareStatement(query);
 		getWatingOrdersStatement.setString(1, park.getParkName());
 		getWatingOrdersStatement.setString(2, date);
@@ -1470,7 +1462,6 @@ public class MySQLConnection {
 			for (String date : dateAndTimesToCheckForPark.keySet()) {
 				List<String> timesToCheckForParkInDate = dateAndTimesToCheckForPark.get(date);
 				for (String time : timesToCheckForParkInDate) {
-					System.out.println(parkName + " " + date + " " + time);
 					List<Order> ordersInWait = getWatingOrdersForParkInDateAndTime(park, date, time);
 					for (Order order : ordersInWait) {
 

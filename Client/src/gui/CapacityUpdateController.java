@@ -49,7 +49,7 @@ guiControl.sendToServer(new ClientMessage(ClientMessageType.PARAMETER_UPDATE, pa
 newvalue.setText("");
     	}
     }
-	/*
+	/**
 	 * 
 	 * A method for input checks for the newvalue field
 	 * 

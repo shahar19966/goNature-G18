@@ -23,7 +23,7 @@ import message.ClientMessageType;
 import message.ServerMessage;
 import message.ServerMessageType;
 
-/*
+/**
  * 
  * This class responsible for the registration of subscriber to Go Nature 
  * 
@@ -98,7 +98,7 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 	private ObservableList<String> monthObsList = FXCollections.observableArrayList("01", "02", "03", "04", "05", "06",
 			"07", "08", "09", "10", "11", "12");
 
-    /*
+    /**
      * 
      * A method that initialize  Data for combo boxes,bind buttons to text fields, and text fields to check box.
      * 
@@ -136,7 +136,7 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		familiyCount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15));
 	}
 
-	/*
+	/**
 	 * 
 	 * When register button pressed, the subscriber details save and send to the server.
 	 * Depending on the server response, shows alert with message if the registration was successful or not.
@@ -172,7 +172,7 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		clearAllFields();
 	}
 
-	/*
+	/**
 	 * 
 	 * A method for input checks for the registration fields
 	 * 
@@ -248,7 +248,7 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		return true;
 	}
 	
-	/*
+	/**
 	 * 
 	 * When clear button is pressed, all fields are cleared.
 	 * 
@@ -258,7 +258,7 @@ public class RegisterSubscriberAndGuideController implements Initializable {
 		clearAllFields();
 	}
 	
-	/*
+	/**
 	 * 
 	 * A method that clear all registration fields
 	 *
