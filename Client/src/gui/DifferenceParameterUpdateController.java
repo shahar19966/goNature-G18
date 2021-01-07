@@ -42,7 +42,7 @@ ParameterUpdate parupdate=new ParameterUpdate(EntityConstants.ParkParameter.DIFF
 guiControl.sendToServer(new ClientMessage(ClientMessageType.PARAMETER_UPDATE, parupdate));
 newvalue.setText("");
     }
-    /*
+    /**
 	 * 
 	 * A method for input checks for the newvalue field
 	 * 

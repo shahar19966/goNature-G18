@@ -94,12 +94,12 @@ import message.ServerMessageType;
 	    	}
 	    }
 	    
-	    
+	    /**
+	     * Initialize the page to show park manager's parks ,the date of today,disable past dates
+	    *and default amount of discount
+	    *also shows a list of his discount requests
+	     */
 
-	    
-	    //Initialize the page to show park manager's parks ,the date of today,disable past dates
-	    //and default amount of discount
-	    //also shows a list of his discount requests
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {
 			parkName.setText(((Employee) guiControl.getUser()).getParkName());
