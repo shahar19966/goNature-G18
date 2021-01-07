@@ -43,7 +43,7 @@ public class VisitationTimeUpdateController {
     	newvalue.setText("");
     	}
     }
-	/*
+	/**
 	 * 
 	 * A method for input checks for the newvalue field
 	 * 
