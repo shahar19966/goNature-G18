@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
 
-public class DifferenceParameterUpdateController implements Initializable{
+public class DifferenceParameterUpdateController{
 	GUIControl guiControl = GUIControl.getInstance();
     @FXML
     private TextField newvalue;
@@ -42,10 +42,27 @@ ParameterUpdate parupdate=new ParameterUpdate(EntityConstants.ParkParameter.DIFF
 guiControl.sendToServer(new ClientMessage(ClientMessageType.PARAMETER_UPDATE, parupdate));
 newvalue.setText("");
     }
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
-		
-	}
+    /*
+	 * 
+	 * A method for input checks for the newvalue field
+	 * 
+	 */
+    public boolean isValidVisitationTime()
+    {
+    	//check if the the new visitation time is not negative 
+    	if(Integer.parseInt(newvalue.getText())<0) {
+    		GUIControl.popUpError("Visitation time can't be less than 0, please enter valid value");
+    		newvalue.setText("");
+    		return false;
+    	}
+    	//check if the new visitation time contains only digits
+    	if (!newvalue.getText().matches("[0-9]+")) {
+    		GUIControl.popUpError("Visitation time can only contain digits");
+    		return false;
+    	}
+
+    	return true;
+    }
+
 
 }
