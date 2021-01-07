@@ -49,7 +49,11 @@ public class OrderDetailsController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 	}
-
+/**
+ * 
+ * @param order
+ * This method fills the AnchorPane with Order order
+ */
 	public void getOrderDetailes(Order order) {
 		idLabel.setText(order.getId());
 		ParkNameLabel.setText(order.getParkName());

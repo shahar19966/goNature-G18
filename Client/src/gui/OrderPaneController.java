@@ -45,6 +45,12 @@ import javafx.util.Callback;
 import message.ClientMessage;
 import message.ClientMessageType;
 
+/**
+ * 
+ * This is the Controller for OrderPane fxml
+ * 
+ *
+ */
 public class OrderPaneController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
 
@@ -94,6 +100,11 @@ public class OrderPaneController implements Initializable {
 	private VBox orderDetails;
 	private OrderDetailsController orderDetailsController;
 
+	/**
+	 * 
+	 * @param event This method is created when group box is pressed it changes the
+	 *              people amount in peopleAmount Spinner
+	 */
 	@FXML
 	void changePeopleAmount(ActionEvent event) {
 		int tmp = peopleAmount.getValue();
@@ -110,6 +121,12 @@ public class OrderPaneController implements Initializable {
 		payInAdvanceCheckBox.setSelected(false);
 	}
 
+	/**
+	 * 
+	 * @param event This method happens when order Button is clicked It creates
+	 *              order Object from the form and pop alerts depend of what the
+	 *              server returns
+	 */
 	@FXML
 	void orderFunc(ActionEvent event) {
 		if (!orderButtonAble)
@@ -161,6 +178,13 @@ public class OrderPaneController implements Initializable {
 
 	}
 
+	/**
+	 * 
+	 * @param map
+	 * @param orderDes This method happens when pick another date button is pressed.
+	 *                 It displays available date and time to create an order if the
+	 *                 park is full it pops park is full alert
+	 */
 	private void displayAvailableDates(Map<String, List<String>> map, List<Object> orderDes) {
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.AVAILABLE_DATES_PAGE.toString()));
@@ -195,6 +219,9 @@ public class OrderPaneController implements Initializable {
 		guiControl.getClientMainPageController().showAlert(AlertType.Info, "Smart Date Picker", root, buttonList);
 	}
 
+	/**
+	 * Init order pane given the logged in user
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
@@ -203,8 +230,8 @@ public class OrderPaneController implements Initializable {
 			orderDetails = fxmlLoader.load();
 			orderDetailsController = (OrderDetailsController) fxmlLoader.getController();
 		} catch (IOException e) {
-			orderDetails=null;
-			orderDetailsController=null;
+			orderDetails = null;
+			orderDetailsController = null;
 		}
 
 		if (!(guiControl.getUser() instanceof Subscriber && ((Subscriber) guiControl.getUser()).getIsGuide())) {

@@ -25,6 +25,11 @@ import javafx.scene.layout.GridPane;
 import message.ClientMessage;
 import message.ClientMessageType;
 
+/**
+ * 
+ * This is the Controller for OrderRegularEmployee fxml
+ *
+ */
 public class OrderRegularEmployeeController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
 	@FXML
@@ -72,6 +77,10 @@ public class OrderRegularEmployeeController implements Initializable {
 		idText.setText("");
 	}
 
+	/**
+	 * 
+	 * This method is for the occasional order
+	 */
 	@FXML
 	void orderFunc(ActionEvent event) {
 		if (!validate())
@@ -82,7 +91,7 @@ public class OrderRegularEmployeeController implements Initializable {
 		System.out.println(dateFormat.format(now));
 		System.out.println(timeFormat.format(now));
 		Order order = new Order(idText.getText(), ((Employee) guiControl.getUser()).getParkName(),
-				peopleAmount.getValue(), null, dateFormat.format(now), timeFormat.format(now), -1, "","");
+				peopleAmount.getValue(), null, dateFormat.format(now), timeFormat.format(now), -1, "", "");
 		if (idBtn.isSelected())
 			order.setType(OrderType.REGULAR);
 		if (subscriberBtn.isSelected())
@@ -110,12 +119,18 @@ public class OrderRegularEmployeeController implements Initializable {
 		peopleAmount.getValueFactory().setValue(1);
 	}
 
+	/**
+	 * This method change spinner amount if it is a Visitor or Subscriber
+	 */
 	private void setSpinerForIdAndSubscriber() {
 		int val = peopleAmount.getValue();
 		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
 		peopleAmount.getValueFactory().setValue(val);
 	}
 
+	/**
+	 * This method change spinner amount if it is a Guide
+	 */
 	private void setSpinerForGuide() {
 		int val = peopleAmount.getValue();
 		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, ClientConstants.MAX_PEOPLE));
