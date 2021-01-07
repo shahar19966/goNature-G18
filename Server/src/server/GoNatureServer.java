@@ -164,10 +164,10 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.GET_ORDERS_BY_ID;
 					break;
 				case CANCEL_ORDER:
-					Order cancelledOrder=MySQLConnection.getCertainOrder((String) (clientMsg.getMessage()));
+					Order cancelledOrder = MySQLConnection.getCertainOrder((String) (clientMsg.getMessage()));
 					returnVal = MySQLConnection.changeOrderStatus((String) (clientMsg.getMessage()),
 							OrderStatus.CANCELLED);
-					if(((Boolean)returnVal).booleanValue())
+					if (((Boolean) returnVal).booleanValue())
 						notifyFromWaitingList(cancelledOrder);
 					type = ServerMessageType.CANCEL_ORDER;
 					break;
@@ -234,12 +234,13 @@ public class GoNatureServer extends AbstractServer {
 					type = message.getType();
 					break;
 				case DISCOUNT_VALIDATION:
-					ServerMessage discountValidationMessage = MySQLConnection.discountValidation((ParkDiscount) (clientMsg.getMessage()));
+					ServerMessage discountValidationMessage = MySQLConnection
+							.discountValidation((ParkDiscount) (clientMsg.getMessage()));
 					returnVal = discountValidationMessage.getMessage();
 					type = discountValidationMessage.getType();
 					break;
 				case GET_PARK:
-					returnVal=MySQLConnection.getPark((String) (clientMsg.getMessage()));
+					returnVal = MySQLConnection.getPark((String) (clientMsg.getMessage()));
 					type = ServerMessageType.GET_PARK;
 					break;
 
@@ -262,8 +263,15 @@ public class GoNatureServer extends AbstractServer {
 			e.printStackTrace();
 		}
 	}
+
 	private void notifyFromWaitingList(Order order) throws NumberFormatException, SQLException, ParseException {
-		if (order!=null && !order.getStatus().equals(OrderStatus.WAITING)) {
+		/*
+		 * This function gets a canceled order and check the Waiting List for orders that the
+		 * date and period of time like order. We get the orders in the Waiting List with
+		 * checkWatingList function. In the end we send the notification of the orders
+		 * in the queue.
+		 */
+		if (order != null && !order.getStatus().equals(OrderStatus.WAITING)) {
 			String parkName = order.getParkName();
 			String dateOfOrder = order.getDateOfOrder();
 			String timeOfOrder = order.getTimeOfOrder();
@@ -273,8 +281,8 @@ public class GoNatureServer extends AbstractServer {
 			times.add(timeOfOrder);
 			dateAndTime.put(dateOfOrder, times);
 			checkWating.put(parkName, dateAndTime);
-			List<Order> orderList=MySQLConnection.checkWatingList(checkWating);
-			sendToAllClients(new ServerMessage(ServerMessageType.WAITING_LIST_APPROVAL_EMAIL_AND_SMS,orderList));
+			List<Order> orderList = MySQLConnection.checkWatingList(checkWating);
+			sendToAllClients(new ServerMessage(ServerMessageType.WAITING_LIST_APPROVAL_EMAIL_AND_SMS, orderList));
 		}
 	}
 

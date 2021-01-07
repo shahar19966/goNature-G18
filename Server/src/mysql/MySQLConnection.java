@@ -1,5 +1,8 @@
 package mysql;
 
+import java.io.NotActiveException;
+import java.io.ObjectInputStream.GetField;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,9 +27,12 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PrimitiveIterator.OfDouble;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import com.sun.javafx.webkit.ThemeClientImpl;
 
 //import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
@@ -55,7 +61,8 @@ import entity.EntityConstants.ParkParameter;
 import entity.EntityConstants.RequestStatus;
 
 /**
- * class that holds static methods related to database actions such as connection, queries,updates and more
+ * class that holds static methods related to database actions such as
+ * connection, queries,updates and more
  */
 public class MySQLConnection {
 	private static Connection con;
@@ -70,7 +77,11 @@ public class MySQLConnection {
 	}
 
 	/**
+	 * A method that returns a Visitor with id. Insert to DataBase if there is not.
 	 * 
+	 * @param id
+	 * @return Subscriber or null
+	 * @throws SQLException
 	 */
 	public static Visitor validateVisitor(String id) throws SQLException {
 		PreparedStatement logInPreparedStatement;
@@ -88,6 +99,13 @@ public class MySQLConnection {
 		}
 	}
 
+	/**
+	 * A method that returns a Subscriber with subNum. Returns null if there is not.
+	 * 
+	 * @param subNum
+	 * @return Subscriber or null
+	 * @throws SQLException
+	 */
 	public static Subscriber validateSubscriber(String subNum) throws SQLException {
 		PreparedStatement logInPreparedStatement;
 		logInPreparedStatement = con.prepareStatement("SELECT * FROM subscriber where subNum=? LIMIT 1;");
@@ -101,12 +119,20 @@ public class MySQLConnection {
 		return null;
 	}
 
-	public static Employee validateEmployee(String[] idAndPassword) throws SQLException {
+	/**
+	 * A method that returns an Employee with employeeNum and password. Returns null
+	 * if there is not.
+	 * 
+	 * @param employeeNumber and password
+	 * @return Employee or null
+	 * @throws SQLException
+	 */
+	public static Employee validateEmployee(String[] employeeNumberAndPassword) throws SQLException {
 		PreparedStatement logInPreparedStatement;
 		logInPreparedStatement = con
 				.prepareStatement("SELECT * FROM employee where employeeNum=? AND password=? LIMIT 1;");
-		logInPreparedStatement.setString(1, idAndPassword[0]);
-		logInPreparedStatement.setString(2, idAndPassword[1]);
+		logInPreparedStatement.setString(1, employeeNumberAndPassword[0]);
+		logInPreparedStatement.setString(2, employeeNumberAndPassword[1]);
 		ResultSet rs = logInPreparedStatement.executeQuery();
 		if (rs.next()) {
 			return new Employee(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
@@ -115,7 +141,17 @@ public class MySQLConnection {
 		return null;
 	}
 
+	/**
+	 * A method that returns a List of all parks in the DataBase
+	 * 
+	 * @param
+	 * @return List of Park
+	 * @throws NumberFormatException, SQLException
+	 */
 	public static List<Park> getParks() throws SQLException {
+		/*
+		 * This function returns a List of all parks in the DataBase
+		 */
 		ArrayList<Park> parkList = new ArrayList<>();
 		Statement getParkStatement;
 		getParkStatement = con.createStatement();
@@ -127,7 +163,16 @@ public class MySQLConnection {
 		return parkList;
 	}
 
+	/**
+	 * A method that returns a Park with it's name is parkName in DB. If there is
+	 * not it returns null.
+	 * 
+	 * @param parkName
+	 * @return Park or null
+	 * @throws NumberFormatException, SQLException
+	 */
 	private static Park getCertainPark(String parkName) throws NumberFormatException, SQLException {
+
 		PreparedStatement getParkStatement;
 		getParkStatement = con.prepareStatement("SELECT * FROM park where parkName=?;");
 		getParkStatement.setString(1, parkName);
@@ -138,29 +183,30 @@ public class MySQLConnection {
 		}
 		return null;
 	}
-/**
- * A method that returns the data to the park manager's visitor report from database
-   According to the data she receives (name of park, month and year)
- * @param reportDate 
- * @return
- * @throws SQLException
- */
+
+	/**
+	 * A method that returns the data to the park manager's visitor report from
+	 * database According to the data she receives (name of park, month and year)
+	 * 
+	 * @param reportDate
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Map<Integer, VisitorReport> getVisitorReport(ReportDate reportDate) throws SQLException {
-		
+
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 		Calendar c = Calendar.getInstance();
-		
-		String query=
-				"SELECT  orders.type ,orders.dateOfOrder ,sum(finishedOrders.actualNumOfVisitors ) " 
-			+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk)" 
-				+ "WHERE MONTH(orders.dateOfOrder)=? AND YEAR(orders.dateOfOrder)=? AND orders.parkName_fk=?  " 
+
+		String query = "SELECT  orders.type ,orders.dateOfOrder ,sum(finishedOrders.actualNumOfVisitors ) "
+				+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk)"
+				+ "WHERE MONTH(orders.dateOfOrder)=? AND YEAR(orders.dateOfOrder)=? AND orders.parkName_fk=?  "
 				+ "GROUP by orders.type, orders.dateOfOrder;";
-						PreparedStatement getVisitionReport = con.prepareStatement(query);
+		PreparedStatement getVisitionReport = con.prepareStatement(query);
 		getVisitionReport.setInt(1, Integer.parseInt(reportDate.getMonth()));
-		getVisitionReport.setInt(2,Integer.parseInt( reportDate.getYear()));
+		getVisitionReport.setInt(2, Integer.parseInt(reportDate.getYear()));
 		getVisitionReport.setString(3, reportDate.getNamePark());
 		ResultSet rs = getVisitionReport.executeQuery();
-	
+
 		int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
 		for (int i = 1; i <= daysInMonth; i++)
@@ -185,9 +231,11 @@ public class MySQLConnection {
 		return reportVisitorMap;
 
 	}
-/**
- * 	A method that returns the data to the department manager's visition report from database
- */
+
+	/**
+	 * A method that returns the data to the department manager's visition report
+	 * from database
+	 */
 	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 
@@ -220,10 +268,12 @@ public class MySQLConnection {
 		return reportVisitorMap;
 
 	}
+
 	/**
-	 * A method that returns the data to the department manager's cancellation report from database
+	 * A method that returns the data to the department manager's cancellation
+	 * report from database
 	 */
-	
+
 	public static Map<String, VisitorReport> getCancellationReport() throws SQLException {
 		Map<String, VisitorReport> reportVisitorMap = new HashMap<String, VisitorReport>();
 		Statement getCancellationReport;
@@ -257,7 +307,9 @@ public class MySQLConnection {
 	}
 
 	/**
-	 * A method that returns the data to the park manager's capacity report from database
+	 * A method that returns the data to the park manager's capacity report from
+	 * database
+	 * 
 	 * @param parkName -The name of the park we want data on
 	 * @return
 	 * @throws SQLException
@@ -273,49 +325,52 @@ public class MySQLConnection {
 		ResultSet rs = getParkCapacityReport.executeQuery();
 		int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-		for (int i =EntityConstants.PARK_OPEN ; i <= EntityConstants.PARK_CLOSED; i++)
-			map.put(i, new boolean[daysInMonth+1]);
+		for (int i = EntityConstants.PARK_OPEN; i <= EntityConstants.PARK_CLOSED; i++)
+			map.put(i, new boolean[daysInMonth + 1]);
 		if (!(rs.next()))
 			return map;
 		String time = rs.getString(2).substring(0, 2);
 		boolean[] tempArr = map.get(Integer.parseInt(time));
 		do {
-			
-			if (!time.equals(rs.getString(2).substring(0,2))) {
+
+			if (!time.equals(rs.getString(2).substring(0, 2))) {
 				map.put(Integer.parseInt(time), tempArr);
-				time = rs.getString(2).substring(0,2);
-				if((Integer.parseInt(time)>EntityConstants.PARK_CLOSED) || (Integer.parseInt(time)<EntityConstants.PARK_OPEN))
-				{ continue;
+				time = rs.getString(2).substring(0, 2);
+				if ((Integer.parseInt(time) > EntityConstants.PARK_CLOSED)
+						|| (Integer.parseInt(time) < EntityConstants.PARK_OPEN)) {
+					continue;
 				}
 				tempArr = map.get(Integer.parseInt(time));
 			}
-			String date = rs.getString(1).substring(8,10);
+			String date = rs.getString(1).substring(8, 10);
 			tempArr[Integer.parseInt(date)] = true;
 
 		} while (rs.next());
 		return map;
 	}
-/**
- * A method that returns the data to the park manager's icome report from database
-   According to the data she receives (name of park, month and year)
- * @param reportDate
- * @return
- * @throws SQLException
- */
+
+	/**
+	 * A method that returns the data to the park manager's icome report from
+	 * database According to the data she receives (name of park, month and year)
+	 * 
+	 * @param reportDate
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Map<Integer, VisitorReport> getIncomeReport(ReportDate reportDate) throws SQLException {
-		
+
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 		Calendar c = Calendar.getInstance();
-		String query=("SELECT sum(finishedOrders.actualPrice ) ," + "orders.dateOfOrder "
-				+ "FROM finishedOrders " + "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
+		String query = ("SELECT sum(finishedOrders.actualPrice ) ," + "orders.dateOfOrder " + "FROM finishedOrders "
+				+ "JOIN orders ON (orders.orderNum = finishedOrders.orderNum_fk) "
 				+ "WHERE MONTH(orders.dateOfOrder)=? AND YEAR(orders.dateOfOrder)=? AND orders.parkName_fk=? "
 				+ "GROUP by orders.parkName_fk,orders.dateOfOrder;");
 		PreparedStatement getIncomeReport = con.prepareStatement(query);
 		getIncomeReport.setInt(1, Integer.parseInt(reportDate.getMonth()));
-		getIncomeReport.setInt(2,Integer.parseInt( reportDate.getYear()));
+		getIncomeReport.setInt(2, Integer.parseInt(reportDate.getYear()));
 		getIncomeReport.setString(3, reportDate.getNamePark());
-        ResultSet rs = getIncomeReport.executeQuery();
-		
+		ResultSet rs = getIncomeReport.executeQuery();
+
 		int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
 		for (int i = 1; i <= daysInMonth; i++)
@@ -353,6 +408,16 @@ public class MySQLConnection {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param park
+	 * @param date
+	 * @param startTime
+	 * @param finishTime
+	 * @return A Map of hour and capacity for hour in Park park
+	 * @throws NumberFormatException
+	 * @throws SQLException
+	 */
 	private static Map<Integer, Integer> parkCapacityForDuration(Park park, String date, String startTime,
 			String finishTime) throws NumberFormatException, SQLException {
 		String[] splitTimeStart = startTime.split(":");
@@ -404,8 +469,17 @@ public class MySQLConnection {
 		return parkCapacity;
 	}
 
+	/**
+	 * 
+	 * @param orderToRequest
+	 * @param isOccasional
+	 * @param payInAdvance
+	 * @return price of orderToRequest
+	 * @throws SQLException
+	 */
 	private static double calculateOrder(Order orderToRequest, boolean isOccasional, Boolean payInAdvance)
 			throws SQLException {
+
 		double priceForTicket = EntityConstants.TICKET_PRICE;
 
 		double priceForOrder;
@@ -456,6 +530,16 @@ public class MySQLConnection {
 
 	}
 
+	/**
+	 * 
+	 * @param orderToInsert
+	 * @param orderStatus
+	 * @param isOccasional
+	 * @param payInAdvance  This method insert orderToInsert with orderStatus and
+	 *                      calculate its price.
+	 * @return inserted order
+	 * @throws SQLException
+	 */
 	private static Order insertNewOrder(Order orderToInsert, OrderStatus orderStatus, boolean isOccasional,
 			Boolean payInAdvance) throws SQLException {
 		PreparedStatement insertOrderStatement = con.prepareStatement(
@@ -495,6 +579,17 @@ public class MySQLConnection {
 		throw new SQLException();
 	}
 
+	/**
+	 * 
+	 * @param orderRequest
+	 * @param payInAdvance
+	 * @return Insert orderRequest with a Status depends of it's date and time of
+	 *         orderRequest. If the park is full for requested period it returns
+	 *         null.
+	 * @throws SQLException
+	 * @throws NumberFormatException
+	 * @throws ParseException
+	 */
 	public static Order createOrder(Order orderRequest, Boolean payInAdvance)
 			throws SQLException, NumberFormatException, ParseException {
 		if (validateDate(orderRequest)) {
@@ -502,7 +597,6 @@ public class MySQLConnection {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			LocalDateTime dateTimeOfOrder = LocalDateTime
 					.parse(orderRequest.getDateOfOrder() + " " + orderRequest.getTimeOfOrder(), formatter);
-			boolean res;
 			long diff = ChronoUnit.MINUTES.between(now, dateTimeOfOrder);
 			if (diff > 24 * 60)
 				return insertNewOrder(orderRequest, OrderStatus.ACTIVE, false, payInAdvance);
@@ -536,6 +630,15 @@ public class MySQLConnection {
 		return parametersUpdateRequestList;
 	}
 
+	/**
+	 * 
+	 * @param orderRequest
+	 * @param payInAdvanceWaitingList
+	 * @return orderRequest with Waiting status.
+	 * @throws SQLException
+	 * @throws NumberFormatException
+	 * @throws ParseException
+	 */
 	public static Order enterWaitingist(Order orderRequest, Boolean payInAdvanceWaitingList)
 			throws SQLException, NumberFormatException, ParseException {
 		return insertNewOrder(orderRequest, OrderStatus.WAITING, false, payInAdvanceWaitingList);
@@ -573,6 +676,15 @@ public class MySQLConnection {
 		return newDiscountRequest;
 	}
 
+	/**
+	 * 
+	 * @param order
+	 * @return A Map with date and List of hour for the next 7 days of order that
+	 *         the requested park can fit numOfvisitors in order
+	 * @throws ParseException
+	 * @throws NumberFormatException
+	 * @throws SQLException
+	 */
 	public static Map<String, List<String>> getAvailableDates(Order order)
 			throws ParseException, NumberFormatException, SQLException {
 		Park park = getCertainPark(order.getParkName());
@@ -630,6 +742,15 @@ public class MySQLConnection {
 		return dateMap;
 	}
 
+	/**
+	 * 
+	 * @param order
+	 * @return An Occasional order. If the park can not fit numOfVisitors it returns
+	 *         null
+	 * @throws SQLException
+	 * @throws NumberFormatException
+	 * @throws ParseException
+	 */
 	public static Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
 
 		if (order.getType().equals(OrderType.REGULAR)) {
@@ -658,6 +779,14 @@ public class MySQLConnection {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return List of order of id of status WAITING or Pending approvals. (These
+	 *         are special because there are orders that the user can cancel or
+	 *         approve etc.)
+	 * @throws SQLException
+	 */
 	public static List<Order> getUnfinishedOrdersById(String id) throws SQLException {
 		List<Order> orders = new ArrayList<Order>();
 		LocalDateTime now = LocalDateTime.now();
@@ -677,6 +806,17 @@ public class MySQLConnection {
 		return orders;
 	}
 
+	/**
+	 * 
+	 * @param orderNum
+	 * @param newStatus
+	 * @return change an order status with orderNum to newStatus and return true if
+	 *         it is. If there is not an order with orderNum or it is already been
+	 *         canceled it returns false.
+	 * @throws SQLException
+	 * @throws NumberFormatException
+	 * @throws ParseException
+	 */
 	public static Boolean changeOrderStatus(String orderNum, OrderStatus newStatus)
 			throws SQLException, NumberFormatException, ParseException {
 		Order order = getCertainOrder(orderNum);
@@ -697,6 +837,12 @@ public class MySQLConnection {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param orderNum
+	 * @return an Order with orderNum in DataBase. If there is not it returns null.
+	 * @throws SQLException
+	 */
 	public static Order getCertainOrder(String orderNum) throws SQLException {
 		String query = "Select * From orders where orderNum=?";
 		PreparedStatement getPark = con.prepareStatement(query);
@@ -711,6 +857,15 @@ public class MySQLConnection {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param order
+	 * @return order with APPROVED or PENDING_FINAL_APPROVAL depending of order's
+	 *         date and time. If the order was canceled it returns null.
+	 * @throws SQLException
+	 * @throws NumberFormatException
+	 * @throws ParseException
+	 */
 	public static Order activateOrderFromWatingList(Order order)
 			throws SQLException, NumberFormatException, ParseException {
 		LocalDateTime now = LocalDateTime.now();
@@ -777,6 +932,13 @@ public class MySQLConnection {
 		return parkDiscountRequestList;
 	}
 
+	/**
+	 * 
+	 * @param idVisitorsAndParkName
+	 * @return The final price of order of Visitor with id for park now.
+	 * 
+	 * @throws SQLException
+	 */
 	public static Integer validateOrderAndReturnPrice(String[] idVisitorsAndParkName) throws SQLException {
 		Order orderToValidate = getCurrentOrderByIDAndParkName(idVisitorsAndParkName[0], idVisitorsAndParkName[2]);
 		if (orderToValidate == null)
@@ -798,6 +960,14 @@ public class MySQLConnection {
 
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @param parkName
+	 * @return The current order of Visitor or Subscriber or Guide with id. If there
+	 *         is not retuns null.
+	 * @throws SQLException
+	 */
 	private static Order getCurrentOrderByIDAndParkName(String id, String parkName) throws SQLException {
 		Order order = null;
 		String date = LocalDate.now().toString();
@@ -818,6 +988,11 @@ public class MySQLConnection {
 		return order;
 	}
 
+	/**
+	 * 
+	 * @param order
+	 * @return change order status to Done when the visitors leave.
+	 */
 	private static boolean updateOrderToDone(Order order) {
 		try {
 			String query = "Update orders SET status='DONE' WHERE orderNum=?";
@@ -830,6 +1005,15 @@ public class MySQLConnection {
 		}
 	}
 
+	/**
+	 * 
+	 * @param orderNum
+	 * @param numOfVisitors
+	 * @param timeOfArrival
+	 * @param price
+	 * @return True if the details of actual order with orderNum has been inserted
+	 *         to DataBase. If there was a problem it returns false
+	 */
 	private static boolean insertFinishedOrder(String orderNum, String numOfVisitors, String timeOfArrival,
 			String price) {
 		try {
@@ -846,6 +1030,13 @@ public class MySQLConnection {
 		}
 	}
 
+	/**
+	 * 
+	 * @param parkName
+	 * @param amount
+	 * @return true if the currentVisitors in parkName has been increased with
+	 *         amount of visitors. If there was SQLException return false
+	 */
 	private static boolean addToCurrentParkVisitors(String parkName, int amount) {
 		try {
 			String query = "Update park SET currentVisitors=currentVisitors+? WHERE parkName=?";
@@ -862,10 +1053,17 @@ public class MySQLConnection {
 		}
 	}
 
+	/**
+	 * 
+	 * @param parkName
+	 * @return Check if park with parkName is full now. if it is insert
+	 *         park to parkFull Table. returns true if there is no
+	 *         SQLException and false otherwise.
+	 */
 	public static boolean updateParkFull(String parkName) {
-		LocalTime opening=LocalTime.of(EntityConstants.PARK_OPEN, 0);
-		LocalTime closing=LocalTime.of(EntityConstants.PARK_CLOSED+4, 0);
-		if(LocalTime.now().isBefore(opening) || LocalTime.now().isAfter(closing))
+		LocalTime opening = LocalTime.of(EntityConstants.PARK_OPEN, 0);
+		LocalTime closing = LocalTime.of(EntityConstants.PARK_CLOSED + 4, 0);
+		if (LocalTime.now().isBefore(opening) || LocalTime.now().isAfter(closing))
 			return true;
 		try {
 			PreparedStatement checkParkFull = con
@@ -889,15 +1087,13 @@ public class MySQLConnection {
 		}
 	}
 
-	public static void main(String[] args) throws ParseException, InstantiationException, IllegalAccessException,
-			ClassNotFoundException, SQLException {
-		connectToDB();
-		// sendSmsToActiveOrders();
-		// expiredApprovedOrders();
-		sendSmsToCancelOrders();
-
-	}
-
+	/**
+	 * 
+	 * @param idAndParkName
+	 * @return Update leave time for orders of Visitor with id in parkName. return
+	 *         true if update leave time. If there was an Exception or there is
+	 *         Visitor with id in ParkName park return false.
+	 */
 	public static Boolean validateOrderAndRegisterExit(String[] idAndParkName) {
 		try {
 			String orderNum, timeOfArrival;
@@ -995,8 +1191,8 @@ public class MySQLConnection {
 
 	/*
 	 * 
-	 * A method that returns ServerMessage if the registration was succeeded with a new subscriber, 
-	 * or failure with the existing subscriber details.
+	 * A method that returns ServerMessage if the registration was succeeded with a
+	 * new subscriber, or failure with the existing subscriber details.
 	 */
 	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
 		PreparedStatement registerPreparedStatement;
@@ -1047,6 +1243,12 @@ public class MySQLConnection {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return List of order that their status was changed to PENDING_FINAL_APPROVAL
+	 *         in order to send them sms.
+	 * @throws SQLException
+	 */
 	public static List<Order> sendSmsToActiveOrders() throws SQLException {
 		System.out.println("Activate Orders");
 		LocalDateTime now = LocalDateTime.now();
@@ -1089,6 +1291,16 @@ public class MySQLConnection {
 		return orders;
 	}
 
+	/**
+	 * 
+	 * @return Two lists of orders. First List of cancelled orders and others of
+	 *         orders that change to PENDING_APPROVAL_FROM_WAITING_LIST. We send
+	 *         them sms that the orders were cancelled or need an approval from
+	 *         waiting List
+	 * @throws SQLException
+	 * @throws NumberFormatException
+	 * @throws ParseException
+	 */
 	public static List<List<Order>> sendSmsToCancelOrders() throws SQLException, NumberFormatException, ParseException {
 		System.out.println("Cancel Orders");
 		List<Order> orders = new ArrayList<>();
@@ -1154,6 +1366,11 @@ public class MySQLConnection {
 		return ordersToSendSMS;
 	}
 
+	/**
+	 * This method expires all orders that were approved and did not show up
+	 * 
+	 * @throws SQLException
+	 */
 	public static void expiredApprovedOrders() throws SQLException {
 		String queryUpdateStatus = "Update orders SET status='EXPIRED' WHERE ((dateOfOrder=? AND HOUR(TIMEDIFF(?,timeOfOrder))>=1 AND ?>timeOfOrder) OR dateOfOrder<?) AND status='APPROVED'";
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
@@ -1169,6 +1386,11 @@ public class MySQLConnection {
 		expirePreparedStatement.executeUpdate();
 	}
 
+	/**
+	 * Insert order to smsSend Table with date and time of now
+	 * 
+	 * @param order
+	 */
 	private static void sendSms(Order order) {
 		try {
 			LocalDateTime now = LocalDateTime.now();
@@ -1187,6 +1409,15 @@ public class MySQLConnection {
 		}
 	}
 
+	/**
+	 * 
+	 * @param park
+	 * @param date
+	 * @param time
+	 * @return Orders that their status are waiting for park in date and time
+	 * @throws NumberFormatException
+	 * @throws SQLException
+	 */
 	private static List<Order> getWatingOrdersForParkInDateAndTime(Park park, String date, String time)
 			throws NumberFormatException, SQLException {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -1219,6 +1450,15 @@ public class MySQLConnection {
 		return ordersInTimeIntervalForDateInPark;
 	}
 
+	/**
+	 * 
+	 * @param dateAndTimesToCheckForParks
+	 * @return List of orders that were changed from waiting to
+	 *         PENDING_APPROVAL_FROM_WAITING_LIST
+	 * @throws NumberFormatException
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
 	public static List<Order> checkWatingList(Map<String, Map<String, List<String>>> dateAndTimesToCheckForParks)
 			throws NumberFormatException, SQLException, ParseException {
 		List<Order> ordersToSendSms = new ArrayList<Order>();
@@ -1246,14 +1486,18 @@ public class MySQLConnection {
 		return ordersToSendSms;
 	}
 
+	/**
+	 * @return Check every park and check if it is full now. if there are insert
+	 *         those parks to parkFull Table.
+	 */
 	public static void checkIfParksFull() throws SQLException {
-		LocalTime opening=LocalTime.of(EntityConstants.PARK_OPEN, 0);
-		LocalTime closing=LocalTime.of(EntityConstants.PARK_CLOSED+4, 0);
-		if(LocalTime.now().isBefore(opening) || LocalTime.now().isAfter(closing))
+		LocalTime opening = LocalTime.of(EntityConstants.PARK_OPEN, 0);
+		LocalTime closing = LocalTime.of(EntityConstants.PARK_CLOSED + 4, 0);
+		if (LocalTime.now().isBefore(opening) || LocalTime.now().isAfter(closing))
 			return;
-		List<Park> parkList=getParks();
-		for(Park park:parkList) {
-			if(park.getParkCurrentVisitors()>park.getParkMaxVisitorsDefault()) {
+		List<Park> parkList = getParks();
+		for (Park park : parkList) {
+			if (park.getParkCurrentVisitors() > park.getParkMaxVisitorsDefault()) {
 				String updateParkFullQuery = "INSERT IGNORE INTO parkFull (parkName_fk,dateFull,timeFull) VALUES (?,?,?)";
 				PreparedStatement updateParkFull = con.prepareStatement(updateParkFullQuery);
 				updateParkFull.setString(1, park.getParkName());
