@@ -1,5 +1,8 @@
 package gui;
 
+/**
+ * This is a way to create stylish buttons
+ */
 import gui.ClientConstants.AlertType;
 import gui.ClientConstants.Sizes;
 import javafx.scene.control.Button;

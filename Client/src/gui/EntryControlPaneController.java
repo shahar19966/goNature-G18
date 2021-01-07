@@ -21,6 +21,13 @@ public class EntryControlPaneController {
     @FXML
     private Button validateButton;
 
+    /**
+     * 
+     * @param event
+     * This method is called when validateButton is clicked
+     * It enters Visitor with id and visitor amount to the park
+     * It pops an alert if it was successful or not
+     */
     @FXML
     void validateOrder(ActionEvent event) {
     	Employee emp=(Employee)guiControl.getUser();

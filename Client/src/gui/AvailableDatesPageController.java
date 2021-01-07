@@ -22,6 +22,11 @@ import javafx.scene.layout.VBox;
 import message.ClientMessage;
 import message.ClientMessageType;
 
+/**
+ * 
+ * @author Aviad This is The Controller for AvailableDatesPage fxml
+ *
+ */
 public class AvailableDatesPageController implements Initializable {
 
 	GUIControl guiControl = GUIControl.getInstance();
@@ -36,6 +41,13 @@ public class AvailableDatesPageController implements Initializable {
 	private VBox orderDetails;
 	private OrderDetailsController orderDetailsController;
 
+	/**
+	 * 
+	 * @param dateMap
+	 * @param orderDes Update the Table from available time and dates for park of
+	 *                 orderDes park requested given by dateMap. Every hour that is
+	 *                 not full is presented as a Button.
+	 */
 	public void setTable(Map<String, List<String>> dateMap, List<Object> orderDes) {
 		Set keySet = dateMap.keySet();
 		String[] dates = Arrays.copyOf(keySet.toArray(), keySet.toArray().length, String[].class);

@@ -55,7 +55,6 @@ public class ClientConstants {
 		Danger("danger"), Success("success"), Info("info"), Warning("warning"), Link("link");
 
 		private String styleClass;
-		private AudioClip sound;
 
 		AlertType(String styleClass) {
 			this.styleClass = styleClass;

@@ -25,6 +25,11 @@ import javafx.util.Callback;
 import message.ClientMessage;
 import message.ClientMessageType;
 
+/**
+ * 
+ * This is the Controller for MyOrdersPane fxml fills the table with orders of
+ * the logged in user
+ */
 public class MyOrdersController implements Initializable {
 
 	@FXML
@@ -223,6 +228,11 @@ public class MyOrdersController implements Initializable {
 		action1Col.prefWidthProperty().bind(orderTable.widthProperty().multiply(0.1));
 	}
 
+	/**
+	 * for every order if OrderStatus is PENDING_FINAL_APPROVAL or
+	 * PENDING_APPROVAL_FROM_WAITING_LIST a Button is shown to Approve or Activate
+	 * the Order
+	 */
 	private void setAction2Col() {
 		action2Col.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 		Callback<TableColumn<Order, String>, TableCell<Order, String>> cellFactory = //
