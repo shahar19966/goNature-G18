@@ -10,7 +10,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/**
+ * 
+ * This class responsible for the park visitation time update for the park manager
+ * 
+ */
 public class VisitationTimeUpdateController {
 	GUIControl guiControl = GUIControl.getInstance();
     @FXML
@@ -24,13 +28,21 @@ public class VisitationTimeUpdateController {
     void newValue(ActionEvent event) {
 
     }
+    /**
+     * when exit button pressed, exit the window
+     * @param event
+     */
     @FXML
     void exitClick(ActionEvent event) {
     	
     	    Stage stage = (Stage)exit.getScene().getWindow();
     	    stage.close();
     }
-
+/**
+ * When update button pressed, the visitation time request save and send to the server.
+ * Depending on the server response, shows alert with message if the new visitation time was valid or not. 
+ * @param event
+ */
     @FXML
     void updateClick(ActionEvent event) {
     	if(!isValidVisitationTime())
@@ -50,17 +62,18 @@ public class VisitationTimeUpdateController {
 	 */
     public boolean isValidVisitationTime()
     {
+    	//check if the new visitation time contains only digits
+    	if (!newvalue.getText().matches("[0-9]+")) {
+    		GUIControl.popUpError("Visitation time can only contain digits");
+    		return false;
+    	}
     	//check if the the new visitation time is not negative 
     	if(Integer.parseInt(newvalue.getText())<0) {
     		GUIControl.popUpError("Visitation time can't be less than 0, please enter valid value");
     		newvalue.setText("");
     		return false;
     	}
-    	//check if the new visitation time contains only digits
-    	if (!newvalue.getText().matches("[0-9]+")) {
-    		GUIControl.popUpError("Visitation time can only contain digits");
-    		return false;
-    	}
+
     	//check if the new visitation time is more than 7 hours, according to the openning hours of the park
     	if(Integer.parseInt(newvalue.getText())>7)
     	{

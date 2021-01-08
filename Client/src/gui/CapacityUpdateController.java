@@ -14,7 +14,11 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/**
+ * 
+ * This class responsible for the park capacity update for the park manager
+ * 
+ */
 public class CapacityUpdateController {
 	GUIControl guiControl = GUIControl.getInstance();
     @FXML
@@ -25,7 +29,10 @@ public class CapacityUpdateController {
 
     @FXML
     private Button exit;
-
+/**
+ * when exit button pressed, exit the window
+ * @param event
+ */
     @FXML
     void exitClick(ActionEvent event) {
     	 Stage stage = (Stage)exit.getScene().getWindow();
@@ -36,7 +43,11 @@ public class CapacityUpdateController {
 
     }
  
-
+	/**
+	 * 
+	 * When update button pressed, the capacity request save and send to the server.
+	 * Depending on the server response, shows alert with message if the new capacity was valid or not.
+	 */
     @FXML
     void updateClick(ActionEvent event) {
     	if(!isValidCapacity())
@@ -56,17 +67,18 @@ newvalue.setText("");
 	 */
 public boolean isValidCapacity()
 {
+	//check if the new capacity contains only digits
+	if (!newvalue.getText().matches("[0-9]+")) {
+		GUIControl.popUpError("Capacity can only contain digits");
+		return false;
+	}
 	//check if the the new capacity is not negative 
 	if(Integer.parseInt(newvalue.getText())<0) {
 		GUIControl.popUpError("Capacity can't be less than 0, please enter valid value");
 		newvalue.setText("");
 		return false;
 	}
-	//check if the new capacity contains only digits
-	if (!newvalue.getText().matches("[0-9]+")) {
-		GUIControl.popUpError("Capacity can only contain digits");
-		return false;
-	}
+
 	return true;
 }
 
