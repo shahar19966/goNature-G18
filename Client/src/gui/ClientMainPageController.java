@@ -325,8 +325,10 @@ public class ClientMainPageController implements Initializable {
 
 		panesMap.put("reports", root);
 	}
-
-	private void loadRequestsDepManager()// liron
+/**
+ * a method that switch to parameters and discount requests for department manager
+ */
+	private void loadRequestsDepManager()
 	{
 		FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource(ClientConstants.Screens.REQUESTS.toString()));
 		VBox root = null;
@@ -339,8 +341,10 @@ public class ClientMainPageController implements Initializable {
 
 		panesMap.put("requests", root);
 	}
-
-	private void loadParkManagerParametersUpdate()// liron
+/**
+ * a method that switch to parameters update screen for park manager
+ */
+	private void loadParkManagerParametersUpdate()
 	{
 		FXMLLoader fxmlLoader1 = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.PARK_MANAGER_PATAMETERS_UPDATE.toString()));
@@ -354,8 +358,10 @@ public class ClientMainPageController implements Initializable {
 
 		panesMap.put("parameters", root);
 	}
-
-	private void loadParkManagerDiscountRequests()// hila
+/**
+ * a method that switch to discount requests for park manager
+ */
+	private void loadParkManagerDiscountRequests()
 	{
 		FXMLLoader fxmlLoader1 = new FXMLLoader(
 				getClass().getResource(ClientConstants.Screens.PARK_MANAGER_DISCOUNT_REQUESTS.toString()));
