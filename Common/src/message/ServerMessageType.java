@@ -1,5 +1,7 @@
 package message;
-
+/*
+ * ServerMessageType is the type of the message of ServerMessage
+ */
 public enum ServerMessageType {
 	LOGIN,
 	LOGOUT_SUCCESS,

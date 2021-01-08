@@ -3,7 +3,9 @@ package entity;
 import java.io.Serializable;
 
 import javafx.beans.property.SimpleStringProperty;
-
+/*
+ * Visitor is for a visitor entity that is sent between the client and server
+ */
 public class Visitor implements Serializable{
 	private String id;
 

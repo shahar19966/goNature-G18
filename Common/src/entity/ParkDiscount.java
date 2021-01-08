@@ -4,7 +4,9 @@ import java.io.Serializable;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import entity.EntityConstants.RequestStatus;
-
+/*
+ * ParkDiscount is for a park discount that is sent between the client and server
+ */
 public class ParkDiscount implements Serializable {
 	private String parkName;
 	private String startDate;

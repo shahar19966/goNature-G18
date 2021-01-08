@@ -7,7 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/*
+ * controller for exit control screen
+ */
 public class ExitControlPaneController {
 	private GUIControl guiControl = GUIControl.getInstance();
     @FXML
@@ -15,7 +17,10 @@ public class ExitControlPaneController {
 
     @FXML
     private Button validateBtn;
-
+    /*/
+     * method called when validate button is pressed,registers the person's order as done if it was found
+     * or pop ups an error if it wasn't found
+     */
     @FXML
     void validateOrder(ActionEvent event) {
     	Employee emp= (Employee)guiControl.getUser();

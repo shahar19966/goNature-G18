@@ -1,5 +1,7 @@
 package entity;
-
+/*
+ * various entity constants that are used for entities
+ */
 public class EntityConstants{
 	public static final int PARK_OPEN=8;
 	public static final int PARK_CLOSED=17;

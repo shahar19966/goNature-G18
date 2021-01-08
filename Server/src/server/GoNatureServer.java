@@ -265,14 +265,14 @@ public class GoNatureServer extends AbstractServer {
 			e.printStackTrace();
 		}
 	}
-
+	/*
+	 * This function gets a canceled order and check the Waiting List for orders that the
+	 * date and period of time like order. We get the orders in the Waiting List with
+	 * checkWatingList function. In the end we send the notification of the orders
+	 * in the queue.
+	 * @param order the order that is cancelled
+	 */
 	private void notifyFromWaitingList(Order order) throws NumberFormatException, SQLException, ParseException {
-		/*
-		 * This function gets a canceled order and check the Waiting List for orders that the
-		 * date and period of time like order. We get the orders in the Waiting List with
-		 * checkWatingList function. In the end we send the notification of the orders
-		 * in the queue.
-		 */
 		if (order != null && !order.getStatus().equals(OrderStatus.WAITING)) {
 			String parkName = order.getParkName();
 			String dateOfOrder = order.getDateOfOrder();

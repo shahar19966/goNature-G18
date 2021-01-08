@@ -46,6 +46,10 @@ public class GUIControl {
 	public Stage getStage() {
 		return primaryStage;
 	}
+	/*
+	 * method to send a message to the server that the client is connected to
+	 * @param msg The message that is sent
+	 */
 	public void sendToServer(Object msg) {
 		client.handleMessageFromClientUI(msg);
 	}
@@ -61,16 +65,25 @@ public class GUIControl {
 	public Object getUser() {
 		return currentUser;
 	}
+	/*
+	 * method to disconnect the current client and user (called on sudden disconnection)
+	 */
 	public void disconnect() {
 		ClientMessage cMsg=new ClientMessage(ClientMessageType.DISCONNECTED,currentUser);
 		sendToServer(cMsg);
 		currentUser=null;
 	}
+	/*
+	 * method to log out the current user 
+	 */
 	public void logOut() {
 		ClientMessage cMsg=new ClientMessage(ClientMessageType.LOGOUT,currentUser);
 		sendToServer(cMsg);
 		currentUser=null;
 	}
+	/*
+	 * method to open the Log In page
+	 */
 	public void openLogInPage() {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(ClientConstants.Screens.LOGIN_PAGE.toString()));
@@ -87,6 +100,10 @@ public class GUIControl {
 			e.printStackTrace();
 		}
 	}
+	/*
+	 * method that displays an error message in an alert
+	 * @param msg the message to be displayed
+	 */
 	public static void popUpError(String msg) {
 		Platform.runLater(() -> { 
 			Alert alert = new Alert(AlertType.ERROR);
@@ -96,6 +113,10 @@ public class GUIControl {
 			alert.showAndWait();
 		});
 	}
+	/*
+	 * method that displays an error message in an alert and exits the client once the user exited the error
+	 * @param msg the message to be displayed
+	 */
 	public static void popUpErrorExitOnClick(String msg) {
 		Platform.runLater(() -> {
 			Alert alert = new Alert(AlertType.ERROR);
@@ -111,6 +132,11 @@ public class GUIControl {
 	public static void popUpMessage(String msg) {
 		popUpMessage("Message",msg);
 	}
+	/*
+	 * method that displays a message in an alert
+	 * @param title the title of the message
+	 * @param msg the message
+	 */
 	public static void popUpMessage(String title,String msg)
 	{
 		Platform.runLater(() -> {
@@ -121,6 +147,11 @@ public class GUIControl {
 			alert.showAndWait();
 		});
 	}
+	/*
+	 * method that returns boolean if the email is of a valid format
+	 * @param email the email to be checked
+	 * @return true if the email is of a valid format
+	 */
 	public static boolean isEmailValid(String email) {
 		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
 				+ "A-Z]{2,7}$";
