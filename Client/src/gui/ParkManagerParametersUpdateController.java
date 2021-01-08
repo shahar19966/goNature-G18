@@ -18,7 +18,11 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/**
+ * 
+ * This class responsible for the park parameters update for the park manager
+ * 
+ */
 public class ParkManagerParametersUpdateController implements Initializable{
 	GUIControl guiControl = GUIControl.getInstance();
 
@@ -36,7 +40,10 @@ public class ParkManagerParametersUpdateController implements Initializable{
 
     @FXML
     private Button updateVisitationTime;
-
+/**
+ * when capacity update pressed, switch to the capacity update screen
+ * @param event
+ */
     @FXML 
     void capacityUpdate(ActionEvent event) {
     	Parent root ;
@@ -50,6 +57,10 @@ public class ParkManagerParametersUpdateController implements Initializable{
 		e.printStackTrace();
 	}
     }
+    /**
+     * when difference update pressed, switch to the difference update screen
+     * @param event
+     */
     @FXML
     void differenceUpdate(ActionEvent event) {
     	Parent root ;
@@ -63,7 +74,10 @@ public class ParkManagerParametersUpdateController implements Initializable{
 		e.printStackTrace();
 	}
     }
-
+    /**
+     * when visitation time update pressed, switch to the visitation time update screen
+     * @param event
+     */
     @FXML
     void visitationTimeUpdate(ActionEvent event) {
     	Parent root ;
@@ -77,6 +91,11 @@ public class ParkManagerParametersUpdateController implements Initializable{
 		e.printStackTrace();
 	}
     }
+    /**
+     * 
+     * A method that initialize  Data to show the current parameters
+     * 
+     */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

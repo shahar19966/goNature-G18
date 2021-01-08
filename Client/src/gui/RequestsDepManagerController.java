@@ -124,7 +124,7 @@ public class RequestsDepManagerController implements Initializable {
 	}
 	
 	/**
-	 * this function called from initialize to initialize every row in the parameter table with approve button
+	 * this method called from initialize to initialize every row in the parameter table with approve button
 	 * when approve button being pressed the parameter is update in the data base and the request is deleted from data base and from table 
 	 */
 	private void setApprovedCol1()
@@ -169,7 +169,7 @@ public class RequestsDepManagerController implements Initializable {
 	approveCol1.setCellFactory(cellFactory);
 
 	/**
-	 * this function called from initialize to initialize every row in the parameter table with decline button
+	 * this method called from initialize to initialize every row in the parameter table with decline button
 	 * when decline button being pressed the request is deleted from data base and from table
 	 */
 	}
@@ -217,7 +217,7 @@ public class RequestsDepManagerController implements Initializable {
 	}
 	
 	/**
-	 * this function called from initialize to initialize every row in the discount table with approve button
+	 * this method called from initialize to initialize every row in the discount table with approve button
 	 * when approve button being pressed the discount status updates to approved in the data base and the request is deleted from table 
 	 */
 	private void setApprovedCol()
@@ -265,7 +265,7 @@ public class RequestsDepManagerController implements Initializable {
 	}
 	
 	/**
-	 * this function called from initialize to initialize every row in the discount table with decline button
+	 * this method called from initialize to initialize every row in the discount table with decline button
 	 * when decline button being pressed the request status is updated to declined and it is deleted from table
 	 */
 	private void setDeclineCol()
