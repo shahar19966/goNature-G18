@@ -32,7 +32,11 @@ import message.ClientMessage;
 import message.ClientMessageType;
 import message.ServerMessage;
 import message.ServerMessageType;
-
+/**
+ * 
+ * this class responsible for park manager discount requests
+ *
+ */
 	public class MyDiscountRequestsController implements Initializable {
 		private ObservableList<ParkDiscount> discountRequestsObservableList = FXCollections.observableArrayList();
 		private Integer discountNumberCol=0;
@@ -76,28 +80,33 @@ import message.ServerMessageType;
 
 	    @FXML
 	    private Button createButton;
-
+	    
+	    
+	    /**
+	     * when add button being pressed this function validates the input dates & amount
+	     * if the validation is OK add discount to the data base, if no show pop up message
+	     * @param event
+	     */
 	    @FXML
 	    void addFunc(ActionEvent event) {
 	    	if( discountFinishDatePicker.getValue().isBefore(discountStartDatePicker.getValue()))
 	    		guiControl.popUpMessage("Date is wrong", "Finish date is before start date\nPlease pick correct start and finish dates");
 	    	else {
-	    		ParkDiscount newDiscountRequest= new ParkDiscount
-	    			(parkName.getText(),discountStartDatePicker.getValue().toString(),
+	    			ParkDiscount newDiscountRequest= new ParkDiscount
+	    					(parkName.getText(),discountStartDatePicker.getValue().toString(),
 	    					discountFinishDatePicker.getValue().toString(), discountAmountSpinner.getValue(),
 	    					EntityConstants.RequestStatus.WAITING, ((Employee) guiControl.getUser()).getEmployeeNumber());
-	    	guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_VALIDATION, newDiscountRequest));
-	    	if( guiControl.getServerMsg().getType()== ServerMessageType.DISCOUNT_IS_ALREADY_EXIST)
-	    		guiControl.popUpMessage("Discount Is Exist","There is already existing discount\nBy you with the same amount and dates\nPlease try different values" );
-	    	else if( guiControl.getServerMsg().getType()== ServerMessageType.CAN_INSERT_NEW_DISCOUNT)
-	    		guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_REQUEST, newDiscountRequest));
+	    			guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_VALIDATION, newDiscountRequest));
+	    		if (guiControl.getServerMsg().getType()== ServerMessageType.DISCOUNT_IS_ALREADY_EXIST)
+	    	    	guiControl.popUpMessage("Discount Is Exist","There is already existing discount\nBy you with the same amount and dates\nPlease try different values" );
+	    	    else if( guiControl.getServerMsg().getType()== ServerMessageType.CAN_INSERT_NEW_DISCOUNT)
+	    	    	guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_REQUEST, newDiscountRequest));
 	    	}
 	    }
 	    
 	    /**
-	     * Initialize the page to show park manager's parks ,the date of today,disable past dates
-	    *and default amount of discount
-	    *also shows a list of his discount requests
+	     * Initialize the page to show park manager's discount requests list and their status,
+	     * show only park manager's park,disable past dates and default amount
 	     */
 
 		@Override
@@ -130,7 +139,7 @@ import message.ServerMessageType;
 			discountFinishDatePicker.setValue(LocalDate.now());
 			guiControl.sendToServer(new ClientMessage(ClientMessageType.GET_DISCOUNT_REQUESTS_FROM_DB,((Employee) guiControl.getUser()).getEmployeeNumber() ));
 			List<ParkDiscount> discountRequestsarr = (List<ParkDiscount>) guiControl.getServerMsg().getMessage();
-			for( ParkDiscount pd:discountRequestsarr)	
+			for( ParkDiscount pd:discountRequestsarr)//flip start date and finish date so they will start with day and end with year and not the other way around.	
 			{
 				StringBuilder rebuildStartDate= new StringBuilder();
 				StringBuilder rebuildFinishDate= new StringBuilder();
@@ -157,7 +166,10 @@ import message.ServerMessageType;
 
 		}
 
-	
+	/**
+	 * function being called from initialize function to initialize the id column with 
+	 * running counter to count the  discount requests on the table.
+	 */
 	public void updateIdColumn()
 	{
 		 discountParkNumberCol.setCellFactory(new Callback<TableColumn<ParkDiscount, Integer>, TableCell<ParkDiscount, Integer>>() {

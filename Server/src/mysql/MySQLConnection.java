@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.sun.javafx.webkit.ThemeClientImpl;
+//import com.sun.javafx.webkit.ThemeClientImpl;
 
 //import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
@@ -644,6 +644,12 @@ public class MySQLConnection {
 		return insertNewOrder(orderRequest, OrderStatus.WAITING, false, payInAdvanceWaitingList);
 	}
 
+	/**
+	 * 
+	 * @param newDiscountRequest
+	 * @return server message about existing discount if the discount is already exist and server message that discount can be insert if not.
+	 * @throws SQLException
+	 */
 	public static ServerMessage discountValidation(ParkDiscount newDiscountRequest) throws SQLException {
 		String query = "SELECT * FROM discounts WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
 		PreparedStatement checkDiscountRequestStatement = con.prepareStatement(query);
@@ -661,6 +667,13 @@ public class MySQLConnection {
 		return new ServerMessage(ServerMessageType.CAN_INSERT_NEW_DISCOUNT, null);
 	}
 
+	/**
+	 * 
+	 * @param newDiscountRequest
+	 * @return discount request
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
 	public static ParkDiscount insertNewDiscountRequest(ParkDiscount newDiscountRequest)
 			throws SQLException, ParseException {
 		PreparedStatement insertDiscountRequestStatement = con.prepareStatement(
@@ -901,6 +914,12 @@ public class MySQLConnection {
 		}
 	}
 
+	/**
+	 * 
+	 * @param employeeId
+	 * @return list of discount requests for specific park and employee
+	 * @throws SQLException
+	 */
 	public static List<ParkDiscount> getDiscountRequests(String employeeId) throws SQLException {
 		List<ParkDiscount> parkDiscountRequestList = new ArrayList<>();
 		LocalDate today = LocalDate.now();
@@ -917,6 +936,11 @@ public class MySQLConnection {
 		return parkDiscountRequestList;
 	}
 
+	/**
+	 * 
+	 * @return list of discount requests for all the parks
+	 * @throws SQLException
+	 */
 	public static List<ParkDiscount> getDepManagerDiscountRequests() throws SQLException {
 		List<ParkDiscount> parkDiscountRequestList = new ArrayList<>();
 		String query = "Select * from discounts Where status=?;";
@@ -1134,6 +1158,12 @@ public class MySQLConnection {
 		}
 	}
 
+	/**
+	 * update approved park parameters  and delete from requests
+	 * @param parameterToApprove
+	 * @return true
+	 * @throws SQLException
+	 */
 	public static boolean approveParameterUpdate(ParameterUpdate parameterToApprove) throws SQLException {
 		String query1 = "DELETE FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;";
 		String query2 = "UPDATE park SET maxVisitors=? WHERE parkName=?;";
@@ -1162,6 +1192,12 @@ public class MySQLConnection {
 		return true;
 	}
 
+	/**
+	 * delete declined parameter requests
+	 * @param parameterToDecline
+	 * @return true
+	 * @throws SQLException
+	 */
 	public static boolean declineParameterUpdate(ParameterUpdate parameterToDecline) throws SQLException {
 		String query1 = "DELETE FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;";
 		PreparedStatement deleteParameter = con.prepareStatement(query1);
@@ -1174,6 +1210,12 @@ public class MySQLConnection {
 		return true;
 	}
 
+	/**
+	 *update discount status to approved
+	 * @param discountToApprove
+	 * @return true
+	 * @throws SQLException
+	 */
 	public static boolean approveDiscountUpdate(ParkDiscount discountToApprove) throws SQLException {
 		String query1 = "UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=? ;";
 		PreparedStatement approveDiscount = con.prepareStatement(query1);
@@ -1227,7 +1269,13 @@ public class MySQLConnection {
 		return new ServerMessage(ServerMessageType.REGISTRATION_SUCCESSED, subscriber);
 
 	}
-
+	
+	/**
+	 * update discount status to decline
+	 * @param discountToDecline
+	 * @return true 
+	 * @throws SQLException
+	 */
 	public static boolean declineDiscountUpdate(ParkDiscount discountToDecline) throws SQLException {
 		String query1 = "UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
 		PreparedStatement declineDiscount = con.prepareStatement(query1);
