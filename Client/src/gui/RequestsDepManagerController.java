@@ -21,7 +21,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import message.ClientMessage;
 import message.ClientMessageType;
-
+/**
+ * 
+ * this class responsible for department manager requests for parameters and discounts
+ *
+ */
 public class RequestsDepManagerController implements Initializable {
 	GUIControl guiControl = GUIControl.getInstance();
 
@@ -70,7 +74,10 @@ public class RequestsDepManagerController implements Initializable {
 	private ObservableList<ParkDiscount> discountRequests = FXCollections.observableArrayList();
 
 
-
+	/**
+	 * initialize discount requests table with waiting discount requests
+	 * initialize parameter requests table with parameter requests   
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
@@ -83,7 +90,7 @@ public class RequestsDepManagerController implements Initializable {
 		parametersTable.setItems(parameters);
 		guiControl.sendToServer(new ClientMessage(ClientMessageType.DEP_MANAGER_GET_DISCOUNT_REQUESTS, null));
 		List<ParkDiscount> discountList=(List<ParkDiscount>)guiControl.getServerMsg().getMessage();
-		for( ParkDiscount pd:discountList)
+		for( ParkDiscount pd:discountList)//flip start date and finish date so they will start with day and end with year and not the other way around.	
 		{
 			StringBuilder rebuildStartDate= new StringBuilder();
 			StringBuilder rebuildFinishDate= new StringBuilder();
@@ -116,6 +123,10 @@ public class RequestsDepManagerController implements Initializable {
 		
 	}
 	
+	/**
+	 * this function called from initialize to initialize every row in the parameter table with approve button
+	 * when approve button being pressed the parameter is update in the data base and the request is deleted from data base and from table 
+	 */
 	private void setApprovedCol1()
 	{
 		approveCol1.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
@@ -139,8 +150,7 @@ public class RequestsDepManagerController implements Initializable {
 									(ParameterUpdate)getTableView().getItems().get(getIndex())));
 							if (guiControl.getServerMsg().getMessage() != null) {
 								GUIControl.popUpMessage("Parameter Updated",
-										"parameter "
-												+ " updated successfully");
+										"parameter updated successfully");
 								parameters.remove(getTableView().getItems().get(getIndex()));
 							}
 						});
@@ -158,6 +168,10 @@ public class RequestsDepManagerController implements Initializable {
 
 	approveCol1.setCellFactory(cellFactory);
 
+	/**
+	 * this function called from initialize to initialize every row in the parameter table with decline button
+	 * when decline button being pressed the request is deleted from data base and from table
+	 */
 	}
 	private void setDeclineCol1()
 	{
@@ -201,6 +215,11 @@ public class RequestsDepManagerController implements Initializable {
 	declineCol1.setCellFactory(cellFactory);
 
 	}
+	
+	/**
+	 * this function called from initialize to initialize every row in the discount table with approve button
+	 * when approve button being pressed the discount status updates to approved in the data base and the request is deleted from table 
+	 */
 	private void setApprovedCol()
 	{
 		approveCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
@@ -244,6 +263,11 @@ public class RequestsDepManagerController implements Initializable {
 	approveCol.setCellFactory(cellFactory);
 
 	}
+	
+	/**
+	 * this function called from initialize to initialize every row in the discount table with decline button
+	 * when decline button being pressed the request status is updated to declined and it is deleted from table
+	 */
 	private void setDeclineCol()
 	{
 		declineCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
