@@ -606,7 +606,13 @@ public class MySQLConnection {
 		return null;
 	}
 
-	// liron
+	/**
+	 * A method that inserts a ParameterUpdate in DB.
+	 * 
+	 * @param ParameterUpdate
+	 * @return ParameterUpdate 
+	 * @throws  SQLException
+	 */
 	public static ParameterUpdate createParameterUpdate(ParameterUpdate parameterUpdate) throws SQLException {
 		PreparedStatement parameterPreparedStatement = con
 				.prepareStatement("INSERT INTO parameterUpdate (parameter,newValue,parkName_fk) VALUES (?,?,?);");
@@ -616,8 +622,14 @@ public class MySQLConnection {
 		parameterPreparedStatement.executeUpdate();
 		return parameterUpdate;
 	}
-
-	public static List<ParameterUpdate> getParameterRequests() throws SQLException {// liron
+	/**
+	 * A method that returns a ParameterUpdate list from DB.
+	 * 
+	 * @param 
+	 * @return List<ParameterUpdate> 
+	 * @throws  SQLException
+	 */
+	public static List<ParameterUpdate> getParameterRequests() throws SQLException {
 		List<ParameterUpdate> parametersUpdateRequestList = new ArrayList<>();
 		String query = "Select * From parameterUpdate ;";
 		PreparedStatement parametersRequests = con.prepareStatement(query);
@@ -1549,7 +1561,13 @@ public class MySQLConnection {
 			}
 		}
 	}
+	/**
+	 * A method that gets park name and returns from the DB Park with all it's details
+	 * @param String
+	 * @return Park
+	 * @throws SQLException
 
+	 */
 	public static Park getPark(String parkname) throws SQLException {
 		Park parktoreturn = null;
 		PreparedStatement getParkdetails;
