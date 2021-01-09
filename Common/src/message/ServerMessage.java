@@ -1,7 +1,9 @@
 package message;
 
 import java.io.Serializable;
-
+/*
+ * ServerMessage is with a type and an Object message that the server sends to the client
+ */
 public class ServerMessage implements Serializable{
 	private ServerMessageType type;
 	private Object message;

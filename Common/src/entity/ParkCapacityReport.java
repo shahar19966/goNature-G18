@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
-
+/*
+ * ParkCapactiyReport is for a park capacity report that is sent between the client and server
+ */
 public class ParkCapacityReport implements Serializable { 
 	
 	private String date;

@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
-
+/*
+ * ParameterUpdate is used for whenever there is a parameter update that is sent between the client and server
+ */
 public class ParameterUpdate implements Serializable {
 	private EntityConstants.ParkParameter parameter;
 	private int newValue;

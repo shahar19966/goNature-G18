@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
-
+/*
+ * Employee class for the entity of an employee that is sent between the client and server
+ */
 public class Employee extends Person implements Serializable {
 
 	private String employeeNumber;

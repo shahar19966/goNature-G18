@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
-
+/*
+ * Person is made for employee and subscriber to extend it
+ */
 public abstract class Person implements Serializable {
 	protected String firstName;
 	protected String lastName;

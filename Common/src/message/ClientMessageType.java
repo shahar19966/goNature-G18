@@ -1,5 +1,7 @@
 package message;
-
+/*
+ * ClientMessageType for the type of the client message
+ */
 public enum ClientMessageType {
 	DISCONNECTED,
 	LOGOUT,

@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
-
+/*
+ * Park class is for a park entity that is sent between the client and server
+ */
 public class Park implements Serializable{
 	private String parkName;
 	private int maxVisitors;

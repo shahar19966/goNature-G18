@@ -1,5 +1,7 @@
 package entity;
-
+/*
+ * Subscriber is for a subscriber entity that is sent between the client and server
+ */
 public class Subscriber extends Person {
 	private String subscriberNumber;
 	private int subscriberFamilyMembers;

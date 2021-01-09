@@ -101,9 +101,8 @@ public class OrderPaneController implements Initializable {
 	private OrderDetailsController orderDetailsController;
 
 	/**
-	 * 
-	 * @param event This method is created when group box is pressed it changes the
-	 *              people amount in peopleAmount Spinner
+	 * This method is created when group box is pressed it changes the
+	 * people amount in peopleAmount Spinner
 	 */
 	@FXML
 	void changePeopleAmount(ActionEvent event) {
@@ -123,10 +122,9 @@ public class OrderPaneController implements Initializable {
 	}
 
 	/**
-	 * 
-	 * @param event This method happens when order Button is clicked It creates
-	 *              order Object from the form and pop alerts depend of what the
-	 *              server returns
+	 * This method happens when order Button is clicked It creates
+	 * order Object from the form and pop alerts depend of what the
+	 * server returns 
 	 */
 	@FXML
 	void orderFunc(ActionEvent event) {
@@ -180,11 +178,11 @@ public class OrderPaneController implements Initializable {
 	}
 
 	/**
-	 * 
+	 * This method happens when pick another date button is pressed.
+	 * It displays available date and time to create an order if the
+	 * park is full it pops park is full alert
 	 * @param map
-	 * @param orderDes This method happens when pick another date button is pressed.
-	 *                 It displays available date and time to create an order if the
-	 *                 park is full it pops park is full alert
+	 * @param orderDes 
 	 */
 	private void displayAvailableDates(Map<String, List<String>> map, List<Object> orderDes) {
 		FXMLLoader fxmlLoader = new FXMLLoader(

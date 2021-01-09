@@ -8,7 +8,9 @@ import entity.EntityConstants.OrderStatus;
 import entity.EntityConstants.OrderType;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-
+/*
+ * Order class is used for the order entity that is sent between the client and server
+ */
 public class Order implements Serializable {
 	private String id;
 	private String parkName;
