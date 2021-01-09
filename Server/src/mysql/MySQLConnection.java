@@ -689,6 +689,32 @@ public class MySQLConnection {
 			return new ServerMessage(ServerMessageType.DISCOUNT_IS_ALREADY_EXIST, existDiscount);
 
 		}
+		String query2 = "SELECT * FROM discounts WHERE parkName_fk=? AND startDate<=? AND finishDate>=? AND status=?;";
+		PreparedStatement checkDiscountRequestStatement2 = con.prepareStatement(query2);
+		checkDiscountRequestStatement2.setString(1, newDiscountRequest.getParkName());
+		checkDiscountRequestStatement2.setString(2, newDiscountRequest.getStartDate());
+		checkDiscountRequestStatement2.setString(3, newDiscountRequest.getFinishDate());
+		checkDiscountRequestStatement2.setString(4, EntityConstants.RequestStatus.APPROVED.name());
+		rs=checkDiscountRequestStatement2.executeQuery();
+		if (rs.next()) 
+		{
+			ParkDiscount discountBetweenDates = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3),
+					rs.getInt(4), EntityConstants.RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			return new ServerMessage(ServerMessageType.DISCOUNT_EXIST_BETWEEN_DATES, discountBetweenDates);
+		}
+		String query3 = "SELECT * FROM discounts WHERE parkName_fk=? AND startDate<=? AND finishDate>=? AND status=?;";
+		PreparedStatement checkDiscountRequestStatement3 = con.prepareStatement(query2);
+		checkDiscountRequestStatement3.setString(1, newDiscountRequest.getParkName());
+		checkDiscountRequestStatement3.setString(2, newDiscountRequest.getStartDate());
+		checkDiscountRequestStatement3.setString(3, newDiscountRequest.getFinishDate());
+		checkDiscountRequestStatement3.setString(4, EntityConstants.RequestStatus.WAITING.name());
+		rs=checkDiscountRequestStatement3.executeQuery();
+		if (rs.next()) 
+		{
+			ParkDiscount waitingDiscount = new ParkDiscount(rs.getString(1), rs.getString(2), rs.getString(3),
+					rs.getInt(4), EntityConstants.RequestStatus.valueOf(rs.getString(5)), rs.getString(6));
+			return new ServerMessage(ServerMessageType.WAITING_DISCOUNT, waitingDiscount);
+		}
 		return new ServerMessage(ServerMessageType.CAN_INSERT_NEW_DISCOUNT, null);
 	}
 
@@ -1248,10 +1274,12 @@ public class MySQLConnection {
 	public static boolean approveDiscountUpdate(ParkDiscount discountToApprove) throws SQLException {
 		String query1 = "UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=? ;";
 		PreparedStatement approveDiscount = con.prepareStatement(query1);
+		String[] changeStartDateForDB=discountToApprove.getStartDate().split("-");
+		String[] changeFinishDateForDB=discountToApprove.getFinishDate().split("-");
 		approveDiscount.setString(1, entity.EntityConstants.RequestStatus.APPROVED.name());
 		approveDiscount.setString(2, discountToApprove.getParkName());
-		approveDiscount.setString(3, discountToApprove.getStartDate());
-		approveDiscount.setString(4, discountToApprove.getFinishDate());
+		approveDiscount.setString(3, changeStartDateForDB[2]+'-'+changeStartDateForDB[1]+'-'+changeStartDateForDB[0]);
+		approveDiscount.setString(4, changeFinishDateForDB[2]+'-'+changeFinishDateForDB[1]+'-'+changeFinishDateForDB[0]);
 		approveDiscount.setInt(5, discountToApprove.getDiscountAmount());
 		approveDiscount.executeUpdate();
 
@@ -1309,10 +1337,12 @@ public class MySQLConnection {
 	public static boolean declineDiscountUpdate(ParkDiscount discountToDecline) throws SQLException {
 		String query1 = "UPDATE discounts SET status=? WHERE parkName_fk=? AND startDate=? AND finishDate=? AND discountAmount=?;";
 		PreparedStatement declineDiscount = con.prepareStatement(query1);
+		String[] changeStartDateForDB=discountToDecline.getStartDate().split("-");
+		String[] changeFinishDateForDB=discountToDecline.getFinishDate().split("-");
 		declineDiscount.setString(1, entity.EntityConstants.RequestStatus.DECLINED.name());
 		declineDiscount.setString(2, discountToDecline.getParkName());
-		declineDiscount.setString(3, discountToDecline.getStartDate());
-		declineDiscount.setString(4, discountToDecline.getFinishDate());
+		declineDiscount.setString(3, changeStartDateForDB[2]+'-'+changeStartDateForDB[1]+'-'+changeStartDateForDB[0]);
+		declineDiscount.setString(4, changeFinishDateForDB[2]+'-'+changeFinishDateForDB[1]+'-'+changeFinishDateForDB[0]);
 		declineDiscount.setInt(5, discountToDecline.getDiscountAmount());
 		declineDiscount.executeUpdate();
 
