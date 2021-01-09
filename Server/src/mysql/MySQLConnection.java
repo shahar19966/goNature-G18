@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PrimitiveIterator.OfDouble;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -610,8 +611,8 @@ public class MySQLConnection {
 	 * A method that inserts a ParameterUpdate in DB.
 	 * 
 	 * @param ParameterUpdate
-	 * @return ParameterUpdate 
-	 * @throws  SQLException
+	 * @return ParameterUpdate
+	 * @throws SQLException
 	 */
 	public static ParameterUpdate createParameterUpdate(ParameterUpdate parameterUpdate) throws SQLException {
 		PreparedStatement parameterPreparedStatement = con
@@ -622,12 +623,13 @@ public class MySQLConnection {
 		parameterPreparedStatement.executeUpdate();
 		return parameterUpdate;
 	}
+
 	/**
 	 * A method that returns a ParameterUpdate list from DB.
 	 * 
-	 * @param 
-	 * @return List<ParameterUpdate> 
-	 * @throws  SQLException
+	 * @param
+	 * @return List<ParameterUpdate>
+	 * @throws SQLException
 	 */
 	public static List<ParameterUpdate> getParameterRequests() throws SQLException {
 		List<ParameterUpdate> parametersUpdateRequestList = new ArrayList<>();
@@ -659,7 +661,8 @@ public class MySQLConnection {
 	/**
 	 * 
 	 * @param newDiscountRequest
-	 * @return server message about existing discount if the discount is already exist and server message that discount can be insert if not.
+	 * @return server message about existing discount if the discount is already
+	 *         exist and server message that discount can be insert if not.
 	 * @throws SQLException
 	 */
 	public static ServerMessage discountValidation(ParkDiscount newDiscountRequest) throws SQLException {
@@ -1091,9 +1094,9 @@ public class MySQLConnection {
 	/**
 	 * 
 	 * @param parkName
-	 * @return Check if park with parkName is full now. if it is insert
-	 *         park to parkFull Table. returns true if there is no
-	 *         SQLException and false otherwise.
+	 * @return Check if park with parkName is full now. if it is insert park to
+	 *         parkFull Table. returns true if there is no SQLException and false
+	 *         otherwise.
 	 */
 	public static boolean updateParkFull(String parkName) {
 		LocalTime opening = LocalTime.of(EntityConstants.PARK_OPEN, 0);
@@ -1121,6 +1124,7 @@ public class MySQLConnection {
 			return false;
 		}
 	}
+
 	/**
 	 * 
 	 * @param idAndParkName
@@ -1171,7 +1175,8 @@ public class MySQLConnection {
 	}
 
 	/**
-	 * update approved park parameters  and delete from requests
+	 * update approved park parameters and delete from requests
+	 * 
 	 * @param parameterToApprove
 	 * @return true
 	 * @throws SQLException
@@ -1206,6 +1211,7 @@ public class MySQLConnection {
 
 	/**
 	 * delete declined parameter requests
+	 * 
 	 * @param parameterToDecline
 	 * @return true
 	 * @throws SQLException
@@ -1223,7 +1229,8 @@ public class MySQLConnection {
 	}
 
 	/**
-	 *update discount status to approved
+	 * update discount status to approved
+	 * 
 	 * @param discountToApprove
 	 * @return true
 	 * @throws SQLException
@@ -1281,11 +1288,12 @@ public class MySQLConnection {
 		return new ServerMessage(ServerMessageType.REGISTRATION_SUCCESSED, subscriber);
 
 	}
-	
+
 	/**
 	 * update discount status to decline
+	 * 
 	 * @param discountToDecline
-	 * @return true 
+	 * @return true
 	 * @throws SQLException
 	 */
 	public static boolean declineDiscountUpdate(ParkDiscount discountToDecline) throws SQLException {
@@ -1308,7 +1316,6 @@ public class MySQLConnection {
 	 * @throws SQLException
 	 */
 	public static List<Order> sendSmsToActiveOrders() throws SQLException {
-		System.out.println("Activate Orders");
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime tommorow = now.plusDays(1);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -1359,7 +1366,6 @@ public class MySQLConnection {
 	 * @throws ParseException
 	 */
 	public static List<List<Order>> sendSmsToCancelOrders() throws SQLException, NumberFormatException, ParseException {
-		System.out.println("Cancel Orders");
 		List<Order> orders = new ArrayList<>();
 		List<Order> ordersFromWaitingList = null;
 		LocalDateTime now = LocalDateTime.now();
@@ -1368,11 +1374,12 @@ public class MySQLConnection {
 		String dateNow = nowString.split(" ")[0];
 		String timeNow = nowString.split(" ")[1];
 		String query = "SELECT orders.* FROM orders JOIN smsSend on orders.orderNum=smsSend.orderNum_fk WHERE "
-				+ "smsSend.smsRecviedDate<=? AND ((orders.status='PENDING_FINAL_APPROVAL' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=2) OR ((orders.status='PENDING_APPROVAL_FROM_WAITING_LIST' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=1)))";
+				+ "(smsSend.smsRecviedDate=? AND ((orders.status='PENDING_FINAL_APPROVAL' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=2) OR ((orders.status='PENDING_APPROVAL_FROM_WAITING_LIST' AND HOUR(TIMEDIFF(?,smsSend.smsRecviedTime))>=1)))) OR (smsSend.smsRecviedDate<? AND (orders.status='PENDING_APPROVAL_FROM_WAITING_LIST' OR orders.status='PENDING_FINAL_APPROVAL'))";
 		PreparedStatement getOrdersToSendSms = con.prepareStatement(query);
 		getOrdersToSendSms.setString(1, dateNow);
 		getOrdersToSendSms.setString(2, timeNow);
 		getOrdersToSendSms.setString(3, timeNow);
+		getOrdersToSendSms.setString(4, dateNow);
 		ResultSet rs = getOrdersToSendSms.executeQuery();
 		while (rs.next()) {
 			Order tmpOrder = new Order(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
@@ -1561,12 +1568,15 @@ public class MySQLConnection {
 			}
 		}
 	}
+
 	/**
-	 * A method that gets park name and returns from the DB Park with all it's details
+	 * A method that gets park name and returns from the DB Park with all it's
+	 * details
+	 * 
 	 * @param String
 	 * @return Park
 	 * @throws SQLException
-
+	 * 
 	 */
 	public static Park getPark(String parkname) throws SQLException {
 		Park parktoreturn = null;
@@ -1579,5 +1589,20 @@ public class MySQLConnection {
 			parktoreturn = new Park(rs.getString(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
 		return parktoreturn;
 	}
-
+/**
+ * This method delete all orders with status waiting in the DB
+ * @throws SQLException
+ */
+	public static void delAllOldWaitingOrders() throws SQLException {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+		now = now.plusHours(2);
+		String dateString[] = formatter.format(now).split(" ");
+		String queryDelWaiting = "DELETE FROM orders WHERE status='WAITING' AND (dateOfOrder<? OR(dateOfOrder=? AND timeOfOrder<=?));";
+		PreparedStatement delWaitingStatement = con.prepareStatement(queryDelWaiting);
+		delWaitingStatement.setString(1, dateString[0]);
+		delWaitingStatement.setString(2, dateString[0]);
+		delWaitingStatement.setString(3, dateString[1]);
+		delWaitingStatement.executeUpdate();
+	}
 }
