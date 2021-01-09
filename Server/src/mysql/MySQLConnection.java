@@ -615,13 +615,24 @@ public class MySQLConnection {
 	 */
 	public static ParameterUpdate createParameterUpdate(ParameterUpdate parameterUpdate) throws SQLException {
 		PreparedStatement parameterPreparedStatement = con
-				.prepareStatement("INSERT INTO parameterUpdate (parameter,newValue,parkName_fk) VALUES (?,?,?);");
+				.prepareStatement("SELECT * FROM parameterUpdate WHERE parameter=? AND newValue=? AND parkName_fk=?;");
 		parameterPreparedStatement.setString(1, parameterUpdate.getParameter());
 		parameterPreparedStatement.setInt(2, parameterUpdate.getNewValue());
 		parameterPreparedStatement.setString(3, parameterUpdate.getParkName());
-		parameterPreparedStatement.executeUpdate();
+		ResultSet rs = parameterPreparedStatement.executeQuery();
+		if(rs.next())
+			return null;
+		else {
+		PreparedStatement parameterPreparedStatement1 = con
+				.prepareStatement("INSERT INTO parameterUpdate (parameter,newValue,parkName_fk) VALUES (?,?,?);");
+		parameterPreparedStatement1.setString(1, parameterUpdate.getParameter());
+		parameterPreparedStatement1.setInt(2, parameterUpdate.getNewValue());
+		parameterPreparedStatement1.setString(3, parameterUpdate.getParkName());
+		parameterPreparedStatement1.executeUpdate();
 		return parameterUpdate;
+		}
 	}
+		
 	/**
 	 * A method that returns a ParameterUpdate list from DB.
 	 * 
