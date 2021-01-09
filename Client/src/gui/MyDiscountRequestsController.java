@@ -90,7 +90,7 @@ public class MyDiscountRequestsController implements Initializable {
 	@FXML
 	void addFunc(ActionEvent event) {
 		if( discountFinishDatePicker.getValue().isBefore(discountStartDatePicker.getValue()))
-			guiControl.popUpMessage("Date is wrong", "Finish date is before start date\nPlease pick correct start and finish dates");
+			guiControl.popUpError("Finish date is before start date\nPlease pick correct start and finish dates");
 		else {
 			ParkDiscount newDiscountRequest= new ParkDiscount
 					(parkName.getText(),discountStartDatePicker.getValue().toString(),
@@ -98,11 +98,11 @@ public class MyDiscountRequestsController implements Initializable {
 							EntityConstants.RequestStatus.WAITING, ((Employee) guiControl.getUser()).getEmployeeNumber());
 			guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_VALIDATION, newDiscountRequest));
 			if (guiControl.getServerMsg().getType()== ServerMessageType.DISCOUNT_IS_ALREADY_EXIST)
-				guiControl.popUpMessage("Discount Is Exist","There is already existing discount\nRequested by you with the same amount and dates\nPlease try different values" );
+				guiControl.popUpError("There is already existing discount\nRequested by you with the same amount and dates\nPlease try different values" );
 			if (guiControl.getServerMsg().getType()== ServerMessageType.DISCOUNT_EXIST_BETWEEN_DATES)
-				guiControl.popUpMessage("Discount Is Exist","There is already existing discount\nRequested by you between these dates with status APPROVED\nPlease try different dates" );
+				guiControl.popUpError("There is already existing discount\nRequested by you between these dates with status APPROVED\nPlease try different dates" );
 			if (guiControl.getServerMsg().getType()== ServerMessageType.WAITING_DISCOUNT)
-				guiControl.popUpMessage("Waiting Discount","There is already existing discount\nRequested by you between these dates with status WAITING\nPlease wait for department manager response" );
+				guiControl.popUpError("There is already existing discount\nRequested by you between these dates with status WAITING\nPlease wait for department manager response" );
 			else if( guiControl.getServerMsg().getType()== ServerMessageType.CAN_INSERT_NEW_DISCOUNT)
 				guiControl.sendToServer(new ClientMessage(ClientMessageType.DISCOUNT_REQUEST, newDiscountRequest));
 			
