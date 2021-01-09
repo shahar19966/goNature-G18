@@ -111,11 +111,12 @@ public class OrderPaneController implements Initializable {
 		if (guideGroupCheckBox.isSelected()) {
 			peopleAmount
 					.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, ClientConstants.MAX_PEOPLE));
-			if (tmp != 1)
+			if (tmp > 1 && tmp <= ClientConstants.MAX_PEOPLE)
 				peopleAmount.getValueFactory().setValue(tmp);
+			else
+				peopleAmount.getValueFactory().setValue(2);
 		} else {
-			peopleAmount
-					.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ClientConstants.MAX_PEOPLE));
+			peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
 			peopleAmount.getValueFactory().setValue(tmp);
 		}
 		payInAdvanceCheckBox.setSelected(false);
@@ -248,7 +249,7 @@ public class OrderPaneController implements Initializable {
 		peopleAmount.prefWidthProperty().bind(timeComboBox.widthProperty());
 		date.prefWidthProperty().bind(emailText.widthProperty());
 		timeComboBox.prefWidthProperty().bind(emailText.widthProperty());
-		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ClientConstants.MAX_PEOPLE));
+		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
 		guiControl.sendToServer(new ClientMessage(ClientMessageType.GET_PARKS, null));
 		List<Park> parkArr = (List<Park>) guiControl.getServerMsg().getMessage();
 		for (Park p : parkArr)
@@ -340,6 +341,11 @@ public class OrderPaneController implements Initializable {
 
 	}
 
+	/**
+	 * This method clears the form.
+	 * 
+	 * @param event
+	 */
 	@FXML
 	private void clearFunc(ActionEvent event) {
 		emailText.setText("");
@@ -349,7 +355,7 @@ public class OrderPaneController implements Initializable {
 		finishPhone.setText("");
 		guideGroupCheckBox.setSelected(false);
 		payInAdvanceCheckBox.setSelected(false);
-		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ClientConstants.MAX_PEOPLE));
+		peopleAmount.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE));
 		peopleAmount.getValueFactory().setValue(1);
 		Date today = new Date();
 		LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1);
