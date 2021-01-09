@@ -856,7 +856,7 @@ public class MySQLConnection {
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String nowString = now.format(formatter);
-		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL') AND dateOfOrder>=?;";
+		String query = "Select * From orders where id_fk=? AND (status='WAITING' OR status='APPROVED' OR status='PENDING_APPROVAL_FROM_WAITING_LIST' OR status='ACTIVE' OR status='PENDING_FINAL_APPROVAL') AND dateOfOrder>=?;";
 		PreparedStatement getOrdersForId = con.prepareStatement(query);
 		getOrdersForId.setString(1, id);
 		getOrdersForId.setString(2, nowString.split(" ")[0]);

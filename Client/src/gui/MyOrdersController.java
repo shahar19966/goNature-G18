@@ -267,7 +267,8 @@ public class MyOrdersController implements Initializable {
 													GUIControl.popUpMessage("Order Approved", "Order "
 															+ getTableView().getItems().get(getIndex()).getOrderNum()
 															+ " is approved successfully");
-													myOrders.remove(getTableView().getItems().get(getIndex()));
+													getTableView().getItems().get(getIndex())
+															.setStatus(OrderStatus.APPROVED);
 												}
 											});
 										} else {

@@ -33,9 +33,11 @@ public class ServerMain extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("/gui/ServerScreen.fxml"));
+		
 		Parent root = loader.load();
 		guiController = loader.getController();
 		Scene serverScene = new Scene(root);
+		serverScene.getStylesheets().add(getClass().getResource("/gui/application.css").toExternalForm());
 		primaryStage.setScene(serverScene);
 		primaryStage.setOnCloseRequest(e -> stopServer());//make sure safe shutdown
 		primaryStage.show();

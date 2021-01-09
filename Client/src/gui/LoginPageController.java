@@ -60,6 +60,7 @@ public class LoginPageController {
     		guiControl.setClientMainPageController(cmpc);
     		cmpc.setUser(guiControl.getUser());
 			Scene scene = new Scene (root);
+			scene.getStylesheets().add(getClass().getResource("/gui/application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setOnCloseRequest(e->{
 				guiControl.disconnect();
