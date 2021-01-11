@@ -65,7 +65,7 @@ import entity.EntityConstants.RequestStatus;
  * class that holds static methods related to database actions such as
  * connection, queries,updates and more
  */
-public class MySQLConnection {
+public class MySQLConnection implements IMySQLConnection {
 	private static Connection con;
 
 	public static void connectToDB()
@@ -84,7 +84,7 @@ public class MySQLConnection {
 	 * @return Subscriber or null
 	 * @throws SQLException
 	 */
-	public static Visitor validateVisitor(String id) throws SQLException {
+	public  Visitor validateVisitor(String id) throws SQLException {
 		PreparedStatement logInPreparedStatement;
 		logInPreparedStatement = con.prepareStatement("SELECT * FROM visitor where id=? LIMIT 1;");
 		logInPreparedStatement.setString(1, id);
@@ -107,7 +107,7 @@ public class MySQLConnection {
 	 * @return Subscriber or null
 	 * @throws SQLException
 	 */
-	public static Subscriber validateSubscriber(String subNum) throws SQLException {
+	public  Subscriber validateSubscriber(String subNum) throws SQLException {
 		PreparedStatement logInPreparedStatement;
 		logInPreparedStatement = con.prepareStatement("SELECT * FROM subscriber where subNum=? LIMIT 1;");
 		logInPreparedStatement.setString(1, subNum);
@@ -128,7 +128,7 @@ public class MySQLConnection {
 	 * @return Employee or null
 	 * @throws SQLException
 	 */
-	public static Employee validateEmployee(String[] employeeNumberAndPassword) throws SQLException {
+	public  Employee validateEmployee(String[] employeeNumberAndPassword) throws SQLException {
 		PreparedStatement logInPreparedStatement;
 		logInPreparedStatement = con
 				.prepareStatement("SELECT * FROM employee where employeeNum=? AND password=? LIMIT 1;");
@@ -237,7 +237,7 @@ public class MySQLConnection {
 	 * A method that returns the data to the department manager's visition report
 	 * from database
 	 */
-	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
+	public  Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 
 		PreparedStatement GetIncomeReport;
@@ -815,7 +815,7 @@ public class MySQLConnection {
 	 * @throws NumberFormatException
 	 * @throws ParseException
 	 */
-	public static Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
+	public  Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
 
 		if (order.getType().equals(OrderType.REGULAR)) {
 			Visitor visitor = validateVisitor(order.getId());
@@ -1291,7 +1291,7 @@ public class MySQLConnection {
 	 * A method that returns ServerMessage if the registration was succeeded with a
 	 * new subscriber, or failure with the existing subscriber details.
 	 */
-	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
+	public ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
 		PreparedStatement registerPreparedStatement;
 		registerPreparedStatement = con.prepareStatement("SELECT * FROM subscriber WHERE id_fk=? ");
 		registerPreparedStatement.setString(1, subscriber.getID());

@@ -18,11 +18,37 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import message.ClientMessage;
 import message.ClientMessageType;
+import message.ServerMessage;
 /**
  * controller for the login page
  */
 public class LoginPageController {
 	GUIControl guiControl=GUIControl.getInstance();
+	IClientServerCommunication clientServerCommunication=new ClientServerCommunication();
+	class ClientServerCommunication implements IClientServerCommunication{
+
+		@Override
+		public void popUpError(String msg) {
+			GUIControl.popUpError(msg);			
+		}
+
+		@Override
+		public void sendToServer(Object msg) {
+			guiControl.sendToServer(msg);
+			
+		}
+
+		@Override
+		public ServerMessage getServerMsg() {
+			return guiControl.getServerMsg();
+		}
+
+		@Override
+		public void setUser(Object user) {
+			guiControl.setUser(user);		
+		}
+		
+	}
     @FXML
     private AnchorPane mainPane;
 
@@ -51,7 +77,7 @@ public class LoginPageController {
      */
     @FXML
     void loginFunc(ActionEvent event) throws IOException {
-    	if(validateLogin()) {
+    	if(validateLogin(idTextField.getText(),passwordTextField.getText(),idBtn.isSelected(),subscriberBtn.isSelected(),employeeBtn.isSelected())) {
     		Stage primaryStage=guiControl.getStage();
     		primaryStage.hide();
     		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/ClientMainPage.fxml"));
@@ -100,45 +126,48 @@ public class LoginPageController {
      * method that asks the server for a certain user given the fields that were selected and filled
      * @return true if user was found (and holds the object of the user in GUIControl) or false if user wasn't found in database
      */
-    private boolean validateLogin() {
+    public boolean validateLogin(String id,String password,boolean checkID,boolean checkSubNum,boolean checkEmployee) {
     	ClientMessage msg=null;
-    	if(idTextField.getText().isEmpty()) {
-    		GUIControl.popUpError("Empty identification field\nPlease choose your desired identification and fill in your credentials");
+    	if(id.isEmpty()) {
+    		clientServerCommunication.popUpError("Empty identification field\nPlease choose your desired identification and fill in your credentials");
 			return false;
     	}
-    	if( !idTextField.getText().matches("[0-9]+")) {
-    		GUIControl.popUpError("Invalid credentials!\nOnly digits are permitted");
+    	if( !id.matches("[0-9]+")) {
+    		clientServerCommunication.popUpError("Invalid credentials!\nOnly digits are permitted");
 			return false;
     	}
-    	if(idBtn.isSelected()) { 
-    		if(idTextField.getText().length()!=9) {
-    			GUIControl.popUpError("ID must consist of 9 digits");
+    	if(checkID) { 
+    		if(id.length()!=9) {
+    			clientServerCommunication.popUpError("ID must consist of 9 digits");
     			return false;
     		}	
-    		msg=new ClientMessage(ClientMessageType.LOGIN_VISITOR,idTextField.getText());
+    		msg=new ClientMessage(ClientMessageType.LOGIN_VISITOR,id);
     	}
-    	else if(subscriberBtn.isSelected())
-    		msg=new ClientMessage(ClientMessageType.LOGIN_SUBSCRIBER,idTextField.getText());
-    	else if(employeeBtn.isSelected()) {
-    		if(passwordTextField.getText().isEmpty()) {
-    			GUIControl.popUpError("Empty password field\nPlease fill in your password");
+    	else if(checkSubNum)
+    		msg=new ClientMessage(ClientMessageType.LOGIN_SUBSCRIBER,id);
+    	else if(checkEmployee) {
+    		if(password.isEmpty()) {
+    			clientServerCommunication.popUpError("Empty password field\nPlease fill in your password");
     			return false;
     		}
-    		String[] idAndPassword={idTextField.getText(),passwordTextField.getText()};
+    		String[] idAndPassword={id,password};
     		msg=new ClientMessage(ClientMessageType.LOGIN_EMPLOYEE,idAndPassword);
     	}
     	else {};
-    	guiControl.sendToServer(msg);
-    	if(guiControl.getServerMsg().getMessage()==null) {
-    		GUIControl.popUpError("Invalid information,please try again");
+    	clientServerCommunication.sendToServer(msg);
+    	if(clientServerCommunication.getServerMsg().getMessage()==null) {
+    		clientServerCommunication.popUpError("Invalid information,please try again");
     		return false;
     	}
-    	else if(guiControl.getServerMsg().getMessage().equals("logged in")) {
-    		GUIControl.popUpError("This user is already logged in");
+    	else if(clientServerCommunication.getServerMsg().getMessage().equals("logged in")) {
+    		clientServerCommunication.popUpError("This user is already logged in");
     		return false;
     	}
-    	guiControl.setUser(guiControl.getServerMsg().getMessage());	
+    	clientServerCommunication.setUser(clientServerCommunication.getServerMsg().getMessage());	
     	return true;
+    }
+    public void setClientServerCommunication(IClientServerCommunication clientServerCommunication) {
+    	this.clientServerCommunication=clientServerCommunication;
     }
 
 }
