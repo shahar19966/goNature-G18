@@ -33,9 +33,11 @@ public class ServerMain extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader =  new FXMLLoader(getClass().getResource("/gui/ServerScreen.fxml"));
+		
 		Parent root = loader.load();
 		guiController = loader.getController();
 		Scene serverScene = new Scene(root);
+		serverScene.getStylesheets().add(getClass().getResource("/gui/application.css").toExternalForm());
 		primaryStage.setScene(serverScene);
 		primaryStage.setOnCloseRequest(e -> stopServer());//make sure safe shutdown
 		primaryStage.show();
@@ -84,9 +86,26 @@ public class ServerMain extends Application {
 		System.exit(0);
 		
 	}
+	/**
+	 * This is The method that handles all order management.
+	 * In addition we check every park if it is full or not
+	 */
 	private static void runThreads() {
 		ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
-
+		scheduledThreadPool.scheduleAtFixedRate(() -> {
+			try {
+				MySQLConnection.delAllOldWaitingOrders();
+			} catch ( SQLException e) {
+				showError("FAILED TO Delete Old Waiting Orders");
+			}
+		}, 0, 5, TimeUnit.HOURS);
+		scheduledThreadPool.scheduleAtFixedRate(() -> {
+			try {
+				MySQLConnection.expiredApprovedOrders();
+			} catch ( SQLException e) {
+				showError("FAILED TO Expire Old Approved Orders");
+			}
+		}, 0, 5, TimeUnit.HOURS);
 		scheduledThreadPool.scheduleAtFixedRate(() -> {
 			try {
 				List<Order> orderList=MySQLConnection.sendSmsToActiveOrders();
@@ -112,6 +131,8 @@ public class ServerMain extends Application {
 				showError("FAILED TO CHECK IF PARKS FULL");
 			}
 		}, 0, 1, TimeUnit.HOURS);
+
+		
 	}
 	private static void showError(String msg) {
 			Platform.runLater(() -> {

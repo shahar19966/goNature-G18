@@ -79,6 +79,9 @@ public class GoNatureClient extends AbstractClient {
 				guiControl.setServerMsg(null);
 				break;
 			case PARAMETER_UPDATE:
+				if(serverMsg.getMessage()==null)
+					GUIControl.popUpError("request already exists");
+				else
 				GUIControl.popUpMessage("Parameter Update Sent",
 						((ParameterUpdate) serverMsg.getMessage()).toString());
 				break;

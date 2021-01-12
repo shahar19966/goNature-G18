@@ -89,6 +89,7 @@ public class GUIControl {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(ClientConstants.Screens.LOGIN_PAGE.toString()));
 			AnchorPane root = fxmlLoader.load();
 			Scene scene = new Scene (root);
+			scene.getStylesheets().add(getClass().getResource("/gui/application.css").toExternalForm());
 			primaryStage.setTitle("goNature");
 			primaryStage.setScene(scene);
 			primaryStage.setOnCloseRequest(e->{

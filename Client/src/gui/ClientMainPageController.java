@@ -103,7 +103,10 @@ public class ClientMainPageController implements Initializable {
 		loadEntryControl();
 		setSwitchPane(panesMap.get("entryControl"));
 	}
-
+	/**
+	 * when discounts button is pressed, switch to discounts screen
+	 * @param event
+	 */
 	@FXML
 	void discountBtnClick(ActionEvent event) {
 		setOpacityOfRestOfButtons((Button) event.getSource());
@@ -151,9 +154,12 @@ public class ClientMainPageController implements Initializable {
 		loadOrderTracking();
 		setSwitchPane(panesMap.get("orderTracking"));
 	}
-
+/**
+ * when parameters update button is pressed, switch to parameters update screen
+ * @param event
+ */
 	@FXML
-	void parametersBtnClick(ActionEvent event) {// liron
+	void parametersBtnClick(ActionEvent event) {
 		setOpacityOfRestOfButtons((Button) event.getSource());
 		loadParkManagerParametersUpdate();
 		setSwitchPane(panesMap.get("parameters"));

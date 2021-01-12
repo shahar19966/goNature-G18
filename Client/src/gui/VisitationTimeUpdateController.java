@@ -74,10 +74,10 @@ public class VisitationTimeUpdateController {
     		return false;
     	}
 
-    	//check if the new visitation time is more than 7 hours, according to the openning hours of the park
-    	if(Integer.parseInt(newvalue.getText())>7)
+    	//check if the new visitation time is longer than  the opening hours of the park
+    	if(Integer.parseInt(newvalue.getText())>(EntityConstants.PARK_CLOSED-EntityConstants.PARK_OPEN))
     	{
-    		GUIControl.popUpError("Visitation time can't be more than 7 hours, please enter valid value");
+    		GUIControl.popUpError("Visitation time can't be longer than opening hours, please enter valid value");
     		newvalue.setText("");
     		return false;
     	}
