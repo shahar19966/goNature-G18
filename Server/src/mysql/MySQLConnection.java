@@ -1,8 +1,5 @@
 package mysql;
 
-import java.io.NotActiveException;
-import java.io.ObjectInputStream.GetField;
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,12 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -27,10 +22,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PrimitiveIterator.OfDouble;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 //import com.sun.javafx.webkit.ThemeClientImpl;
 
@@ -40,31 +31,26 @@ import java.util.concurrent.TimeUnit;
 
 import entity.Employee;
 import entity.EntityConstants;
+import entity.EntityConstants.OrderStatus;
+import entity.EntityConstants.OrderType;
+import entity.EntityConstants.ParkParameter;
+import entity.EntityConstants.RequestStatus;
 import entity.Order;
 import entity.ParameterUpdate;
 import entity.Park;
 import entity.ParkDiscount;
 import entity.ReportDate;
-import entity.ParkCapacityReport;
 import entity.Subscriber;
 import entity.Visitor;
 import entity.VisitorReport;
-import message.ClientMessageType;
 import message.ServerMessage;
 import message.ServerMessageType;
-import server.GoNatureServer;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import entity.EntityConstants.OrderStatus;
-import entity.EntityConstants.OrderType;
-import entity.EntityConstants.ParkParameter;
-import entity.EntityConstants.RequestStatus;
 
 /**
  * class that holds static methods related to database actions such as
  * connection, queries,updates and more
  */
-public class MySQLConnection implements IMySQLConnection {
+public class MySQLConnection {
 	private static Connection con;
 
 	public static void connectToDB()
@@ -83,13 +69,9 @@ public class MySQLConnection implements IMySQLConnection {
 	 * @return Subscriber or null
 	 * @throws SQLException
 	 */
-	public  Visitor validateVisitor(String id) throws SQLException {
-		PreparedStatement logInPreparedStatement;
-		logInPreparedStatement = con.prepareStatement("SELECT * FROM visitor where id=? LIMIT 1;");
-		logInPreparedStatement.setString(1, id);
-		ResultSet rs = logInPreparedStatement.executeQuery();
-		if (rs.next()) {
-			return new Visitor(rs.getString(1));
+	public static Visitor validateVisitor(String id) throws SQLException {
+		if (visitorExists(id)) {
+			return new Visitor(id);
 		} else {
 			PreparedStatement insertVisitorPreparedStatement;
 			insertVisitorPreparedStatement = con.prepareStatement("INSERT INTO visitor (id) VALUES (?);");
@@ -97,6 +79,15 @@ public class MySQLConnection implements IMySQLConnection {
 			insertVisitorPreparedStatement.executeUpdate();
 			return new Visitor(id);
 		}
+	}
+	public static boolean visitorExists(String id) throws SQLException{
+		PreparedStatement checkVisitor;
+		checkVisitor = con.prepareStatement("SELECT * FROM visitor where id=? LIMIT 1;");
+		checkVisitor.setString(1, id);
+		ResultSet rs = checkVisitor.executeQuery();
+		if (rs.next()) 
+			return true;
+		return false;
 	}
 
 	/**
@@ -106,7 +97,7 @@ public class MySQLConnection implements IMySQLConnection {
 	 * @return Subscriber or null
 	 * @throws SQLException
 	 */
-	public  Subscriber validateSubscriber(String subNum) throws SQLException {
+	public static Subscriber validateSubscriber(String subNum) throws SQLException {
 		PreparedStatement logInPreparedStatement;
 		logInPreparedStatement = con.prepareStatement("SELECT * FROM subscriber where subNum=? LIMIT 1;");
 		logInPreparedStatement.setString(1, subNum);
@@ -127,7 +118,7 @@ public class MySQLConnection implements IMySQLConnection {
 	 * @return Employee or null
 	 * @throws SQLException
 	 */
-	public  Employee validateEmployee(String[] employeeNumberAndPassword) throws SQLException {
+	public static Employee validateEmployee(String[] employeeNumberAndPassword) throws SQLException {
 		PreparedStatement logInPreparedStatement;
 		logInPreparedStatement = con
 				.prepareStatement("SELECT * FROM employee where employeeNum=? AND password=? LIMIT 1;");
@@ -236,7 +227,7 @@ public class MySQLConnection implements IMySQLConnection {
 	 * A method that returns the data to the department manager's visition report
 	 * from database
 	 */
-	public  Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
+	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 
 		PreparedStatement GetIncomeReport;
@@ -776,7 +767,7 @@ public class MySQLConnection implements IMySQLConnection {
 	 * @throws NumberFormatException
 	 * @throws ParseException
 	 */
-	public  Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
+	public static Object OccasionalcreateOrder(Order order) throws SQLException, NumberFormatException, ParseException {
 
 		if (order.getType().equals(OrderType.REGULAR)) {
 			Visitor visitor = validateVisitor(order.getId());
@@ -1246,7 +1237,7 @@ public class MySQLConnection implements IMySQLConnection {
 	 * A method that returns ServerMessage if the registration was succeeded with a
 	 * new subscriber, or failure with the existing subscriber details.
 	 */
-	public ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
+	public static ServerMessage registerSubscriber(Subscriber subscriber) throws SQLException {
 		PreparedStatement registerPreparedStatement;
 		registerPreparedStatement = con.prepareStatement("SELECT * FROM subscriber WHERE id_fk=? ");
 		registerPreparedStatement.setString(1, subscriber.getID());
@@ -1578,6 +1569,13 @@ public class MySQLConnection implements IMySQLConnection {
 		if (rs.next())
 			parktoreturn = new Park(rs.getString(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
 		return parktoreturn;
+	}
+	public static boolean deleteVisitor(String id) throws SQLException{
+		PreparedStatement deleteVisitorPrepStmt;
+		deleteVisitorPrepStmt = con.prepareStatement("delete from visitor where id=?;");
+		deleteVisitorPrepStmt.setString(1, id);
+		deleteVisitorPrepStmt.executeUpdate();
+		return true;
 	}
 
 }
