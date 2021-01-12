@@ -12,17 +12,15 @@ import java.util.List;
 import java.util.Map;
 
 import application.ServerMain;
-import entity.Employee;
 import entity.EntityConstants.OrderStatus;
 import entity.Order;
 import entity.ParameterUpdate;
-import entity.Subscriber;
 import entity.ParkDiscount;
 import entity.ReportDate;
+import entity.Subscriber;
 import message.ClientMessage;
 import message.ServerMessage;
 import message.ServerMessageType;
-import mysql.IMySQLConnection;
 import mysql.MySQLConnection;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -43,7 +41,6 @@ import ocsf.server.ConnectionToClient;
  */
 public class GoNatureServer extends AbstractServer {
 	// Class variables *****************
-	private IMySQLConnection goNatureDB;
 	public ArrayList<Object> userList;
 
 	// Constructors ******************
@@ -57,14 +54,8 @@ public class GoNatureServer extends AbstractServer {
 	public GoNatureServer(int port) {
 		super(port);
 		userList = new ArrayList<>();
-		goNatureDB=new MySQLConnection();
 	}
-	public GoNatureServer(int port,IMySQLConnection db) {
-		super(port);
-		userList = new ArrayList<>();
-		goNatureDB=db;
-	}
-
+	
 	// Instance methods ****************
 
 	/**
@@ -143,7 +134,7 @@ public class GoNatureServer extends AbstractServer {
 					type = ServerMessageType.PARAMETER_UPDATE;
 					break;
 				case OCCASIONAL_ORDER:
-					returnVal = goNatureDB.OccasionalcreateOrder((Order) clientMsg.getMessage());
+					returnVal = MySQLConnection.OccasionalcreateOrder((Order) clientMsg.getMessage());
 					type = ServerMessageType.OCCASIONAL_ORDER;
 					break;
 				case DISCOUNT_REQUEST:
@@ -181,7 +172,7 @@ public class GoNatureServer extends AbstractServer {
 					break;
 
 				case DEP_MNG_VISITION_REPORT:
-					returnVal = goNatureDB.getVisitionReport((String) (clientMsg.getMessage()));
+					returnVal = MySQLConnection.getVisitionReport((String) (clientMsg.getMessage()));
 					type = ServerMessageType.DEPARTMENT_VISITATION_REPORT;
 					break;
 				case GET_DISCOUNT_REQUESTS_FROM_DB:
@@ -224,7 +215,7 @@ public class GoNatureServer extends AbstractServer {
 					break;
 
 				case REGISTRATION:
-					ServerMessage message = goNatureDB.registerSubscriber((Subscriber) clientMsg.getMessage());
+					ServerMessage message = MySQLConnection.registerSubscriber((Subscriber) clientMsg.getMessage());
 					returnVal = message.getMessage();
 					type = message.getType();
 					break;
@@ -284,7 +275,7 @@ public class GoNatureServer extends AbstractServer {
 	}
 	public Object loginVisitor(String id) throws SQLException {
 		Object returnVal;
-		returnVal = goNatureDB.validateVisitor(id);
+		returnVal = MySQLConnection.validateVisitor(id);
 		if (userList.contains(returnVal)) // user already logged in
 			returnVal = "logged in";
 		else if (returnVal != null) // user isn't already logged in and was found in the database
@@ -293,7 +284,7 @@ public class GoNatureServer extends AbstractServer {
 	}
 	public Object loginSubscriber(String subNum) throws SQLException{
 		Object returnVal;
-		returnVal = goNatureDB.validateSubscriber(subNum);
+		returnVal = MySQLConnection.validateSubscriber(subNum);
 		if (userList.contains(returnVal))
 			returnVal = "logged in";
 		else if (returnVal != null)
@@ -302,7 +293,7 @@ public class GoNatureServer extends AbstractServer {
 	}
 	public Object loginEmployee(String[] numAndPw) throws SQLException {
 		Object returnVal;
-		returnVal = goNatureDB.validateEmployee(numAndPw);
+		returnVal = MySQLConnection.validateEmployee(numAndPw);
 		if (userList.contains(returnVal))
 			returnVal = "logged in";
 		else if (returnVal != null)
