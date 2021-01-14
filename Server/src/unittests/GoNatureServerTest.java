@@ -287,9 +287,9 @@ class GoNatureServerTest {
 	}
 
 	/**
-	 * parkMenegerVisitReport test when the name park is existing.
-	 * excepted: Map<Integer, VisitorReport> with the values from data base.
-	 * result: visitReportMap
+	 * parkMenegerVisitReport test when the name park is existing. excepted:
+	 * Map<Integer, VisitorReport> with the values from data base. result:
+	 * visitReportMap
 	 */
 	@Test
 	void parkMenegerVisitReportExistingParkTest() {
@@ -299,22 +299,21 @@ class GoNatureServerTest {
 		try {
 			result = (Map<Integer, VisitorReport>) server.parkMenegerVisitReport(parkName);
 			for (VisitorReport vrExcepted : expected.values()) {
-				//for (VisitorReport vrResult : result.values()) {
-					if (!(vrExcepted.equals(result.get(vrExcepted.time())))) {
-						assertFalse(true);
-					}
+				// for (VisitorReport vrResult : result.values()) {
+				if (!(vrExcepted.equals(result.get(vrExcepted.time())))) {
+					assertFalse(true);
 				}
-			//}
+			}
+			// }
 			assertTrue(true);
 		} catch (SQLException e) {
 			assertTrue(false);
 		}
 	}
-	
+
 	/**
-	 * parkMenegerVisitReport test when the name park is not existing.
-	 * excepted: MySQLException
-	 * result: visitReportMap
+	 * parkMenegerVisitReport test when the name park is not existing. excepted:
+	 * MySQLException result: visitReportMap
 	 */
 	@Test
 	void parkMenegerVisitReportNotExistingParkTest() {
@@ -324,22 +323,20 @@ class GoNatureServerTest {
 		try {
 			result = (Map<Integer, VisitorReport>) server.parkMenegerVisitReport(parkName);
 			for (VisitorReport vrExcepted : expected.values()) {
-				//for (VisitorReport vrResult : result.values()) {
-					if (!(vrExcepted.equals(result.get(vrExcepted.time())))) {
-						assertFalse(true);
-					}
+				if (!(vrExcepted.equals(result.get(vrExcepted.time())))) {
+					assertFalse(true);
 				}
-			//}
+			}
+			// }
 			assertTrue(true);
 		} catch (SQLException e) {
 			assertTrue(false);
 		}
 	}
-	
+
 	/**
-	 * parkMenegerVisitReport test when the name park is null.
-	 * excepted: MySQLException
-	 * result: visitReportMap
+	 * parkMenegerVisitReport test when the name park is null. excepted:
+	 * MySQLException result: visitReportMap
 	 */
 	@Test
 	void parkMenegerVisitReportParkNameIsNullTest() {
@@ -349,16 +346,15 @@ class GoNatureServerTest {
 		try {
 			result = (Map<Integer, VisitorReport>) server.parkMenegerVisitReport(parkName);
 			for (VisitorReport vrExcepted : expected.values()) {
-				//for (VisitorReport vrResult : result.values()) {
-					if (!(vrExcepted.equals(result.get(vrExcepted.time())))) {
-						assertFalse(true);
-					}
+				if (!(vrExcepted.equals(result.get(vrExcepted.time())))) {
+					assertFalse(true);
 				}
-			//}
+			}
+			// }
 			assertTrue(true);
 		} catch (SQLException e) {
 			assertTrue(false);
 		}
 	}
-	
+
 }
