@@ -3,7 +3,6 @@ package unittests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,7 +27,7 @@ class DepartmentManagerVisitionReportControllerTest {
 	Object parksResponse;
 	Object park1Data;
 	Object park2Data, park3Data;
-
+	Exception throwen = null;
 	ArrayList<Park> parkList = new ArrayList<>();
 
 	class ClientServerCommunicationStub implements IClientServerCommunication {
@@ -80,13 +79,26 @@ class DepartmentManagerVisitionReportControllerTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		departmentManagerVisitionReportController = new DepartmentManagerVisitionReportController();
 		clientServerCommunicationStub = new ClientServerCommunicationStub();
-		departmentManagerVisitionReportController.setClientServerCommunication(clientServerCommunicationStub);
+		DepartmentManagerVisitionReportController.setClientServerCommunication(clientServerCommunicationStub);
 		parkList.add(new Park("1", 0, 0, 0, 0));
 		parkList.add(new Park("2", 0, 0, 0, 0));
 		parkList.add(new Park("3", 0, 0, 0, 0));
 		parksResponse = parkList;
+		throwen = null;
+	}
+
+	private DepartmentManagerVisitionReportController getScreen() {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/gui/DepartmentManagerVisitionReport.fxml"));
+		try {
+			loader.load();
+
+			return loader.getController();
+		} catch (IOException e) {
+			throwen = e;
+		}
+		return null;
 	}
 
 	/*
@@ -95,8 +107,6 @@ class DepartmentManagerVisitionReportControllerTest {
 	 */
 	@Test
 	void serialsForXValuesTest() {
-
-		// set parks data
 		Map<Integer, VisitorReport> mapDataPark1 = new LinkedHashMap<Integer, VisitorReport>();
 		mapDataPark1.put(8, new VisitorReport(8));
 		mapDataPark1.get(8).setAvgGuid(5.0);
@@ -107,31 +117,97 @@ class DepartmentManagerVisitionReportControllerTest {
 		park3Data = mapDataPark1;
 		DepartmentManagerVisitionReportController cont = getScreen();
 
-		// assertion
-//cont.barPark1.getData().get(0)//First series
-//		cont.barPark1.getData().get(0).getData()//all data
 		if (!(cont.barPark1.getData().get(0).getData().get(0).getXValue().equals("8:00"))) {
-			assertTrue(false);
+			fail();
 		}
 		if (!(cont.barPark1.getData().get(1).getData().get(0).getXValue().equals("8:00"))) {
-			assertTrue(false);
+			fail();
 		}
 		if (!(cont.barPark1.getData().get(2).getData().get(0).getXValue().equals("8:00"))) {
-			assertTrue(false);
+			fail();
 		}
 		assertTrue(true);
 	}
 
-	private DepartmentManagerVisitionReportController getScreen() {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("/gui/DepartmentManagerVisitionReport.fxml"));
-		try {
-			loader.load();
-			return loader.getController();
-		} catch (IOException e) {
-			e.printStackTrace();
+	/*
+	 * check the average stay of serials for arrival time: 8. input: map with the
+	 * values- subscriber serial= 7.0, group serial = 5.0, individual serial=6.0 in
+	 * arrival time: 8. excepted : subscriber serial= 7.0, group serial = 5.0,
+	 * individual serial=6.0 in the varChar.
+	 */
+	@Test
+	void serialsForYValuesTest() {
+		Map<Integer, VisitorReport> mapDataPark1 = new LinkedHashMap<Integer, VisitorReport>();
+		mapDataPark1.put(8, new VisitorReport(8));
+		mapDataPark1.get(8).setAvgGuid(5.0);
+		mapDataPark1.get(8).setAvgRegular(6.0);
+		mapDataPark1.get(8).setAvgSubscriber(7.0);
+		park1Data = mapDataPark1;
+		park2Data = mapDataPark1;
+		park3Data = mapDataPark1;
+		DepartmentManagerVisitionReportController cont = getScreen();
+
+		if (!(cont.barPark1.getData().get(0).getData().get(0).getYValue().equals(7.0))) {
+			fail();
 		}
-		return null;
+		if (!(cont.barPark1.getData().get(1).getData().get(0).getYValue().equals(5.0))) {
+			fail();
+		}
+		if (!(cont.barPark1.getData().get(2).getData().get(0).getYValue().equals(6.0))) {
+			fail();
+		}
+		assertTrue(true);
+	}
+
+	/*
+	 * check the average stay of serials for arrival time: 8. input: map with the
+	 * values- subscriber serial= 7.0, group serial = 5.0, in arrival time: 8.
+	 * excepted : subscriber serial= 7.0, group serial = 5.0, in the varChar.
+	 */
+	@Test
+	void oneSerialEmptyTest() {
+
+		Map<Integer, VisitorReport> mapDataPark1 = new LinkedHashMap<Integer, VisitorReport>();
+		mapDataPark1.put(8, new VisitorReport(8));
+		mapDataPark1.get(8).setAvgGuid(5.0);
+		mapDataPark1.get(8).setAvgSubscriber(7.0);
+		park1Data = mapDataPark1;
+		park2Data = mapDataPark1;
+		park3Data = mapDataPark1;
+		DepartmentManagerVisitionReportController cont = getScreen();
+
+		if (!(cont.barPark1.getData().get(0).getData().get(0).getYValue().equals(7.0))) {
+			fail();
+		}
+		if (!(cont.barPark1.getData().get(1).getData().get(0).getYValue().equals(5.0))) {
+			fail();
+		}
+		if (!(cont.barPark1.getData().get(2).getData().get(0).getYValue().equals(0.0))) {
+			fail();
+		}
+		assertTrue(true);
+	}
+
+	/*
+	 * check if the name label identify to the park input: 1 excepted: 1
+	 */
+	@Test
+	void existingParkNameTest() {
+
+		Map<Integer, VisitorReport> mapDataPark1 = new LinkedHashMap<Integer, VisitorReport>();
+		mapDataPark1.put(8, new VisitorReport(8));
+		mapDataPark1.get(8).setAvgGuid(5.0);
+		mapDataPark1.get(8).setAvgRegular(6.0);
+		mapDataPark1.get(8).setAvgSubscriber(7.0);
+		park1Data = mapDataPark1;
+		park2Data = mapDataPark1;
+		park3Data = mapDataPark1;
+		DepartmentManagerVisitionReportController cont = getScreen();
+
+		if (!(cont.park1.getText().equals("1"))) {
+			fail();
+		}
+		assertTrue(true);
 	}
 
 	/*
@@ -145,9 +221,8 @@ class DepartmentManagerVisitionReportControllerTest {
 		park3Data = null;
 
 		DepartmentManagerVisitionReportController cont = getScreen();
-		if (cont != null) {
-
-			assertTrue(false);
+		if (throwen == null) {
+			fail();
 		}
 		assertTrue(true);
 	}
@@ -161,11 +236,9 @@ class DepartmentManagerVisitionReportControllerTest {
 		parksResponse = null;
 
 		DepartmentManagerVisitionReportController cont = getScreen();
-		if (cont != null) {
-
-			assertTrue(false);
+		if (throwen == null) {
+			fail();
 		}
 		assertTrue(true);
 	}
-
 }
