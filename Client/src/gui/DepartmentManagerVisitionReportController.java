@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import entity.Park;
 import entity.VisitorReport;
+import gui.LoginPageController.ClientServerCommunication;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -19,14 +20,40 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
 import message.ClientMessage;
 import message.ClientMessageType;
+import message.ServerMessage;
 /**
  * 
  * This class responsible for the control page of the department manager's visition report
  *
  */
-public class DepartmentManagerVisitionReportController implements Initializable {
-	GUIControl guiControl = GUIControl.getInstance();
 
+public class DepartmentManagerVisitionReportController implements Initializable {
+	static GUIControl guiControl = GUIControl.getInstance();
+	static IClientServerCommunication clientServerCommunication=new ClientServerCommunication();
+	static class ClientServerCommunication implements IClientServerCommunication{
+
+		@Override
+		public void popUpError(String msg) {
+			GUIControl.popUpError(msg);			
+		}
+
+		@Override
+		public void sendToServer(Object msg) {
+			guiControl.sendToServer(msg);
+			
+		}
+
+		@Override
+		public ServerMessage getServerMsg() {
+			return guiControl.getServerMsg();
+		}
+
+		@Override
+		public void setUser(Object user) {
+			guiControl.setUser(user);		
+		}
+		
+	}
     @FXML
     private Label month;
 
@@ -34,7 +61,7 @@ public class DepartmentManagerVisitionReportController implements Initializable 
     private Label park1;
 
     @FXML
-    private BarChart<String,Number> barPark1;
+    public BarChart<String,Number> barPark1;
 
     @FXML
     private CategoryAxis xPark1;
@@ -75,8 +102,8 @@ public class DepartmentManagerVisitionReportController implements Initializable 
        {
     	Calendar c=Calendar.getInstance();
     	month.setText(c.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
-    	guiControl.sendToServer(new ClientMessage(ClientMessageType.GET_PARKS, null));
-    	List<Park> parks = (List<Park> ) guiControl.getServerMsg().getMessage();
+    	clientServerCommunication.sendToServer(new ClientMessage(ClientMessageType.GET_PARKS, null));
+    	List<Park> parks = (List<Park> ) clientServerCommunication.getServerMsg().getMessage();
     	
     	 park1.setText(parks.get(0).getParkName());
     	 park2.setText(parks.get(1).getParkName());
@@ -94,8 +121,8 @@ public class DepartmentManagerVisitionReportController implements Initializable 
  */
     private void dataBar(BarChart<String,Number > bar,String nameP)
     {
-    	guiControl.sendToServer(new ClientMessage(ClientMessageType.DEP_MNG_VISITION_REPORT, nameP));
-        Map<Integer, VisitorReport> parkReportMap = (Map<Integer, VisitorReport>) guiControl.getServerMsg().getMessage();
+    	clientServerCommunication.sendToServer(new ClientMessage(ClientMessageType.DEP_MNG_VISITION_REPORT, nameP));
+        Map<Integer, VisitorReport> parkReportMap = (Map<Integer, VisitorReport>) clientServerCommunication.getServerMsg().getMessage();
        XYChart.Series<String, Number> SubscribersP1 = new XYChart.Series<>();
        XYChart.Series<String, Number> GroupsP1 = new XYChart.Series<>();
        XYChart.Series<String, Number> IndividualsP1 = new XYChart.Series<>();
@@ -104,11 +131,15 @@ public class DepartmentManagerVisitionReportController implements Initializable 
         IndividualsP1.setName("Individuals");
 		for(VisitorReport vr : parkReportMap.values())
 		{
-			SubscribersP1.getData().add(new XYChart.Data<>(vr.timeSring(),(vr.getAvgSubscriber())/60));
-		   GroupsP1.getData().add(new XYChart.Data<>(vr.timeSring(), (vr.getAvgGuid())/60));
-		   IndividualsP1.getData().add(new XYChart.Data<>(vr.timeSring(), (vr.getAvgRegular())/60));
+			SubscribersP1.getData().add(new XYChart.Data<>(vr.timeSring(),(vr.getAvgSubscriber())));
+		   GroupsP1.getData().add(new XYChart.Data<>(vr.timeSring(), (vr.getAvgGuid())));
+		   IndividualsP1.getData().add(new XYChart.Data<>(vr.timeSring(), (vr.getAvgRegular())));
 		
 		}
 		bar.getData().addAll(SubscribersP1,GroupsP1,IndividualsP1);
+    }
+    
+    public void setClientServerCommunication(IClientServerCommunication clientServerCommunication) {
+    	clientServerCommunication=clientServerCommunication;
     }
 }

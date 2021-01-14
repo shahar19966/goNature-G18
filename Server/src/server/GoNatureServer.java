@@ -172,7 +172,7 @@ public class GoNatureServer extends AbstractServer {
 					break;
 
 				case DEP_MNG_VISITION_REPORT:
-					returnVal = MySQLConnection.getVisitionReport((String) (clientMsg.getMessage()));
+					returnVal = MySQLConnection.parkMenegerVisitReport((String) (clientMsg.getMessage()));
 					type = ServerMessageType.DEPARTMENT_VISITATION_REPORT;
 					break;
 				case GET_DISCOUNT_REQUESTS_FROM_DB:
@@ -229,7 +229,6 @@ public class GoNatureServer extends AbstractServer {
 					returnVal = MySQLConnection.getPark((String) (clientMsg.getMessage()));
 					type = ServerMessageType.GET_PARK;
 					break;
-
 				}
 			}
 		} catch (Exception e) {
@@ -301,6 +300,12 @@ public class GoNatureServer extends AbstractServer {
 		return returnVal;
 	}
 
+	public Object parkMenegerVisitReport(String parkName) throws SQLException {
+		Object returnVal;
+		returnVal = MySQLConnection.parkMenegerVisitReport(parkName);
+		return returnVal;
+	}
+	
 	/**
 	 * This method overrides the one in the superclass. Called when the server
 	 * starts listening for connections.
