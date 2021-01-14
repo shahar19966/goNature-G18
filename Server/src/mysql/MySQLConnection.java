@@ -232,12 +232,12 @@ public class MySQLConnection {
 	 * A method that returns the data to the department manager's visition report
 	 * from database
 	 */
-	public static Map<Integer, VisitorReport> getVisitionReport(String namePark) throws SQLException {
+	public static Map<Integer, VisitorReport> parkMenegerVisitReport(String namePark) throws SQLException {
 		Map<Integer, VisitorReport> reportVisitorMap = new LinkedHashMap<Integer, VisitorReport>();
 
 		PreparedStatement GetIncomeReport;
 		GetIncomeReport = con.prepareStatement(
-				"SELECT orders.type,sum(finishedOrders.visitDuration)/sum(finishedOrders.actualNumOfVisitors ),finishedOrders.actualTimeOfArrival "
+				"SELECT orders.type,sum(finishedOrders.actualNumOfVisitors )/sum(finishedOrders.visitDuration),finishedOrders.actualTimeOfArrival "
 						+ "FROM orders" + " JOIN finishedOrders ON (orders.orderNum = finishedOrders.orderNum_fk) "
 						+ "WHERE (MONTH(NOW()) = MONTH(orders.dateOfOrder)) AND (YEAR(NOW()) = YEAR(orders.dateOfOrder)) and orders.parkName_fk=?"
 						+ " GROUP by orders.type ,finishedOrders.actualTimeOfArrival");
